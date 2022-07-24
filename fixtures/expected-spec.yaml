@@ -1,0 +1,88 @@
+openapi: 3.0.1
+info:
+  title: 'Apie-lib generated OpenAPI spec'
+  version: 1.0.0
+paths:
+  /UserWithAddress:
+    post:
+      tags:
+        - UserWithAddress
+        - create
+      description: 'Creates an instance of UserWithAddress'
+      operationId: post-UserWithAddress
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserWithAddress-post'
+  /UserWithAutoincrementKey:
+    post:
+      tags:
+        - UserWithAutoincrementKey
+        - create
+      description: 'Creates an instance of UserWithAutoincrementKey'
+      operationId: post-UserWithAutoincrementKey
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserWithAutoincrementKey-post'
+  /secretCode/:
+    get:
+      tags:
+        - StaticActionExample
+        - methodCall
+      description: 'Calls method secretCode and returns return value.'
+      operationId: call-method-StaticActionExample-secretCode
+components:
+  schemas:
+    mixed:
+      nullable: true
+    DatabaseText-post:
+      type: string
+      format: databasetext
+      pattern: '^.{0,65535}$'
+    AddressWithZipcodeCheck-post:
+      required:
+        - street
+        - streetNumber
+        - zipcode
+        - city
+      type: object
+      properties:
+        street:
+          $ref: '#/components/schemas/DatabaseText-post'
+        streetNumber:
+          $ref: '#/components/schemas/DatabaseText-post'
+        zipcode:
+          $ref: '#/components/schemas/DatabaseText-post'
+        city:
+          $ref: '#/components/schemas/DatabaseText-post'
+    UserWithAddressIdentifier-post:
+      type: string
+      format: userwithaddressidentifier
+      pattern: '^[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$'
+    Password-post:
+      type: string
+      format: password
+      pattern: '^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[\!@\#\$%\^&\*\-_\+\.]){1,}).{6,42}$'
+    UserWithAddress-post:
+      required:
+        - address
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/AddressWithZipcodeCheck-post'
+        id:
+          $ref: '#/components/schemas/UserWithAddressIdentifier-post'
+        password:
+          $ref: '#/components/schemas/Password-post'
+    UserWithAutoincrementKey-post:
+      required:
+        - address
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/AddressWithZipcodeCheck-post'
+        password:
+          $ref: '#/components/schemas/Password-post'
