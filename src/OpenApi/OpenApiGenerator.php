@@ -3,6 +3,7 @@ namespace Apie\RestApi\OpenApi;
 
 use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\ContextBuilders\ContextBuilderFactory;
+use Apie\Core\Enums\RequestMethod;
 use Apie\Core\RouteDefinitions\RouteDefinitionProviderInterface;
 use Apie\RestApi\Interfaces\RestApiRouteDefinition;
 use Apie\SchemaGenerator\Builders\ComponentsBuilder;
@@ -15,7 +16,10 @@ use cebe\openapi\spec\OpenApi;
 use cebe\openapi\spec\Operation;
 use cebe\openapi\spec\PathItem;
 use cebe\openapi\spec\Paths;
+use cebe\openapi\spec\Reference;
 use cebe\openapi\spec\RequestBody;
+use cebe\openapi\spec\Response;
+use cebe\openapi\spec\Schema;
 use cebe\openapi\spec\Tag;
 use ReflectionClass;
 
@@ -71,27 +75,52 @@ class OpenApiGenerator
         return $spec;
     }
 
-    private function addAction(PathItem $pathItem, ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition)
+    private function createSchemaForInput(ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition): Schema|Reference|null
     {
         $input = $routeDefinition->getInputType();
-        $schema = null;
         if ($input instanceof ReflectionClass) {
-            $schema = $componentsBuilder->addCreationSchemaFor($input->name);
+            return $componentsBuilder->addCreationSchemaFor($input->name);
         }
-        // TODO fill in response
+        return null;
+    }
+
+    private function createSchemaForOutput(ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition): Schema|Reference|null
+    {
+        $input = $routeDefinition->getOutputType();
+        if ($input instanceof ReflectionClass) {
+            return $componentsBuilder->addDisplaySchemaFor($input->name);
+        }
+        return null;
+    }
+
+    private function addAction(PathItem $pathItem, ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition)
+    {
+        $method = $routeDefinition->getMethod();
+        $inputSchema = $this->createSchemaForInput($componentsBuilder, $routeDefinition);
+        $outputSchema = $this->createSchemaForOutput($componentsBuilder, $routeDefinition);
         $operation = new Operation([
             'tags' => $routeDefinition->getTags()->toArray(),
             'description' => $routeDefinition->getDescription(),
             'operationId' => $routeDefinition->getOperationId(),
         ]);
-        if ($schema) {
+        if ($inputSchema && $method !== RequestMethod::GET) {
             $operation->requestBody = new RequestBody([
                 'content' => [
-                    'application/json' => new MediaType(['schema' => $schema])
+                    'application/json' => new MediaType(['schema' => $inputSchema])
                 ]
             ]);
         }
-        $prop = strtolower($routeDefinition->getMethod()->value);
+        if ($outputSchema) {
+            $operation->responses = [
+                201 => new Response([
+                    'description' => 'OK',
+                    'content' => [
+                        'application/json' => new MediaType(['schema' => $outputSchema])
+                    ]
+                ]),
+            ];
+        }
+        $prop = strtolower($method->value);
         $pathItem->{$prop} = $operation;
     }
 }

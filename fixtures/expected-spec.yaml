@@ -15,6 +15,13 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UserWithAddress-post'
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWithAddress-get'
   /UserWithAutoincrementKey:
     post:
       tags:
@@ -27,6 +34,13 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UserWithAutoincrementKey-post'
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWithAutoincrementKey-get'
   /secretCode/:
     get:
       tags:
@@ -77,6 +91,46 @@ components:
           $ref: '#/components/schemas/UserWithAddressIdentifier-post'
         password:
           $ref: '#/components/schemas/Password-post'
+    UserWithAddressIdentifier-get:
+      type: string
+      format: userwithaddressidentifier
+      pattern: '^[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$'
+    DatabaseText-get:
+      type: string
+      format: databasetext
+      pattern: '^.{0,65535}$'
+    AddressWithZipcodeCheck-get:
+      required:
+        - street
+        - streetNumber
+        - zipcode
+        - city
+      type: object
+      properties:
+        street:
+          $ref: '#/components/schemas/DatabaseText-get'
+        streetNumber:
+          $ref: '#/components/schemas/DatabaseText-get'
+        zipcode:
+          $ref: '#/components/schemas/DatabaseText-get'
+        city:
+          $ref: '#/components/schemas/DatabaseText-get'
+    Password-get:
+      type: string
+      format: password
+      pattern: '^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[\!@\#\$%\^&\*\-_\+\.]){1,}).{6,42}$'
+    UserWithAddress-get:
+      required:
+        - id
+        - address
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UserWithAddressIdentifier-get'
+        address:
+          $ref: '#/components/schemas/AddressWithZipcodeCheck-get'
+        password:
+          $ref: '#/components/schemas/Password-get'
     UserWithAutoincrementKey-post:
       required:
         - address
@@ -86,3 +140,17 @@ components:
           $ref: '#/components/schemas/AddressWithZipcodeCheck-post'
         password:
           $ref: '#/components/schemas/Password-post'
+    UserAutoincrementIdentifier-get:
+      type: integer
+    UserWithAutoincrementKey-get:
+      required:
+        - id
+        - address
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UserAutoincrementIdentifier-get'
+        address:
+          $ref: '#/components/schemas/AddressWithZipcodeCheck-get'
+        password:
+          $ref: '#/components/schemas/Password-get'
