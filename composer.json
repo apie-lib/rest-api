@@ -28,6 +28,7 @@
     "nyholm/psr7": "^1.5"
   },
   "require-dev": {
+    "apie/composite-value-objects": "self.version",
     "apie/fixtures": "self.version",
     "apie/text-value-objects": "self.version",
     "phpunit/phpunit": "^9.5"
