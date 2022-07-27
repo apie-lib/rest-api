@@ -1,39 +1,59 @@
 <?php
-namespace Apie\Tests\RestApi\Actions;
+namespace Apie\Tests\RestApi\Controllers;
 
 use Apie\Core\BoundedContext\BoundedContext;
+use Apie\Core\BoundedContext\BoundedContextHashmap;
+use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\ContextBuilders\ContextBuilderFactory;
-use Apie\Core\Controllers\ApieController;
 use Apie\Core\Lists\ReflectionClassList;
 use Apie\Core\Lists\ReflectionMethodList;
 use Apie\Fixtures\Entities\UserWithAddress;
 use Apie\Fixtures\Identifiers\UserWithAddressIdentifier;
 use Apie\RestApi\Actions\CreateObjectAction;
+use Apie\RestApi\Controllers\CreateResourceController;
+use Apie\Serializer\DecoderHashmap;
+use Apie\Serializer\EncoderHashmap;
 use Apie\Serializer\Serializer;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use ReflectionClass;
 
-class CreateObjectActionTest extends TestCase
+class CreateResourceControllerTest extends TestCase
 {
-    protected function givenAControllerToCreateAnObject(ReflectionClass $class): ApieController
+    protected function givenAControllerToCreateAnObject(ReflectionClass $class): CreateResourceController
     {
-        return new ApieController(
-            new CreateObjectAction($class, Serializer::create()),
+        return new CreateResourceController(
             ContextBuilderFactory::create(),
-            new BoundedContext(new ReflectionClassList(), new ReflectionMethodList())
+            new BoundedContextHashmap(['test' => $this->givenABoundedContext()]),
+            new CreateObjectAction(Serializer::create()),
+            EncoderHashmap::create(),
+            DecoderHashmap::create()
         );
     }
 
-    protected function givenAPostRequestWithBody(string $uri, mixed $body): RequestInterface
+    protected function givenABoundedContext(): BoundedContext
+    {
+        return new BoundedContext(
+            new BoundedContextId('test'),
+            new ReflectionClassList([
+                new ReflectionClass(UserWithAddress::class)
+            ]),
+            new ReflectionMethodList([
+            ])
+        );
+    }
+
+    protected function givenAPostRequestWithBody(string $uri, mixed $body): ServerRequestInterface
     {
         $factory = new Psr17Factory();
         $stream = $factory->createStream(json_encode($body));
-        return $factory->createRequest('POST', $uri)
+        return $factory->createServerRequest('POST', $uri)
             ->withHeader('Content-Type', 'application/json')
             ->withBody($stream)
-            ->withHeader('Accept', 'application/json');
+            ->withHeader('Accept', 'application/json')
+            ->withAttribute('boundedContextId', 'test')
+            ->withAttribute('resourceName', UserWithAddress::class);
     }
 
     /**

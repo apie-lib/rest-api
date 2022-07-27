@@ -48,6 +48,13 @@ paths:
         - methodCall
       description: 'Calls method secretCode and returns return value.'
       operationId: call-method-StaticActionExample-secretCode
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImmutableStringOrIntList-get'
 components:
   schemas:
     mixed:
@@ -154,3 +161,11 @@ components:
           $ref: '#/components/schemas/AddressWithZipcodeCheck-get'
         password:
           $ref: '#/components/schemas/Password-get'
+    ImmutableStringOrIntList-get:
+      type: array
+      items:
+        oneOf:
+          -
+            type: string
+          -
+            type: integer

@@ -1,52 +1,55 @@
 <?php
-namespace Apie\Tests\RestApi\Actions;
+namespace Apie\Tests\RestApi\Controllers;
 
 use Apie\Core\BoundedContext\BoundedContext;
+use Apie\Core\BoundedContext\BoundedContextHashmap;
+use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\ContextBuilders\ContextBuilderFactory;
-use Apie\Core\Controllers\ApieController;
 use Apie\Core\Lists\ReflectionClassList;
 use Apie\Core\Lists\ReflectionMethodList;
 use Apie\Fixtures\Actions\StaticActionExample;
 use Apie\Fixtures\Entities\UserWithAddress;
 use Apie\Fixtures\Entities\UserWithAutoincrementKey;
-use Apie\RestApi\Actions\OpenApiDocumentation;
+use Apie\RestApi\Controllers\OpenApiDocumentationController;
 use Apie\RestApi\OpenApi\OpenApiGenerator;
 use Apie\RestApi\RouteDefinitions\RestApiRouteDefinitionProvider;
 use Apie\SchemaGenerator\ComponentsBuilderFactory;
 use Apie\Serializer\Serializer;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use ReflectionClass;
 use ReflectionMethod;
 
-class OpenApiDocumentationTest extends TestCase
+class OpenApiDocumentationControllerTest extends TestCase
 {
-    protected function givenAControllerToProvideOpenApiDocumentation(): ApieController
+    protected function givenAControllerToProvideOpenApiDocumentation(): OpenApiDocumentationController
     {
         $contextBuilder = ContextBuilderFactory::create();
-        return new ApieController(
-            new OpenApiDocumentation(new OpenApiGenerator(
+        return new OpenApiDocumentationController(
+            new BoundedContextHashmap(['test' => $this->givenABoundedContext()]),
+            new OpenApiGenerator(
                 $contextBuilder,
                 ComponentsBuilderFactory::createComponentsBuilderFactory(),
                 new RestApiRouteDefinitionProvider(),
                 Serializer::create()
-            )),
-            $contextBuilder,
-            $this->givenABoundedContext()
+            )
         );
     }
 
-    protected function givenAGetRequest(string $uri): RequestInterface
+    protected function givenAGetRequest(string $uri): ServerRequestInterface
     {
         $factory = new Psr17Factory();
-        return $factory->createRequest('GET', $uri)
-            ->withHeader('Accept', 'application/json');
+        return $factory->createServerRequest('GET', $uri)
+            ->withHeader('Accept', 'application/json')
+            ->withAttribute('boundedContextId', 'test')
+            ->withAttribute('yaml', true);
     }
 
     protected function givenABoundedContext(): BoundedContext
     {
         return new BoundedContext(
+            new BoundedContextId('test'),
             new ReflectionClassList([
                 new ReflectionClass(UserWithAddress::class),
                 new ReflectionClass(UserWithAutoincrementKey::class)

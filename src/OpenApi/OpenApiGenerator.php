@@ -20,8 +20,9 @@ use cebe\openapi\spec\Reference;
 use cebe\openapi\spec\RequestBody;
 use cebe\openapi\spec\Response;
 use cebe\openapi\spec\Schema;
-use cebe\openapi\spec\Tag;
 use ReflectionClass;
+use ReflectionMethod;
+use ReflectionType;
 
 class OpenApiGenerator
 {
@@ -81,6 +82,17 @@ class OpenApiGenerator
         if ($input instanceof ReflectionClass) {
             return $componentsBuilder->addCreationSchemaFor($input->name);
         }
+        if ($input instanceof ReflectionMethod) {
+            $info = $componentsBuilder->getSchemaForMethod($input);
+            return new Schema([
+                'type' => 'object',
+                'properties' => $info->schemas,
+                'required' => $info->required,
+            ]);
+        }
+        if ($input instanceof ReflectionType) {
+            return $componentsBuilder->getSchemaForType($input);
+        }
         return null;
     }
 
@@ -89,6 +101,12 @@ class OpenApiGenerator
         $input = $routeDefinition->getOutputType();
         if ($input instanceof ReflectionClass) {
             return $componentsBuilder->addDisplaySchemaFor($input->name);
+        }
+        if ($input instanceof ReflectionMethod) {
+            $input = $input->getReturnType();
+        }
+        if ($input instanceof ReflectionType) {
+            return $componentsBuilder->getSchemaForType($input, false, true);
         }
         return null;
     }
