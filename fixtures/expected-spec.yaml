@@ -57,55 +57,6 @@ paths:
                 $ref: '#/components/schemas/ImmutableStringOrIntList-get'
 components:
   schemas:
-    mixed:
-      nullable: true
-    DatabaseText-post:
-      type: string
-      format: databasetext
-      pattern: '^.{0,65535}$'
-    AddressWithZipcodeCheck-post:
-      required:
-        - street
-        - streetNumber
-        - zipcode
-        - city
-      type: object
-      properties:
-        street:
-          $ref: '#/components/schemas/DatabaseText-post'
-        streetNumber:
-          $ref: '#/components/schemas/DatabaseText-post'
-        zipcode:
-          $ref: '#/components/schemas/DatabaseText-post'
-        city:
-          $ref: '#/components/schemas/DatabaseText-post'
-    UserWithAddressIdentifier-post:
-      type: string
-      format: userwithaddressidentifier
-      pattern: '^[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$'
-    Password-post:
-      type: string
-      format: password
-      pattern: '^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[\!@\#\$%\^&\*\-_\+\.]){1,}).{6,42}$'
-    UserWithAddress-post:
-      required:
-        - address
-      type: object
-      properties:
-        address:
-          $ref: '#/components/schemas/AddressWithZipcodeCheck-post'
-        id:
-          $ref: '#/components/schemas/UserWithAddressIdentifier-post'
-        password:
-          $ref: '#/components/schemas/Password-post'
-    UserWithAddressIdentifier-get:
-      type: string
-      format: userwithaddressidentifier
-      pattern: '^[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$'
-    DatabaseText-get:
-      type: string
-      format: databasetext
-      pattern: '^.{0,65535}$'
     AddressWithZipcodeCheck-get:
       required:
         - street
@@ -122,10 +73,50 @@ components:
           $ref: '#/components/schemas/DatabaseText-get'
         city:
           $ref: '#/components/schemas/DatabaseText-get'
+    AddressWithZipcodeCheck-post:
+      required:
+        - street
+        - streetNumber
+        - zipcode
+        - city
+      type: object
+      properties:
+        street:
+          $ref: '#/components/schemas/DatabaseText-post'
+        streetNumber:
+          $ref: '#/components/schemas/DatabaseText-post'
+        zipcode:
+          $ref: '#/components/schemas/DatabaseText-post'
+        city:
+          $ref: '#/components/schemas/DatabaseText-post'
+    DatabaseText-get:
+      maxLength: 65535
+      minLength: 0
+      type: string
+      example: 'Lorem Ipsum'
+    DatabaseText-post:
+      maxLength: 65535
+      minLength: 0
+      type: string
+      example: 'Lorem Ipsum'
+    ImmutableStringOrIntList-get:
+      type: array
+      items:
+        oneOf:
+          -
+            type: string
+          -
+            type: integer
     Password-get:
       type: string
       format: password
       pattern: '^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[\!@\#\$%\^&\*\-_\+\.]){1,}).{6,42}$'
+    Password-post:
+      type: string
+      format: password
+      pattern: '^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[\!@\#\$%\^&\*\-_\+\.]){1,}).{6,42}$'
+    UserAutoincrementIdentifier-get:
+      type: integer
     UserWithAddress-get:
       required:
         - id
@@ -134,6 +125,37 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/UserWithAddressIdentifier-get'
+        address:
+          $ref: '#/components/schemas/AddressWithZipcodeCheck-get'
+        password:
+          $ref: '#/components/schemas/Password-get'
+    UserWithAddress-post:
+      required:
+        - address
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/AddressWithZipcodeCheck-post'
+        id:
+          $ref: '#/components/schemas/UserWithAddressIdentifier-post'
+        password:
+          $ref: '#/components/schemas/Password-post'
+    UserWithAddressIdentifier-get:
+      type: string
+      format: userwithaddressidentifier
+      pattern: '^[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$'
+    UserWithAddressIdentifier-post:
+      type: string
+      format: userwithaddressidentifier
+      pattern: '^[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$'
+    UserWithAutoincrementKey-get:
+      required:
+        - id
+        - address
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UserAutoincrementIdentifier-get'
         address:
           $ref: '#/components/schemas/AddressWithZipcodeCheck-get'
         password:
@@ -147,25 +169,5 @@ components:
           $ref: '#/components/schemas/AddressWithZipcodeCheck-post'
         password:
           $ref: '#/components/schemas/Password-post'
-    UserAutoincrementIdentifier-get:
-      type: integer
-    UserWithAutoincrementKey-get:
-      required:
-        - id
-        - address
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/UserAutoincrementIdentifier-get'
-        address:
-          $ref: '#/components/schemas/AddressWithZipcodeCheck-get'
-        password:
-          $ref: '#/components/schemas/Password-get'
-    ImmutableStringOrIntList-get:
-      type: array
-      items:
-        oneOf:
-          -
-            type: string
-          -
-            type: integer
+    mixed:
+      nullable: true

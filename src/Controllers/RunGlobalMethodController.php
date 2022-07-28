@@ -46,7 +46,7 @@ class RunGlobalMethodController
                 BoundedContext::class => $boundedContext,
             ]
         )->registerInstance($request);
-        $data = ($this->runAction)($context, $rawContents);
+        $data = ($this->runAction)($context, $rawContents ?? []);
         $contentType = $this->encoderHashmap->getAcceptedContentTypeForRequest($request);
         $encoder = $this->encoderHashmap[$contentType];
         

@@ -12,7 +12,7 @@ class RunAction implements ActionInterface
     {
     }
 
-    public function __invoke(ApieContext $context, array $rawContents): ApieContext
+    public function __invoke(ApieContext $context, array $rawContents): mixed
     {
         $object = $this->method->isStatic() ? null : $context->getContext($this->method->getDeclaringClass()->name);
         return $this->serializer->denormalizeOnMethodCall($rawContents, $object, $this->method, $context);
