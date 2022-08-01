@@ -14,6 +14,5 @@ interface RestApiRouteDefinition extends HasRouteDefinition
     public const RAW_CONTENTS = ContextBuilderInterface::RAW_CONTENTS;
 
     public function getDescription(): string;
-    public function getOperationId(): string;
     public function getTags(): StringList;
 }

@@ -13,6 +13,11 @@ class OpenApiDocumentationRouteDefinition implements HasRouteDefinition
     {
     }
 
+    public function getOperationId(): string
+    {
+        return 'openapi_spec.' . ($this->yamlFormat ? 'yaml' : 'json');
+    }
+
     public function __serialize(): array
     {
         return [
