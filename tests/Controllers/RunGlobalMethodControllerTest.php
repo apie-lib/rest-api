@@ -8,11 +8,7 @@ use Apie\Core\ContextBuilders\ContextBuilderFactory;
 use Apie\Core\Lists\ReflectionClassList;
 use Apie\Core\Lists\ReflectionMethodList;
 use Apie\Fixtures\Actions\StaticActionExample;
-use Apie\Fixtures\Entities\UserWithAddress;
-use Apie\Fixtures\Identifiers\UserWithAddressIdentifier;
-use Apie\RestApi\Actions\CreateObjectAction;
 use Apie\RestApi\Actions\RunAction;
-use Apie\RestApi\Controllers\CreateResourceController;
 use Apie\RestApi\Controllers\RunGlobalMethodController;
 use Apie\Serializer\DecoderHashmap;
 use Apie\Serializer\EncoderHashmap;
@@ -20,7 +16,6 @@ use Apie\Serializer\Serializer;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use ReflectionClass;
 use ReflectionMethod;
 
 class RunGlobalMethodControllerTest extends TestCase
