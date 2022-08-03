@@ -20,6 +20,7 @@ use cebe\openapi\spec\Reference;
 use cebe\openapi\spec\RequestBody;
 use cebe\openapi\spec\Response;
 use cebe\openapi\spec\Schema;
+use cebe\openapi\spec\Server;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionType;
@@ -35,6 +36,7 @@ class OpenApiGenerator
         private ComponentsBuilderFactory $componentsFactory,
         private RouteDefinitionProviderInterface $routeDefinitionProvider,
         private Serializer $serializer,
+        private string $baseUrl = '',
         ?OpenApi $baseSpec = null
     ) {
         $baseSpec ??= $this->createDefaultSpec();
@@ -56,6 +58,8 @@ class OpenApiGenerator
     public function create(BoundedContext $boundedContext): OpenApi
     {
         $spec = unserialize($this->baseSpec);
+        $urlPrefix = $this->baseUrl . '/' . $boundedContext->getId();
+        $spec->servers = [new Server(['url' => $urlPrefix]), new Server(['url' => 'http://localhost/' . $urlPrefix])];
         $componentsBuilder = $this->componentsFactory->createComponentsBuilder();
         $context = $this->contextBuilder->createGeneralContext([OpenApiGenerator::class => $this, Serializer::class => $this->serializer]);
         foreach ($this->routeDefinitionProvider->getActionsForBoundedContext($boundedContext, $context) as $routeDefinition) {

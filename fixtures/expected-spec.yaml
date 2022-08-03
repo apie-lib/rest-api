@@ -55,6 +55,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ImmutableStringOrIntList-get'
+servers:
+  -
+    url: /test
+  -
+    url: 'http://localhost//test'
 components:
   schemas:
     AddressWithZipcodeCheck-get:
@@ -110,11 +115,11 @@ components:
     Password-get:
       type: string
       format: password
-      pattern: '^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[\!@\#\$%\^&\*\-_\+\.]){1,}).{6,42}$'
+      pattern: '^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[\!@#\$%\^&\*\-_\+\.]){1,}).{6,42}$'
     Password-post:
       type: string
       format: password
-      pattern: '^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[\!@\#\$%\^&\*\-_\+\.]){1,}).{6,42}$'
+      pattern: '^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[\!@#\$%\^&\*\-_\+\.]){1,}).{6,42}$'
     UserAutoincrementIdentifier-get:
       type: integer
     UserWithAddress-get:

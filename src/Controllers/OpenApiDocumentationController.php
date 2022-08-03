@@ -24,7 +24,7 @@ class OpenApiDocumentationController
         $openapi = $this->openApiGenerator->create($boundedContext);
         $psr17Factory = new Psr17Factory();
         $responseBody = $psr17Factory->createStream(
-            $yaml ? Writer::writeToYaml($openapi) : Writer::writeToJson($openapi)
+            $yaml ? Writer::writeToYaml($openapi) : Writer::writeToJson($openapi, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
         );
         return $psr17Factory->createResponse(200)
             ->withBody($responseBody)
