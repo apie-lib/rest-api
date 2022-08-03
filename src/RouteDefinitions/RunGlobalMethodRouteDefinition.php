@@ -21,9 +21,19 @@ class RunGlobalMethodRouteDefinition implements RestApiRouteDefinition
         return empty($this->method->getParameters()) ? RequestMethod::GET : RequestMethod::POST;
     }
 
+    private function getNameToDisplay(): string
+    {
+        $methodName = $this->method->getName();
+        if ($methodName === '__invoke') {
+            return $this->method->getDeclaringClass()->getShortName();
+        }
+
+        return $methodName;
+    }
+
     public function getUrl(): UrlRouteDefinition
     {
-        return new UrlRouteDefinition($this->method->getName() . '/');
+        return new UrlRouteDefinition($this->getNameToDisplay() . '/');
     }
 
     public function getController(): string
@@ -35,17 +45,21 @@ class RunGlobalMethodRouteDefinition implements RestApiRouteDefinition
     {
         return [
             'boundedContextId' => $this->boundedContextId->toNative(),
+            'class' => $this->method->getDeclaringClass()->name,
+            'methodName' => $this->method->getName(),
         ];
     }
 
     public function getDescription(): string
     {
-        return 'Calls method ' . $this->method->getName() . ' and returns return value.';
+        return 'Calls method ' . $this->getNameToDisplay() . ' and returns return value.';
     }
 
     public function getOperationId(): string
     {
-        return 'call-method-' . $this->method->getDeclaringClass()->getShortName() . '-' . $this->method->getName();
+        $methodName = $this->method->getName();
+        $suffix = $methodName === '__invoke' ? '' : ('-' . $methodName);
+        return 'call-method-' . $this->method->getDeclaringClass()->getShortName() . $suffix;
     }
 
     public function getTags(): StringList

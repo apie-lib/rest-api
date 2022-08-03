@@ -23,7 +23,6 @@ use cebe\openapi\spec\Schema;
 use cebe\openapi\spec\Server;
 use ReflectionClass;
 use ReflectionMethod;
-use ReflectionType;
 
 class OpenApiGenerator
 {
@@ -80,7 +79,7 @@ class OpenApiGenerator
         return $spec;
     }
 
-    private function createSchemaForInput(ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition): Schema|Reference|null
+    private function createSchemaForInput(ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition): Schema|Reference
     {
         $input = $routeDefinition->getInputType();
         if ($input instanceof ReflectionClass) {
@@ -94,13 +93,10 @@ class OpenApiGenerator
                 'required' => $info->required,
             ]);
         }
-        if ($input instanceof ReflectionType) {
-            return $componentsBuilder->getSchemaForType($input);
-        }
-        return null;
+        return $componentsBuilder->getSchemaForType($input);
     }
 
-    private function createSchemaForOutput(ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition): Schema|Reference|null
+    private function createSchemaForOutput(ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition): Schema|Reference
     {
         $input = $routeDefinition->getOutputType();
         if ($input instanceof ReflectionClass) {
@@ -109,15 +105,15 @@ class OpenApiGenerator
         if ($input instanceof ReflectionMethod) {
             $input = $input->getReturnType();
         }
-        if ($input instanceof ReflectionType) {
-            return $componentsBuilder->getSchemaForType($input, false, true);
-        }
-        return null;
+        return $componentsBuilder->getSchemaForType($input, false, true);
     }
 
-    private function addAction(PathItem $pathItem, ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition)
+    private function addAction(PathItem $pathItem, ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition): void
     {
         $method = $routeDefinition->getMethod();
+        if ($method === RequestMethod::CONNECT) {
+            return;
+        }
         $inputSchema = $this->createSchemaForInput($componentsBuilder, $routeDefinition);
         $outputSchema = $this->createSchemaForOutput($componentsBuilder, $routeDefinition);
         $operation = new Operation([
@@ -125,23 +121,21 @@ class OpenApiGenerator
             'description' => $routeDefinition->getDescription(),
             'operationId' => $routeDefinition->getOperationId(),
         ]);
-        if ($inputSchema && $method !== RequestMethod::GET) {
+        if ($method !== RequestMethod::GET) {
             $operation->requestBody = new RequestBody([
                 'content' => [
                     'application/json' => new MediaType(['schema' => $inputSchema])
                 ]
             ]);
         }
-        if ($outputSchema) {
-            $operation->responses = [
-                201 => new Response([
-                    'description' => 'OK',
-                    'content' => [
-                        'application/json' => new MediaType(['schema' => $outputSchema])
-                    ]
-                ]),
-            ];
-        }
+        $operation->responses = [
+            201 => new Response([
+                'description' => 'OK',
+                'content' => [
+                    'application/json' => new MediaType(['schema' => $outputSchema])
+                ]
+            ]),
+        ];
         $prop = strtolower($method->value);
         $pathItem->{$prop} = $operation;
     }

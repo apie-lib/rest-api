@@ -4,6 +4,9 @@ namespace Apie\RestApi\Interfaces;
 use Apie\Core\Actions\HasRouteDefinition;
 use Apie\Core\ContextBuilders\ContextBuilderInterface;
 use Apie\RestApi\Lists\StringList;
+use ReflectionClass;
+use ReflectionMethod;
+use ReflectionType;
 
 interface RestApiRouteDefinition extends HasRouteDefinition
 {
@@ -13,6 +16,14 @@ interface RestApiRouteDefinition extends HasRouteDefinition
     public const RESOURCE_NAME = 'RESOURCE_NAME';
     public const RAW_CONTENTS = ContextBuilderInterface::RAW_CONTENTS;
 
+    /**
+     * @return ReflectionClass<object>|ReflectionMethod|ReflectionType
+     */
+    public function getInputType(): ReflectionClass|ReflectionMethod|ReflectionType;
+    /**
+     * @return ReflectionClass<object>|ReflectionMethod|ReflectionType
+     */
+    public function getOutputType(): ReflectionClass|ReflectionMethod|ReflectionType;
     public function getDescription(): string;
     public function getTags(): StringList;
 }

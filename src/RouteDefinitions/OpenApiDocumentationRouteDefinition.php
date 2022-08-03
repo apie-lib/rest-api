@@ -18,6 +18,9 @@ class OpenApiDocumentationRouteDefinition implements HasRouteDefinition
         return 'openapi_spec.' . ($this->yamlFormat ? 'yaml' : 'json');
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function __serialize(): array
     {
         return [
@@ -26,6 +29,9 @@ class OpenApiDocumentationRouteDefinition implements HasRouteDefinition
         ];
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function __unserialize(array $data): void
     {
         $this->yamlFormat = $data['yamlFormat'];

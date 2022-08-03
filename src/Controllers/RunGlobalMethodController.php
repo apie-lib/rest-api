@@ -1,6 +1,7 @@
 <?php
 namespace Apie\RestApi\Controllers;
 
+use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\BoundedContext\BoundedContextHashmap;
 use Apie\Core\ContextBuilders\ContextBuilderFactory;
 use Apie\RestApi\Actions\RunAction;
@@ -9,8 +10,8 @@ use Apie\RestApi\Interfaces\RestApiRouteDefinition;
 use Apie\Serializer\DecoderHashmap;
 use Apie\Serializer\EncoderHashmap;
 use Nyholm\Psr7\Factory\Psr17Factory;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class RunGlobalMethodController
 {
@@ -23,7 +24,7 @@ class RunGlobalMethodController
     ) {
     }
 
-    public function __invoke(RequestInterface $request): ResponseInterface
+    public function __invoke(ServerRequestInterface $request): ResponseInterface
     {
         $boundedContextId = $request->getAttribute('boundedContextId');
         $boundedContext = $this->boundedContextHashmap[$boundedContextId];

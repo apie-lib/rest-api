@@ -12,6 +12,9 @@ class RunAction implements ActionInterface
     {
     }
 
+    /**
+     * @param array<string|int, mixed> $rawContents
+     */
     public function __invoke(ApieContext $context, array $rawContents): mixed
     {
         $object = $this->method->isStatic() ? null : $context->getContext($this->method->getDeclaringClass()->name);
