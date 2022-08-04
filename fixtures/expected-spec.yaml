@@ -41,7 +41,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserWithAutoincrementKey-get'
-  /secretCode/:
+  /StaticActionExample/secretCode:
     get:
       tags:
         - StaticActionExample
