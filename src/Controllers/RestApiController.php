@@ -25,6 +25,9 @@ class RestApiController
     ) {
     }
 
+    /**
+     * @return array<string|int, mixed>
+     */
     private function decodeBody(ServerRequestInterface $request): array
     {
         $contentTypes = $request->getHeader('Content-Type');
@@ -65,7 +68,7 @@ class RestApiController
         return $this->createResponse($request, $data);
     }
 
-    private function createResponse(ServerRequestInterface $request, mixed $output)
+    private function createResponse(ServerRequestInterface $request, mixed $output): ResponseInterface
     {        
         $contentType = $this->encoderHashmap->getAcceptedContentTypeForRequest($request);
         $encoder = $this->encoderHashmap[$contentType];
