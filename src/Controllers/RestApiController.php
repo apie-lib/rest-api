@@ -4,21 +4,24 @@ namespace Apie\RestApi\Controllers;
 use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\BoundedContext\BoundedContextHashmap;
 use Apie\Core\ContextBuilders\ContextBuilderFactory;
-use Apie\RestApi\Actions\RunAction;
+use Apie\Core\Exceptions\InvalidTypeException;
+use Apie\RestApi\ActionProvider;
+use Apie\RestApi\Actions\CreateObjectAction;
 use Apie\RestApi\Exceptions\InvalidContentTypeException;
 use Apie\RestApi\Interfaces\RestApiRouteDefinition;
+use Apie\RestApi\RouteDefinitions\RestApiRouteDefinitionProvider;
 use Apie\Serializer\DecoderHashmap;
 use Apie\Serializer\EncoderHashmap;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class RunGlobalMethodController
+class RestApiController
 {
     public function __construct(
         private ContextBuilderFactory $contextBuilderFactory,
         private BoundedContextHashmap $boundedContextHashmap,
-        private RunAction $runAction,
+        private ActionProvider $actionProvider,
         private EncoderHashmap $encoderHashmap,
         private DecoderHashmap $decoderHashmap
     ) {
@@ -27,6 +30,7 @@ class RunGlobalMethodController
     public function __invoke(ServerRequestInterface $request): ResponseInterface
     {
         $boundedContextId = $request->getAttribute('boundedContextId');
+        $resourceName = $request->getAttribute('resourceName');
         $boundedContext = $this->boundedContextHashmap[$boundedContextId];
         $contentTypes = $request->getHeader('Content-Type');
         if (count($contentTypes) !== 1) {
@@ -37,19 +41,24 @@ class RunGlobalMethodController
             throw new InvalidContentTypeException($contentType);
         }
         $decoder = $this->decoderHashmap[$contentType];
-        $rawContents = $decoder->decode((string) $request->getBody());
+        $rawContents = $request->getMethod() === 'GET' ? [] : $decoder->decode((string) $request->getBody());
+        if (!is_array($rawContents)) {
+            throw new InvalidTypeException($rawContents, 'array');
+        }
+
         $context = $this->contextBuilderFactory->createFromRequest(
             $request,
             [
                 RestApiRouteDefinition::CONTENT_TYPE => $contentType,
-                RestApiRouteDefinition::OPENAPI_POST => true,
                 RestApiRouteDefinition::RAW_CONTENTS => $rawContents,
+                RestApiRouteDefinition::RESOURCE_NAME => $resourceName,
                 BoundedContext::class => $boundedContext,
-                'class' => $request->getAttribute('class'),
-                'methodName' => $request->getAttribute('methodName'),
+                ...$request->getAttributes(),
             ]
         )->registerInstance($request);
-        $data = ($this->runAction)($context, $rawContents ?? []);
+        $action = $this->actionProvider->getAction($boundedContextId, $request->getAttribute('operationId'), $context);
+        $data = ($action)($context, $rawContents);
+        
         $contentType = $this->encoderHashmap->getAcceptedContentTypeForRequest($request);
         $encoder = $this->encoderHashmap[$contentType];
         

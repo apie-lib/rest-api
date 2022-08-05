@@ -1,8 +1,10 @@
 <?php
 namespace Apie\RestApi\Interfaces;
 
+use Apie\Core\Actions\ActionInterface;
 use Apie\Core\Actions\HasRouteDefinition;
 use Apie\Core\ContextBuilders\ContextBuilderInterface;
+use Apie\RestApi\Controllers\RestApiController;
 use Apie\RestApi\Lists\StringList;
 use ReflectionClass;
 use ReflectionMethod;
@@ -20,10 +22,22 @@ interface RestApiRouteDefinition extends HasRouteDefinition
      * @return ReflectionClass<object>|ReflectionMethod|ReflectionType
      */
     public function getInputType(): ReflectionClass|ReflectionMethod|ReflectionType;
+
     /**
      * @return ReflectionClass<object>|ReflectionMethod|ReflectionType
      */
     public function getOutputType(): ReflectionClass|ReflectionMethod|ReflectionType;
+
+    /**
+     * @return class-string<RestApiController>
+     */
+    public function getController(): string;
+
+    /**
+     * @return class-string<ActionInterface>
+     */
+    public function getAction(): string;
+
     public function getDescription(): string;
     public function getTags(): StringList;
 }

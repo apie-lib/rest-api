@@ -7,9 +7,14 @@ use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\ContextBuilders\ContextBuilderFactory;
 use Apie\Core\Lists\ReflectionClassList;
 use Apie\Core\Lists\ReflectionMethodList;
+use Apie\Core\RouteDefinitions\ActionHashmap;
+use Apie\Core\RouteDefinitions\RouteDefinitionsProviderList;
 use Apie\Fixtures\Actions\StaticActionExample;
+use Apie\RestApi\ActionProvider;
 use Apie\RestApi\Actions\RunAction;
+use Apie\RestApi\Controllers\RestApiController;
 use Apie\RestApi\Controllers\RunGlobalMethodController;
+use Apie\RestApi\RouteDefinitions\RunGlobalMethodRouteDefinition;
 use Apie\Serializer\DecoderHashmap;
 use Apie\Serializer\EncoderHashmap;
 use Apie\Serializer\Serializer;
@@ -18,14 +23,29 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionMethod;
 
-class RunGlobalMethodControllerTest extends TestCase
+class RestApiControllerTest extends TestCase
 {
-    protected function givenAControllerToRunArbitraryMethod(): RunGlobalMethodController
+    protected function givenAControllerToRunArbitraryMethod(): RestApiController
     {
-        return new RunGlobalMethodController(
+        $boundedContext = $this->givenABoundedContext();
+        $boundedContextHashmap = new BoundedContextHashmap(['test' => $boundedContext]);
+        return new RestApiController(
             ContextBuilderFactory::create(),
-            new BoundedContextHashmap(['test' => $this->givenABoundedContext()]),
-            new RunAction(Serializer::create()),
+            $boundedContextHashmap,
+            new ActionProvider(
+                new RouteDefinitionsProviderList(
+                    new ActionHashmap(
+                        [
+                            '/SecretCode' => new RunGlobalMethodRouteDefinition(
+                                new ReflectionMethod(StaticActionExample::class, 'secretCode'),
+                                $boundedContext->getId()
+                            ),
+                        ]
+                    )
+                ),
+                $boundedContextHashmap,
+                Serializer::create()
+            ),
             EncoderHashmap::create(),
             DecoderHashmap::create()
         );
@@ -51,7 +71,8 @@ class RunGlobalMethodControllerTest extends TestCase
             ->withHeader('Accept', 'application/json')
             ->withAttribute('boundedContextId', 'test')
             ->withAttribute('class', StaticActionExample::class)
-            ->withAttribute('methodName', 'secretCode');
+            ->withAttribute('methodName', 'secretCode')
+            ->withAttribute('operationId', 'call-method-StaticActionExample-secretCode');
     }
 
     /**
