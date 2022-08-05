@@ -9,13 +9,13 @@ use Apie\RestApi\Interfaces\RestApiRouteDefinition;
 use Apie\Serializer\Serializer;
 use LogicException;
 
-final class ActionProvider {
+final class ActionProvider
+{
     public function __construct(
         private RouteDefinitionProviderInterface $routeDefinitionProvider,
         private BoundedContextHashmap $boundedContextHashmap,
         private Serializer $serializer
     ) {
-        
     }
 
     public function getAction(string $boundedContextId, string $operationId, ApieContext $apieContext): ActionInterface
@@ -31,7 +31,7 @@ final class ActionProvider {
     }
 
     /**
-     * @param class-string<ActionInterface>
+     * @param class-string<ActionInterface> $classAction
      */
     private function createAction(string $classAction): ActionInterface
     {

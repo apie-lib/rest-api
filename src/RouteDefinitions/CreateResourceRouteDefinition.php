@@ -6,7 +6,6 @@ use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Enums\RequestMethod;
 use Apie\Core\ValueObjects\UrlRouteDefinition;
 use Apie\RestApi\Actions\CreateObjectAction;
-use Apie\RestApi\Controllers\CreateResourceController;
 use Apie\RestApi\Controllers\RestApiController;
 use Apie\RestApi\Interfaces\RestApiRouteDefinition;
 use Apie\RestApi\Lists\StringList;
