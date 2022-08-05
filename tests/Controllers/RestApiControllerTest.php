@@ -12,6 +12,7 @@ use Apie\Core\RouteDefinitions\RouteDefinitionsProviderList;
 use Apie\Fixtures\Actions\StaticActionExample;
 use Apie\RestApi\ActionProvider;
 use Apie\RestApi\Controllers\RestApiController;
+use Apie\RestApi\Interfaces\RestApiRouteDefinition;
 use Apie\RestApi\RouteDefinitions\RunGlobalMethodRouteDefinition;
 use Apie\Serializer\DecoderHashmap;
 use Apie\Serializer\EncoderHashmap;
@@ -67,10 +68,10 @@ class RestApiControllerTest extends TestCase
         return $factory->createServerRequest('GET', $uri)
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('Accept', 'application/json')
-            ->withAttribute('boundedContextId', 'test')
-            ->withAttribute('class', StaticActionExample::class)
-            ->withAttribute('methodName', 'secretCode')
-            ->withAttribute('operationId', 'call-method-StaticActionExample-secretCode');
+            ->withAttribute(RestApiRouteDefinition::BOUNDED_CONTEXT_ID, 'test')
+            ->withAttribute(RestApiRouteDefinition::SERVICE_CLASS, StaticActionExample::class)
+            ->withAttribute(RestApiRouteDefinition::METHOD_NAME, 'secretCode')
+            ->withAttribute(RestApiRouteDefinition::OPERATION_ID, 'call-method-StaticActionExample-secretCode');
     }
 
     /**

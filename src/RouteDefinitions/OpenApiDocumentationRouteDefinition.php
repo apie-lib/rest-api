@@ -42,14 +42,17 @@ class OpenApiDocumentationRouteDefinition implements HasRouteDefinition
     {
         return RequestMethod::GET;
     }
+
     public function getUrl(): UrlRouteDefinition
     {
         return new UrlRouteDefinition('/openapi.' . ($this->yamlFormat ? 'yaml' : 'json'));
     }
+
     public function getController(): string
     {
         return OpenApiDocumentationController::class;
     }
+    
     public function getRouteAttributes(): array
     {
         return [

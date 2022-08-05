@@ -12,10 +12,14 @@ use ReflectionType;
 
 interface RestApiRouteDefinition extends HasRouteDefinition
 {
-    public const CONTENT_TYPE = 'CONTENT_TYPE';
-    public const OPENAPI_POST = 'OPENAPI_POST';
-    public const OPENAPI_ACTION = 'OPENAPI_ACTION';
-    public const RESOURCE_NAME = 'RESOURCE_NAME';
+    public const BOUNDED_CONTEXT_ID = 'boundedContextId';
+    public const RESOURCE_NAME = 'resourceName';
+    public const OPERATION_ID = 'operationId';
+    public const SERVICE_CLASS = 'serviceClass';
+    public const METHOD_NAME = 'methodName';
+
+    public const OPENAPI_POST = 'openapi_post';
+    public const OPENAPI_ACTION = 'openapi_action';
     public const RAW_CONTENTS = ContextBuilderInterface::RAW_CONTENTS;
 
     /**

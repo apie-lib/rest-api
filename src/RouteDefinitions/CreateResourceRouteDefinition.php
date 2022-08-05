@@ -92,10 +92,12 @@ class CreateResourceRouteDefinition implements RestApiRouteDefinition
 
     public function getRouteAttributes(): array
     {
-        return [
-            'boundedContextId' => $this->boundedContextId->toNative(),
-            'resourceName' => $this->className->name,
-            'operationId' => $this->getOperationId(),
+        return 
+        [
+            RestApiRouteDefinition::OPENAPI_POST => true,
+            RestApiRouteDefinition::RESOURCE_NAME => $this->className->name,
+            RestApiRouteDefinition::BOUNDED_CONTEXT_ID => $this->boundedContextId->toNative(),
+            RestApiRouteDefinition::OPERATION_ID => $this->getOperationId(),
         ];
     }
 }

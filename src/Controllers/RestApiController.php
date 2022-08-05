@@ -25,11 +25,8 @@ class RestApiController
     ) {
     }
 
-    public function __invoke(ServerRequestInterface $request): ResponseInterface
+    private function decodeBody(ServerRequestInterface $request): array
     {
-        $boundedContextId = $request->getAttribute('boundedContextId');
-        $resourceName = $request->getAttribute('resourceName');
-        $boundedContext = $this->boundedContextHashmap[$boundedContextId];
         $contentTypes = $request->getHeader('Content-Type');
         if (count($contentTypes) !== 1) {
             throw new InvalidContentTypeException($request->getHeaderLine('Content-Type'));
@@ -43,25 +40,39 @@ class RestApiController
         if (!is_array($rawContents)) {
             throw new InvalidTypeException($rawContents, 'array');
         }
+        return $rawContents;
+    }
+
+    public function __invoke(ServerRequestInterface $request): ResponseInterface
+    {
+        $boundedContextId = $request->getAttribute('boundedContextId');
+        $boundedContext = $this->boundedContextHashmap[$boundedContextId];
+        
+        $rawContents = $this->decodeBody($request);
 
         $context = $this->contextBuilderFactory->createFromRequest(
             $request,
             [
-                RestApiRouteDefinition::CONTENT_TYPE => $contentType,
                 RestApiRouteDefinition::RAW_CONTENTS => $rawContents,
-                RestApiRouteDefinition::RESOURCE_NAME => $resourceName,
                 BoundedContext::class => $boundedContext,
                 ...$request->getAttributes(),
             ]
-        )->registerInstance($request);
+        );
+
         $action = $this->actionProvider->getAction($boundedContextId, $request->getAttribute('operationId'), $context);
         $data = ($action)($context, $rawContents);
-        
+
+        return $this->createResponse($request, $data);
+    }
+
+    private function createResponse(ServerRequestInterface $request, mixed $output)
+    {        
         $contentType = $this->encoderHashmap->getAcceptedContentTypeForRequest($request);
         $encoder = $this->encoderHashmap[$contentType];
         
         $psr17Factory = new Psr17Factory();
-        $responseBody = $psr17Factory->createStream($encoder->encode($data));
+        $responseBody = $psr17Factory->createStream($encoder->encode($output));
+
         return $psr17Factory->createResponse(201)
             ->withBody($responseBody)
             ->withHeader('Content-Type', $contentType);

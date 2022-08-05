@@ -54,10 +54,11 @@ class RunGlobalMethodRouteDefinition implements RestApiRouteDefinition
     public function getRouteAttributes(): array
     {
         return [
-            'boundedContextId' => $this->boundedContextId->toNative(),
-            'class' => $this->method->getDeclaringClass()->name,
-            'methodName' => $this->method->getName(),
-            'operationId' => $this->getOperationId(),
+            RestApiRouteDefinition::OPENAPI_ACTION => true,
+            RestApiRouteDefinition::BOUNDED_CONTEXT_ID => $this->boundedContextId->toNative(),
+            RestApiRouteDefinition::SERVICE_CLASS => $this->method->getDeclaringClass()->name,
+            RestApiRouteDefinition::METHOD_NAME => $this->method->getName(),
+            RestApiRouteDefinition::OPERATION_ID => $this->getOperationId(),
         ];
     }
 
