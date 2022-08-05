@@ -45,6 +45,8 @@ class RunGlobalMethodController
                 RestApiRouteDefinition::OPENAPI_POST => true,
                 RestApiRouteDefinition::RAW_CONTENTS => $rawContents,
                 BoundedContext::class => $boundedContext,
+                'class' => $request->getAttribute('class'),
+                'methodName' => $request->getAttribute('methodName'),
             ]
         )->registerInstance($request);
         $data = ($this->runAction)($context, $rawContents ?? []);
@@ -53,7 +55,7 @@ class RunGlobalMethodController
         
         $psr17Factory = new Psr17Factory();
         $responseBody = $psr17Factory->createStream($encoder->encode($data));
-        return $psr17Factory->createResponse(200)
+        return $psr17Factory->createResponse(201)
             ->withBody($responseBody)
             ->withHeader('Content-Type', $contentType);
     }

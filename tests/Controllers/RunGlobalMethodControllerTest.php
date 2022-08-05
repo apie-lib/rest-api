@@ -25,7 +25,7 @@ class RunGlobalMethodControllerTest extends TestCase
         return new RunGlobalMethodController(
             ContextBuilderFactory::create(),
             new BoundedContextHashmap(['test' => $this->givenABoundedContext()]),
-            new RunAction(new ReflectionMethod(StaticActionExample::class, 'secretCode'), Serializer::create()),
+            new RunAction(Serializer::create()),
             EncoderHashmap::create(),
             DecoderHashmap::create()
         );
@@ -49,7 +49,9 @@ class RunGlobalMethodControllerTest extends TestCase
         return $factory->createServerRequest('GET', $uri)
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('Accept', 'application/json')
-            ->withAttribute('boundedContextId', 'test');
+            ->withAttribute('boundedContextId', 'test')
+            ->withAttribute('class', StaticActionExample::class)
+            ->withAttribute('methodName', 'secretCode');
     }
 
     /**

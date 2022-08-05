@@ -35,7 +35,7 @@ class RunGlobalMethodRouteDefinition implements RestApiRouteDefinition
     {
         $methodName = $this->method->getName();
         if ($methodName === '__invoke') {
-            return new UrlRouteDefinition($this->method->getDeclaringClass()->getShortName() . '/');
+            return new UrlRouteDefinition($this->method->getDeclaringClass()->getShortName());
         }
         return new UrlRouteDefinition($this->method->getDeclaringClass()->getShortName() . '/' . $methodName);
     }
