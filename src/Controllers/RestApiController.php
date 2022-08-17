@@ -30,6 +30,9 @@ class RestApiController
      */
     private function decodeBody(ServerRequestInterface $request): array
     {
+        if ($request->getMethod() === 'GET') {
+            return $request->getQueryParams();
+        }
         $contentTypes = $request->getHeader('Content-Type');
         if (count($contentTypes) !== 1) {
             throw new InvalidContentTypeException($request->getHeaderLine('Content-Type'));
@@ -39,7 +42,7 @@ class RestApiController
             throw new InvalidContentTypeException($contentType);
         }
         $decoder = $this->decoderHashmap[$contentType];
-        $rawContents = $request->getMethod() === 'GET' ? $request->getQueryParams() : $decoder->decode((string) $request->getBody());
+        $rawContents = $decoder->decode((string) $request->getBody());
         if (!is_array($rawContents)) {
             throw new InvalidTypeException($rawContents, 'array');
         }

@@ -9,7 +9,7 @@ use Apie\Fixtures\BoundedContextFactory;
 use Apie\RestApi\Controllers\RestApiController;
 use Apie\Serializer\DecoderHashmap;
 use Apie\Serializer\EncoderHashmap;
-use Apie\Tests\Common\Concerns\ProvidesApieFacade;
+use Apie\Common\Tests\Concerns\ProvidesApieFacade;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
