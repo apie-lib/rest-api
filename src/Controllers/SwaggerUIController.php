@@ -23,7 +23,7 @@ class SwaggerUIController
             '%%OPENAPI_YAML%%'
         ];
         $replace = [
-            '/' . trim($this->baseUrl) . '/' . $boundedContextId . '/openapi.yaml'
+            '/' . trim($this->baseUrl, '/') . '/' . $boundedContextId . '/openapi.yaml'
         ];
 
         $responseBody = str_replace($search, $replace, file_get_contents($this->htmlPath));
