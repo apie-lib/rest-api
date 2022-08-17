@@ -1,64 +1,32 @@
 <?php
 namespace Apie\Tests\RestApi\Controllers;
 
-use Apie\Core\BoundedContext\BoundedContext;
-use Apie\Core\BoundedContext\BoundedContextHashmap;
-use Apie\Core\BoundedContext\BoundedContextId;
+use Apie\Common\Actions\RunAction;
+use Apie\Common\ContextConstants;
 use Apie\Core\ContextBuilders\ContextBuilderFactory;
-use Apie\Core\Lists\ReflectionClassList;
-use Apie\Core\Lists\ReflectionMethodList;
-use Apie\Core\RouteDefinitions\ActionHashmap;
-use Apie\Core\RouteDefinitions\RouteDefinitionsProviderList;
 use Apie\Fixtures\Actions\StaticActionExample;
-use Apie\RestApi\ActionProvider;
+use Apie\Fixtures\BoundedContextFactory;
 use Apie\RestApi\Controllers\RestApiController;
-use Apie\RestApi\Interfaces\RestApiRouteDefinition;
-use Apie\RestApi\RouteDefinitions\RunGlobalMethodRouteDefinition;
 use Apie\Serializer\DecoderHashmap;
 use Apie\Serializer\EncoderHashmap;
-use Apie\Serializer\Serializer;
+use Apie\Tests\Common\Concerns\ProvidesApieFacade;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use ReflectionMethod;
 
 class RestApiControllerTest extends TestCase
 {
+    use ProvidesApieFacade;
+
     protected function givenAControllerToRunArbitraryMethod(): RestApiController
     {
-        $boundedContext = $this->givenABoundedContext();
-        $boundedContextHashmap = new BoundedContextHashmap(['test' => $boundedContext]);
+        $boundedContextHashmap = BoundedContextFactory::createHashmap();
         return new RestApiController(
             ContextBuilderFactory::create(),
             $boundedContextHashmap,
-            new ActionProvider(
-                new RouteDefinitionsProviderList(
-                    new ActionHashmap(
-                        [
-                            '/SecretCode' => new RunGlobalMethodRouteDefinition(
-                                new ReflectionMethod(StaticActionExample::class, 'secretCode'),
-                                $boundedContext->getId()
-                            ),
-                        ]
-                    )
-                ),
-                $boundedContextHashmap,
-                Serializer::create()
-            ),
+            $this->givenAnApieFacade(RunAction::class, $boundedContextHashmap),
             EncoderHashmap::create(),
             DecoderHashmap::create()
-        );
-    }
-
-    protected function givenABoundedContext(): BoundedContext
-    {
-        return new BoundedContext(
-            new BoundedContextId('test'),
-            new ReflectionClassList([
-            ]),
-            new ReflectionMethodList([
-                new ReflectionMethod(StaticActionExample::class, 'secretCode')
-            ])
         );
     }
 
@@ -68,10 +36,10 @@ class RestApiControllerTest extends TestCase
         return $factory->createServerRequest('GET', $uri)
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('Accept', 'application/json')
-            ->withAttribute(RestApiRouteDefinition::BOUNDED_CONTEXT_ID, 'test')
-            ->withAttribute(RestApiRouteDefinition::SERVICE_CLASS, StaticActionExample::class)
-            ->withAttribute(RestApiRouteDefinition::METHOD_NAME, 'secretCode')
-            ->withAttribute(RestApiRouteDefinition::OPERATION_ID, 'call-method-StaticActionExample-secretCode');
+            ->withAttribute(ContextConstants::BOUNDED_CONTEXT_ID, 'default')
+            ->withAttribute(ContextConstants::SERVICE_CLASS, StaticActionExample::class)
+            ->withAttribute(ContextConstants::METHOD_NAME, 'secretCode')
+            ->withAttribute(ContextConstants::OPERATION_ID, 'test');
     }
 
     /**

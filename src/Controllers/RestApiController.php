@@ -1,13 +1,13 @@
 <?php
 namespace Apie\RestApi\Controllers;
 
+use Apie\Common\ApieFacade;
+use Apie\Common\ContextConstants;
 use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\BoundedContext\BoundedContextHashmap;
 use Apie\Core\ContextBuilders\ContextBuilderFactory;
 use Apie\Core\Exceptions\InvalidTypeException;
-use Apie\RestApi\ActionProvider;
 use Apie\RestApi\Exceptions\InvalidContentTypeException;
-use Apie\RestApi\Interfaces\RestApiRouteDefinition;
 use Apie\Serializer\DecoderHashmap;
 use Apie\Serializer\EncoderHashmap;
 use Nyholm\Psr7\Factory\Psr17Factory;
@@ -19,7 +19,7 @@ class RestApiController
     public function __construct(
         private ContextBuilderFactory $contextBuilderFactory,
         private BoundedContextHashmap $boundedContextHashmap,
-        private ActionProvider $actionProvider,
+        private ApieFacade $apieFacade,
         private EncoderHashmap $encoderHashmap,
         private DecoderHashmap $decoderHashmap
     ) {
@@ -39,7 +39,7 @@ class RestApiController
             throw new InvalidContentTypeException($contentType);
         }
         $decoder = $this->decoderHashmap[$contentType];
-        $rawContents = $request->getMethod() === 'GET' ? [] : $decoder->decode((string) $request->getBody());
+        $rawContents = $request->getMethod() === 'GET' ? $request->getQueryParams() : $decoder->decode((string) $request->getBody());
         if (!is_array($rawContents)) {
             throw new InvalidTypeException($rawContents, 'array');
         }
@@ -56,20 +56,20 @@ class RestApiController
         $context = $this->contextBuilderFactory->createFromRequest(
             $request,
             [
-                RestApiRouteDefinition::RAW_CONTENTS => $rawContents,
+                ContextConstants::RAW_CONTENTS => $rawContents,
                 BoundedContext::class => $boundedContext,
                 ...$request->getAttributes(),
             ]
         );
 
-        $action = $this->actionProvider->getAction($boundedContextId, $request->getAttribute('operationId'), $context);
+        $action = $this->apieFacade->getAction($boundedContextId, $request->getAttribute('operationId'), $context);
         $data = ($action)($context, $rawContents);
 
         return $this->createResponse($request, $data);
     }
 
     private function createResponse(ServerRequestInterface $request, mixed $output): ResponseInterface
-    {        
+    {
         $contentType = $this->encoderHashmap->getAcceptedContentTypeForRequest($request);
         $encoder = $this->encoderHashmap[$contentType];
         

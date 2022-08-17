@@ -12,24 +12,33 @@ class RestApiRouteDefinitionProvider implements RouteDefinitionProviderInterface
 {
     public function getActionsForBoundedContext(BoundedContext $boundedContext, ApieContext $apieContext): ActionHashmap
     {
+        $map = [];
+        $definition = new OpenApiDocumentationRouteDefinition(true, $boundedContext->getId());
+        $map[$definition->getOperationId()] = $definition;
+        $definition = new OpenApiDocumentationRouteDefinition(false, $boundedContext->getId());
+        $map[$definition->getOperationId()] = $definition;
+        $definition = new SwaggerUIRouteDefinition($boundedContext->getId());
+        $map[$definition->getOperationId()] = $definition;
+
         $postContext = $apieContext->withContext(RequestMethod::class, RequestMethod::POST)
             ->withContext(RestApiRouteDefinition::OPENAPI_POST, true)
             ->registerInstance($boundedContext);
-
-        $map = [];
-        $definition = new OpenApiDocumentationRouteDefinition(true, $boundedContext->getId());
-        $map[$definition->getUrl()->toNative()] = $definition;
-        $definition = new OpenApiDocumentationRouteDefinition(false, $boundedContext->getId());
-        $map[$definition->getUrl()->toNative()] = $definition;
         foreach ($boundedContext->resources->filterOnApieContext($postContext) as $resource) {
             $definition = new CreateResourceRouteDefinition($resource, $boundedContext->getId());
-            $map[$definition->getUrl()->toNative()] = $definition;
+            $map[$definition->getOperationId()] = $definition;
+        }
+        $getAllContext = $apieContext->withContext(RequestMethod::class, RequestMethod::GET)
+            ->withContext(RestApiRouteDefinition::OPENAPI_ALL, true)
+            ->registerInstance($boundedContext);
+        foreach ($boundedContext->resources->filterOnApieContext($getAllContext) as $resource) {
+            $definition = new GetResourceListRouteDefinition($resource, $boundedContext->getId());
+            $map[$definition->getOperationId()] = $definition;
         }
 
         $actionContext = $apieContext->withContext(RestApiRouteDefinition::OPENAPI_ACTION, true);
         foreach ($boundedContext->actions->filterOnApieContext($actionContext) as $action) {
             $definition = new RunGlobalMethodRouteDefinition($action, $boundedContext->getId());
-            $map[$definition->getUrl()->toNative()] = $definition;
+            $map[$definition->getOperationId()] = $definition;
         }
         return new ActionHashmap($map);
     }

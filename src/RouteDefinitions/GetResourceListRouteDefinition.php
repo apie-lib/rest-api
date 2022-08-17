@@ -1,7 +1,7 @@
 <?php
 namespace Apie\RestApi\RouteDefinitions;
 
-use Apie\Common\Actions\CreateObjectAction;
+use Apie\Common\Actions\GetListAction;
 use Apie\Common\ContextConstants;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Entities\EntityInterface;
@@ -13,9 +13,9 @@ use Apie\RestApi\Lists\StringList;
 use ReflectionClass;
 
 /**
- * Route definition for creating an entity.
+ * Route definition for getting a list of resources.
  */
-class CreateResourceRouteDefinition implements RestApiRouteDefinition
+class GetResourceListRouteDefinition implements RestApiRouteDefinition
 {
     /**
      * @param ReflectionClass<EntityInterface> $className
@@ -53,21 +53,21 @@ class CreateResourceRouteDefinition implements RestApiRouteDefinition
     }
 
     /**
-     * @return ReflectionClass<EntityInterface>
+     * @return ListOf
      */
-    public function getOutputType(): ReflectionClass
+    public function getOutputType(): ListOf
     {
-        return $this->className;
+        return new ListOf($this->className);
     }
 
     public function getDescription(): string
     {
-        return 'Creates an instance of ' . $this->className->getShortName();
+        return 'Gets a list of resource that are an instance of ' . $this->className->getShortName();
     }
 
     public function getOperationId(): string
     {
-        return 'post-' . $this->className->getShortName();
+        return 'get-all-' . $this->className->getShortName();
     }
     
     public function getTags(): StringList
@@ -77,8 +77,9 @@ class CreateResourceRouteDefinition implements RestApiRouteDefinition
 
     public function getMethod(): RequestMethod
     {
-        return RequestMethod::POST;
+        return RequestMethod::GET;
     }
+
     public function getUrl(): UrlRouteDefinition
     {
         return new UrlRouteDefinition($this->className->getShortName());
@@ -91,14 +92,14 @@ class CreateResourceRouteDefinition implements RestApiRouteDefinition
 
     public function getAction(): string
     {
-        return CreateObjectAction::class;
+        return GetListAction::class;
     }
 
     public function getRouteAttributes(): array
     {
         return
         [
-            RestApiRouteDefinition::OPENAPI_POST => true,
+            RestApiRouteDefinition::OPENAPI_ALL => true,
             ContextConstants::RESOURCE_NAME => $this->className->name,
             ContextConstants::BOUNDED_CONTEXT_ID => $this->boundedContextId->toNative(),
             ContextConstants::OPERATION_ID => $this->getOperationId(),

@@ -6,6 +6,7 @@ use Apie\Core\ContextBuilders\ContextBuilderFactory;
 use Apie\Core\Enums\RequestMethod;
 use Apie\Core\RouteDefinitions\RouteDefinitionProviderInterface;
 use Apie\RestApi\Interfaces\RestApiRouteDefinition;
+use Apie\RestApi\RouteDefinitions\ListOf;
 use Apie\SchemaGenerator\Builders\ComponentsBuilder;
 use Apie\SchemaGenerator\ComponentsBuilderFactory;
 use Apie\Serializer\Serializer;
@@ -23,6 +24,7 @@ use cebe\openapi\spec\Schema;
 use cebe\openapi\spec\Server;
 use ReflectionClass;
 use ReflectionMethod;
+use ReflectionType;
 
 class OpenApiGenerator
 {
@@ -82,6 +84,21 @@ class OpenApiGenerator
     private function createSchemaForInput(ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition): Schema|Reference
     {
         $input = $routeDefinition->getInputType();
+        if ($input instanceof ListOf) {
+            return new Schema([
+                'type' => 'array',
+                'items' => $this->doSchemaForInput($input->type, $componentsBuilder),
+            ]);
+        }
+        
+        return $this->doSchemaForInput($input, $componentsBuilder);
+    }
+
+    /**
+     * @param ReflectionClass<object>|ReflectionMethod|ReflectionType $input
+     */
+    private function doSchemaForInput(ReflectionClass|ReflectionMethod|ReflectionType $input, ComponentsBuilder $componentsBuilder): Schema|Reference
+    {
         if ($input instanceof ReflectionClass) {
             return $componentsBuilder->addCreationSchemaFor($input->name);
         }
@@ -96,16 +113,46 @@ class OpenApiGenerator
         return $componentsBuilder->getSchemaForType($input);
     }
 
+    /**
+     * @param ReflectionClass<object>|ReflectionMethod|ReflectionType $output
+     */
+    private function doSchemaForOutput(ReflectionClass|ReflectionMethod|ReflectionType $output, ComponentsBuilder $componentsBuilder): Schema|Reference
+    {
+        if ($output instanceof ReflectionClass) {
+            return $componentsBuilder->addDisplaySchemaFor($output->name);
+        }
+        if ($output instanceof ReflectionMethod) {
+            $output = $output->getReturnType();
+        }
+        return $componentsBuilder->getSchemaForType($output, false, true);
+    }
+
     private function createSchemaForOutput(ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition): Schema|Reference
     {
         $input = $routeDefinition->getOutputType();
-        if ($input instanceof ReflectionClass) {
-            return $componentsBuilder->addDisplaySchemaFor($input->name);
+        if ($input instanceof ListOf) {
+            return new Schema([
+                'type' => 'object',
+                'required' => [
+                    'totalCount',
+                    'first',
+                    'last',
+                    'list',
+                ],
+                'properties' => [
+                    'totalCount' => ['type' => 'integer'],
+                    'first' => ['type' => 'string', 'format' => 'uri'],
+                    'last' => ['type' => 'string', 'format' => 'uri'],
+                    'prev' => ['type' => 'string', 'format' => 'uri'],
+                    'next' => ['type' => 'string', 'format' => 'uri'],
+                    'list' => [
+                        'type' => 'array',
+                        'items' => $this->doSchemaForOutput($input->type, $componentsBuilder),
+                    ]
+                ]
+            ]);
         }
-        if ($input instanceof ReflectionMethod) {
-            $input = $input->getReturnType();
-        }
-        return $componentsBuilder->getSchemaForType($input, false, true);
+        return $this->doSchemaForOutput($input, $componentsBuilder);
     }
 
     private function addAction(PathItem $pathItem, ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition): void
