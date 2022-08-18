@@ -188,7 +188,7 @@ class OpenApiGenerator
                 }
             }
         }
-        return $this->doSchemaForOutput($input, $componentsBuilder);
+        return $this->doSchemaForInput($input, $componentsBuilder);
     }
 
     private function generateParameter(
