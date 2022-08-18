@@ -115,6 +115,128 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/UserWithAutoincrementKey-get'
+  /Order:
+    post:
+      tags:
+        - Order
+        - resource
+      description: 'Creates an instance of Order'
+      operationId: post-Order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order-post'
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order-get'
+    get:
+      tags:
+        - Order
+        - resource
+      description: 'Gets a list of resource that are an instance of Order'
+      operationId: get-all-Order
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - totalCount
+                  - first
+                  - last
+                  - list
+                type: object
+                properties:
+                  totalCount:
+                    type: integer
+                  first:
+                    type: string
+                    format: uri
+                  last:
+                    type: string
+                    format: uri
+                  prev:
+                    type: string
+                    format: uri
+                  next:
+                    type: string
+                    format: uri
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Order-get'
+  '/UserWithAddress/{id}':
+    get:
+      tags:
+        - UserWithAddress
+        - resource
+      description: 'Gets a resource of UserWithAddress with a specific id'
+      operationId: get-single-UserWithAddress
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'id of instance of UserWithAddress'
+          required: true
+          schema:
+            $ref: '#/components/schemas/UserWithAddressIdentifier-post'
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWithAddress-get'
+  '/UserWithAutoincrementKey/{id}':
+    get:
+      tags:
+        - UserWithAutoincrementKey
+        - resource
+      description: 'Gets a resource of UserWithAutoincrementKey with a specific id'
+      operationId: get-single-UserWithAutoincrementKey
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'id of instance of UserWithAutoincrementKey'
+          required: true
+          schema:
+            $ref: '#/components/schemas/UserAutoincrementIdentifier-post'
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWithAutoincrementKey-get'
+  '/Order/{id}':
+    get:
+      tags:
+        - Order
+        - resource
+      description: 'Gets a resource of Order with a specific id'
+      operationId: get-single-Order
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'id of instance of Order'
+          required: true
+          schema:
+            $ref: '#/components/schemas/OrderIdentifier-post'
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order-get'
   /StaticActionExample/secretCode:
     get:
       tags:
@@ -129,6 +251,111 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ImmutableStringOrIntList-get'
+  '/UserWithAddress/{id}/verifyAuthentication':
+    post:
+      tags:
+        - UserWithAddress
+        - action
+      description: 'Runs method verifyAuthentication on a UserWithAddress with a specific id'
+      operationId: get-single-UserWithAddress-run-verifyAuthentication
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'id of instance of verifyAuthentication'
+          required: true
+          schema:
+            required:
+              - username
+              - password
+            type: object
+            properties:
+              username:
+                type: string
+              password:
+                type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - username
+                - password
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+  '/Order/{id}/orderLine':
+    post:
+      tags:
+        - Order
+        - action
+      description: 'Adds orderLine to Order'
+      operationId: get-single-Order-run-addOrderLine
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'id of instance of addOrderLine'
+          required: true
+          schema:
+            required:
+              - orderLines
+            type: object
+            properties:
+              orderLines:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderLine-post'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - orderLines
+              type: object
+              properties:
+                orderLines:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/OrderLine-post'
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order-get'
+    delete:
+      tags:
+        - Order
+        - action
+      description: 'Removes orderLine from Order'
+      operationId: get-single-Order-run-removeOrderLine
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'id of instance of removeOrderLine'
+          required: true
+          schema:
+            $ref: '#/components/schemas/OrderLineIdentifier-post'
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order-get'
 servers:
   -
     url: /test
@@ -186,6 +413,53 @@ components:
             type: string
           -
             type: integer
+    Order-get:
+      required:
+        - id
+        - orderLines
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/OrderIdentifier-get'
+        orderLines:
+          $ref: '#/components/schemas/OrderLineList-get'
+    Order-post:
+      required:
+        - id
+        - orderLineList
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/OrderIdentifier-post'
+        orderLineList:
+          $ref: '#/components/schemas/OrderLineList-post'
+    OrderIdentifier-get:
+      type: string
+      format: orderidentifier
+      pattern: '^[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$'
+    OrderIdentifier-post:
+      type: string
+      format: orderidentifier
+      pattern: '^[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$'
+    OrderLine-post:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/OrderLineIdentifier-post'
+    OrderLineIdentifier-post:
+      type: string
+      format: orderlineidentifier
+      pattern: '^[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$'
+    OrderLineList-get:
+      type: array
+      items:
+        $ref: '#/components/schemas/OrderLine-post'
+    OrderLineList-post:
+      type: array
+      items:
+        $ref: '#/components/schemas/OrderLine-post'
     Password-get:
       type: string
       format: password
@@ -195,6 +469,8 @@ components:
       format: password
       pattern: '^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[\!@#\$%\^&\*\-_\+\.]){1,}).{6,42}$'
     UserAutoincrementIdentifier-get:
+      type: integer
+    UserAutoincrementIdentifier-post:
       type: integer
     UserWithAddress-get:
       required:

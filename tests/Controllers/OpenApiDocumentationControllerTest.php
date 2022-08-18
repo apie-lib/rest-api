@@ -8,6 +8,7 @@ use Apie\Core\ContextBuilders\ContextBuilderFactory;
 use Apie\Core\Lists\ReflectionClassList;
 use Apie\Core\Lists\ReflectionMethodList;
 use Apie\Fixtures\Actions\StaticActionExample;
+use Apie\Fixtures\Entities\Order;
 use Apie\Fixtures\Entities\UserWithAddress;
 use Apie\Fixtures\Entities\UserWithAutoincrementKey;
 use Apie\RestApi\Controllers\OpenApiDocumentationController;
@@ -52,7 +53,8 @@ class OpenApiDocumentationControllerTest extends TestCase
             new BoundedContextId('test'),
             new ReflectionClassList([
                 new ReflectionClass(UserWithAddress::class),
-                new ReflectionClass(UserWithAutoincrementKey::class)
+                new ReflectionClass(UserWithAutoincrementKey::class),
+                new ReflectionClass(Order::class),
             ]),
             new ReflectionMethodList([
                 new ReflectionMethod(StaticActionExample::class, 'secretCode')

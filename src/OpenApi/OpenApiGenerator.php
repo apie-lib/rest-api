@@ -15,6 +15,7 @@ use cebe\openapi\ReferenceContext;
 use cebe\openapi\spec\MediaType;
 use cebe\openapi\spec\OpenApi;
 use cebe\openapi\spec\Operation;
+use cebe\openapi\spec\Parameter;
 use cebe\openapi\spec\PathItem;
 use cebe\openapi\spec\Paths;
 use cebe\openapi\spec\Reference;
@@ -24,6 +25,7 @@ use cebe\openapi\spec\Schema;
 use cebe\openapi\spec\Server;
 use ReflectionClass;
 use ReflectionMethod;
+use ReflectionNamedType;
 use ReflectionType;
 
 class OpenApiGenerator
@@ -155,6 +157,75 @@ class OpenApiGenerator
         return $this->doSchemaForOutput($input, $componentsBuilder);
     }
 
+    private function createSchemaForParameter(
+        ComponentsBuilder $componentsBuilder,
+        RestApiRouteDefinition $routeDefinition,
+        string $placeholderName
+    ): Schema|Reference {
+        $input = $routeDefinition->getInputType();
+        if ($input instanceof ReflectionClass) {
+            $methodNames = [
+                ['get' . ucfirst($placeholderName), 'hasMethod', 'getMethod', 'getReturnType'],
+                ['has' . ucfirst($placeholderName), 'hasMethod', 'getMethod', 'getReturnType'],
+                ['is' . ucfirst($placeholderName), 'hasMethod', 'getMethod', 'getReturnType'],
+                [$placeholderName, 'hasProperty', 'getProperty', 'getType'],
+            ];
+            foreach ($methodNames as $optionToCheck) {
+                list($propertyName, $has, $get, $type) = $optionToCheck;
+                if ($input->$has($propertyName)) {
+                    $input = $input->$get($propertyName)->$type();
+                    break;
+                }
+            }
+        }
+        if ($input instanceof ReflectionMethod) {
+            foreach ($input->getParameters() as $parameter) {
+                if ($parameter->name === $placeholderName) {
+                    return $this->doSchemaForInput(
+                        $parameter->getType(),
+                        $componentsBuilder
+                    );
+                }
+            }
+        }
+        return $this->doSchemaForInput($input, $componentsBuilder);
+    }
+
+    private function generateParameter(
+        ComponentsBuilder $componentsBuilder,
+        RestApiRouteDefinition $routeDefinition,
+        string $placeholderName
+    ): Parameter {
+        return new Parameter([
+            'in' => 'path',
+            'name' => $placeholderName,
+            'required' => true,
+            'description' => $placeholderName . ' of instance of ' . $this->getDisplayValue($routeDefinition->getInputType()),
+            'schema' => $this->createSchemaForParameter($componentsBuilder, $routeDefinition, $placeholderName),
+        ]);
+    }
+
+    /**
+     * @param ReflectionClass<object>|ReflectionMethod|ReflectionType $type
+     */
+    private function getDisplayValue(ReflectionClass|ReflectionMethod|ReflectionType $type): string
+    {
+        if ($type instanceof ReflectionNamedType) {
+            $name = $type->getName();
+            if (class_exists($name)) {
+                return (new ReflectionClass($name))->getShortName();
+            }
+            return $name;
+        }
+        if ($type instanceof ReflectionType) {
+            return (string) $type;
+        }
+        if ($type instanceof ReflectionClass) {
+            return $type->getShortName();
+        }
+        return $type->name;
+    }
+
     private function addAction(PathItem $pathItem, ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition): void
     {
         $method = $routeDefinition->getMethod();
@@ -168,7 +239,16 @@ class OpenApiGenerator
             'description' => $routeDefinition->getDescription(),
             'operationId' => $routeDefinition->getOperationId(),
         ]);
-        if ($method !== RequestMethod::GET) {
+        $placeholders = $routeDefinition->getUrl()->getPlaceholders();
+        if ($placeholders) {
+            $parameters = [];
+            foreach ($placeholders as $placeholderName) {
+                $parameters[] = $this->generateParameter($componentsBuilder, $routeDefinition, $placeholderName);
+            }
+            $operation->parameters = $parameters;
+        }
+
+        if ($method !== RequestMethod::GET && $method !== RequestMethod::DELETE) {
             $operation->requestBody = new RequestBody([
                 'content' => [
                     'application/json' => new MediaType(['schema' => $inputSchema])

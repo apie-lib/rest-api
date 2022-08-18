@@ -14,6 +14,7 @@ interface RestApiRouteDefinition extends HasRouteDefinition, HasActionDefinition
 {
     public const OPENAPI_POST = 'openapi_post';
     public const OPENAPI_ALL = 'openapi_all';
+    public const OPENAPI_GET = 'openapi_get';
     public const OPENAPI_ACTION = 'openapi_action';
     /**
      * @return ReflectionClass<object>|ReflectionMethod|ReflectionType|ListOf

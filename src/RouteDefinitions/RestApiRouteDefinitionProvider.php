@@ -27,6 +27,15 @@ class RestApiRouteDefinitionProvider implements RouteDefinitionProviderInterface
             $definition = new CreateResourceRouteDefinition($resource, $boundedContext->getId());
             $map[$definition->getOperationId()] = $definition;
         }
+
+        $getSingleContext = $apieContext->withContext(RequestMethod::class, RequestMethod::GET)
+            ->withContext(RestApiRouteDefinition::OPENAPI_GET, true)
+            ->registerInstance($boundedContext);
+        foreach ($boundedContext->resources->filterOnApieContext($getSingleContext) as $resource) {
+            $definition = new GetSingleResourceRouteDefinition($resource, $boundedContext->getId());
+            $map[$definition->getOperationId()] = $definition;
+        }
+
         $getAllContext = $apieContext->withContext(RequestMethod::class, RequestMethod::GET)
             ->withContext(RestApiRouteDefinition::OPENAPI_ALL, true)
             ->registerInstance($boundedContext);
@@ -39,6 +48,16 @@ class RestApiRouteDefinitionProvider implements RouteDefinitionProviderInterface
         foreach ($boundedContext->actions->filterOnApieContext($actionContext) as $action) {
             $definition = new RunGlobalMethodRouteDefinition($action, $boundedContext->getId());
             $map[$definition->getOperationId()] = $definition;
+        }
+        foreach ($boundedContext->resources->filterOnApieContext($actionContext) as $resource) {
+            foreach ($actionContext->getApplicableMethods($resource) as $method) {
+                $definition = new RunMethodCallOnSingleResourceRouteDefinition(
+                    $resource,
+                    $method,
+                    $boundedContext->getId()
+                );
+                $map[$definition->getOperationId()] = $definition;
+            }
         }
         return new ActionHashmap($map);
     }
