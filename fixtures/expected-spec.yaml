@@ -185,7 +185,7 @@ paths:
           description: 'id of instance of UserWithAddress'
           required: true
           schema:
-            $ref: '#/components/schemas/UserWithAddressIdentifier-post'
+            $ref: '#/components/schemas/UserWithAddressIdentifier-get'
       responses:
         '201':
           description: OK
@@ -207,7 +207,7 @@ paths:
           description: 'id of instance of UserWithAutoincrementKey'
           required: true
           schema:
-            $ref: '#/components/schemas/UserAutoincrementIdentifier-post'
+            $ref: '#/components/schemas/UserAutoincrementIdentifier-get'
       responses:
         '201':
           description: OK
@@ -229,7 +229,7 @@ paths:
           description: 'id of instance of Order'
           required: true
           schema:
-            $ref: '#/components/schemas/OrderIdentifier-post'
+            $ref: '#/components/schemas/OrderIdentifier-get'
       responses:
         '201':
           description: OK
@@ -262,18 +262,10 @@ paths:
         -
           name: id
           in: path
-          description: 'id of instance of verifyAuthentication'
+          description: 'id of instance of UserWithAddress'
           required: true
           schema:
-            required:
-              - username
-              - password
-            type: object
-            properties:
-              username:
-                type: string
-              password:
-                type: string
+            type: boolean
       requestBody:
         content:
           application/json:
@@ -305,17 +297,10 @@ paths:
         -
           name: id
           in: path
-          description: 'id of instance of addOrderLine'
+          description: 'id of instance of Order'
           required: true
           schema:
-            required:
-              - orderLines
-            type: object
-            properties:
-              orderLines:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OrderLine-post'
+            type: integer
       requestBody:
         content:
           application/json:
@@ -345,10 +330,33 @@ paths:
         -
           name: id
           in: path
-          description: 'id of instance of removeOrderLine'
+          description: 'id of instance of Order'
           required: true
           schema:
-            $ref: '#/components/schemas/OrderLineIdentifier-post'
+            $ref: '#/components/schemas/OrderLineIdentifier-get'
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order-get'
+  '/Order/{id}/acceptOrder':
+    get:
+      tags:
+        - Order
+        - action
+      description: 'Runs method acceptOrder on a Order with a specific id'
+      operationId: get-single-Order-run-acceptOrder
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'id of instance of Order'
+          required: true
+          schema:
+            nullable: true
+            default: null
       responses:
         '201':
           description: OK
@@ -415,10 +423,13 @@ components:
             type: integer
     Order-get:
       required:
+        - orderStatus
         - id
         - orderLines
       type: object
       properties:
+        orderStatus:
+          $ref: '#/components/schemas/OrderStatus-get'
         id:
           $ref: '#/components/schemas/OrderIdentifier-get'
         orderLines:
@@ -448,6 +459,10 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/OrderLineIdentifier-post'
+    OrderLineIdentifier-get:
+      type: string
+      format: orderlineidentifier
+      pattern: '^[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$'
     OrderLineIdentifier-post:
       type: string
       format: orderlineidentifier
@@ -460,17 +475,21 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/OrderLine-post'
+    OrderStatus-get:
+      enum:
+        - DRAFT
+        - ACCEPTED
+        - COMPLETED
+      type: string
     Password-get:
       type: string
       format: password
-      pattern: '^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[\!@#\$%\^&\*\-_\+\.]){1,}).{6,42}$'
+      pattern: '^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[\!@#\$%\^&\*\-_\+\.]){1,})[a-zA-Z0-9\!@#\$%\^&\*\-_\+\.]{6,42}$'
     Password-post:
       type: string
       format: password
-      pattern: '^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[\!@#\$%\^&\*\-_\+\.]){1,}).{6,42}$'
+      pattern: '^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[\!@#\$%\^&\*\-_\+\.]){1,})[a-zA-Z0-9\!@#\$%\^&\*\-_\+\.]{6,42}$'
     UserAutoincrementIdentifier-get:
-      type: integer
-    UserAutoincrementIdentifier-post:
       type: integer
     UserWithAddress-get:
       required:

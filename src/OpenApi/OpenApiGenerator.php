@@ -181,14 +181,14 @@ class OpenApiGenerator
         if ($input instanceof ReflectionMethod) {
             foreach ($input->getParameters() as $parameter) {
                 if ($parameter->name === $placeholderName) {
-                    return $this->doSchemaForInput(
+                    return $this->doSchemaForOutput(
                         $parameter->getType(),
                         $componentsBuilder
                     );
                 }
             }
         }
-        return $this->doSchemaForInput($input, $componentsBuilder);
+        return $this->doSchemaForOutput($input, $componentsBuilder);
     }
 
     private function generateParameter(
@@ -223,7 +223,7 @@ class OpenApiGenerator
         if ($type instanceof ReflectionClass) {
             return $type->getShortName();
         }
-        return $type->name;
+        return $type->getDeclaringClass()->getShortName();
     }
 
     private function addAction(PathItem $pathItem, ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition): void
