@@ -81,11 +81,9 @@ class RunMethodCallOnSingleResourceRouteDefinition implements RestApiRouteDefini
 
     public function getUrl(): UrlRouteDefinition
     {
-        $url = $this->className->getShortName()
-            . '/{'
-            . ContextConstants::RESOURCE_ID
-            . '}/'
-            . RunItemMethodAction::getDisplayNameForMethod($this->method);
+        $url = $this->className->getShortName();
+        $url .= ($this->method->isStatic()) ? '/' : ('/{' . ContextConstants::RESOURCE_ID . '}/');
+        $url .= RunItemMethodAction::getDisplayNameForMethod($this->method);
         return new UrlRouteDefinition($url);
     }
 

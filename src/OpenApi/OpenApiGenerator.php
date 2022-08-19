@@ -163,6 +163,9 @@ class OpenApiGenerator
         string $placeholderName
     ): Schema|Reference {
         $input = $routeDefinition->getInputType();
+        if ($input instanceof ReflectionMethod) {
+            $input = $input->getDeclaringClass();
+        }
         if ($input instanceof ReflectionClass) {
             $methodNames = [
                 ['get' . ucfirst($placeholderName), 'hasMethod', 'getMethod', 'getReturnType'],
@@ -175,16 +178,6 @@ class OpenApiGenerator
                 if ($input->$has($propertyName)) {
                     $input = $input->$get($propertyName)->$type();
                     break;
-                }
-            }
-        }
-        if ($input instanceof ReflectionMethod) {
-            foreach ($input->getParameters() as $parameter) {
-                if ($parameter->name === $placeholderName) {
-                    return $this->doSchemaForOutput(
-                        $parameter->getType(),
-                        $componentsBuilder
-                    );
                 }
             }
         }
