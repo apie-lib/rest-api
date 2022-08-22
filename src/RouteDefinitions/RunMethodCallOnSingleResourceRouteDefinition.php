@@ -3,6 +3,8 @@ namespace Apie\RestApi\RouteDefinitions;
 
 use Apie\Common\Actions\RunItemMethodAction;
 use Apie\Common\ContextConstants;
+use Apie\Core\Actions\ActionResponseStatus;
+use Apie\Core\Actions\ActionResponseStatusList;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Enums\RequestMethod;
@@ -39,6 +41,18 @@ class RunMethodCallOnSingleResourceRouteDefinition implements RestApiRouteDefini
             return $this->className;
         }
         return $this->method;
+    }
+
+    public function getPossibleActionResponseStatuses(): ActionResponseStatusList
+    {
+        $list = [ActionResponseStatus::SUCCESS];
+        if (!empty($this->method->getParameters())) {
+            $list[] = ActionResponseStatus::CLIENT_ERROR;
+        }
+        if (!$this->method->isStatic()) {
+            $list[] = ActionResponseStatus::NOT_FOUND;
+        }
+        return new ActionResponseStatusList($list);
     }
 
     public function getDescription(): string
@@ -107,6 +121,7 @@ class RunMethodCallOnSingleResourceRouteDefinition implements RestApiRouteDefini
             ContextConstants::METHOD_NAME => $this->method->name,
             ContextConstants::BOUNDED_CONTEXT_ID => $this->boundedContextId->toNative(),
             ContextConstants::OPERATION_ID => $this->getOperationId(),
+            ContextConstants::APIE_ACTION => $this->getAction(),
         ];
     }
 }

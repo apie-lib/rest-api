@@ -3,6 +3,8 @@ namespace Apie\RestApi\RouteDefinitions;
 
 use Apie\Common\Actions\CreateObjectAction;
 use Apie\Common\ContextConstants;
+use Apie\Core\Actions\ActionResponseStatus;
+use Apie\Core\Actions\ActionResponseStatusList;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Enums\RequestMethod;
@@ -25,26 +27,6 @@ class CreateResourceRouteDefinition implements RestApiRouteDefinition
     }
 
     /**
-     * @return array<string, mixed>
-     */
-    public function __serialize(): array
-    {
-        return [
-            'className' => $this->className->name,
-            'boundedContextId' => $this->boundedContextId->toNative(),
-        ];
-    }
-
-    /**
-     * @param array<string, mixed> $data
-     */
-    public function __unserialize(array $data): void
-    {
-        $this->className = new ReflectionClass($data['className']);
-        $this->boundedContextId = new BoundedContextId($data['boundedContextId']);
-    }
-
-    /**
      * @return ReflectionClass<EntityInterface>
      */
     public function getInputType(): ReflectionClass
@@ -58,6 +40,15 @@ class CreateResourceRouteDefinition implements RestApiRouteDefinition
     public function getOutputType(): ReflectionClass
     {
         return $this->className;
+    }
+
+    public function getPossibleActionResponseStatuses(): ActionResponseStatusList
+    {
+        return new ActionResponseStatusList([
+            ActionResponseStatus::CREATED,
+            ActionResponseStatus::CLIENT_ERROR,
+            ActionResponseStatus::PERISTENCE_ERROR
+        ]);
     }
 
     public function getDescription(): string
@@ -102,6 +93,7 @@ class CreateResourceRouteDefinition implements RestApiRouteDefinition
             ContextConstants::RESOURCE_NAME => $this->className->name,
             ContextConstants::BOUNDED_CONTEXT_ID => $this->boundedContextId->toNative(),
             ContextConstants::OPERATION_ID => $this->getOperationId(),
+            ContextConstants::APIE_ACTION => $this->getAction(),
         ];
     }
 }

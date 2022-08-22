@@ -1,6 +1,7 @@
 <?php
 namespace Apie\RestApi\Interfaces;
 
+use Apie\Core\Actions\ActionResponseStatusList;
 use Apie\Core\Actions\HasActionDefinition;
 use Apie\Core\Actions\HasRouteDefinition;
 use Apie\RestApi\Controllers\RestApiController;
@@ -25,6 +26,8 @@ interface RestApiRouteDefinition extends HasRouteDefinition, HasActionDefinition
      * @return ReflectionClass<object>|ReflectionMethod|ReflectionType|ListOf
      */
     public function getOutputType(): ReflectionClass|ReflectionMethod|ReflectionType|ListOf;
+
+    public function getPossibleActionResponseStatuses(): ActionResponseStatusList;
 
     /**
      * @return class-string<RestApiController>

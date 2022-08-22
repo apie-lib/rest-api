@@ -1,6 +1,7 @@
 <?php
 namespace Apie\RestApi\OpenApi;
 
+use Apie\Core\Actions\ActionResponseStatus;
 use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\ContextBuilders\ContextBuilderFactory;
 use Apie\Core\Enums\RequestMethod;
@@ -27,6 +28,7 @@ use ReflectionClass;
 use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionType;
+use Throwable;
 
 class OpenApiGenerator
 {
@@ -248,14 +250,66 @@ class OpenApiGenerator
                 ]
             ]);
         }
-        $operation->responses = [
-            201 => new Response([
-                'description' => 'OK',
-                'content' => [
-                    'application/json' => new MediaType(['schema' => $outputSchema])
-                ]
-            ]),
+        $responses = [
         ];
+        foreach ($routeDefinition->getPossibleActionResponseStatuses() as $responseStatus) {
+            switch($responseStatus) {
+                case ActionResponseStatus::CREATED:
+                    $responses[201] = new Response([
+                        'description' => 'Resource was created',
+                        'content' => [
+                            'application/json' => new MediaType(['schema' => $outputSchema])
+                        ]
+                    ]);
+                    break;
+                case ActionResponseStatus::SUCCESS:
+                    $responses[200] = new Response([
+                        'description' => 'OK',
+                        'content' => [
+                            'application/json' => new MediaType(['schema' => $outputSchema])
+                        ]
+                    ]);
+                    break;
+                case ActionResponseStatus::CLIENT_ERROR:
+                    foreach ([400, 405, 406] as $statusCode) {
+                        $responses[$statusCode] = new Response([
+                            'description' => 'Invalid request',
+                            'content' => [
+                                'application/json' => new MediaType(['schema' => $componentsBuilder->addDisplaySchemaFor(Throwable::class)]),
+                            ]
+                        ]);
+                    }
+                    // TODO: validation error
+                    break;
+                case ActionResponseStatus::DELETED:
+                    $responses[204] = new Response(['description' => 'Resource was deleted']);
+                    break;
+                case ActionResponseStatus::NOT_FOUND:
+                    $responses[404] = new Response([
+                        'description' => 'Resource not found',
+                        'content' => [
+                            'application/json' => new MediaType(['schema' => $componentsBuilder->addDisplaySchemaFor(Throwable::class)]),
+                        ]
+                    ]);
+                    break;
+                case ActionResponseStatus::PERISTENCE_ERROR:
+                    $responses[409] = new Response([
+                        'description' => 'Resource not found',
+                        'content' => [
+                            'application/json' => new MediaType(['schema' => $componentsBuilder->addDisplaySchemaFor(Throwable::class)]),
+                        ]
+                    ]);
+                    break;
+                default:
+                    $responses[500] = new Response([
+                        'description' => 'Unknown error occurred',
+                        'content' => [
+                            'application/json' => new MediaType(['schema' => $componentsBuilder->addDisplaySchemaFor(Throwable::class)]),
+                        ]
+                    ]);
+            }
+        }
+        $operation->responses = $responses;
         $prop = strtolower($method->value);
         $pathItem->{$prop} = $operation;
     }

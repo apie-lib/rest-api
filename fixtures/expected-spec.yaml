@@ -17,11 +17,35 @@ paths:
               $ref: '#/components/schemas/UserWithAddress-post'
       responses:
         '201':
-          description: OK
+          description: 'Resource was created'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserWithAddress-get'
+        '400':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '405':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '406':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '409':
+          description: 'Resource not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
     get:
       tags:
         - UserWithAddress
@@ -29,7 +53,7 @@ paths:
       description: 'Gets a list of resource that are an instance of UserWithAddress'
       operationId: get-all-UserWithAddress
       responses:
-        '201':
+        '200':
           description: OK
           content:
             application/json:
@@ -73,11 +97,35 @@ paths:
               $ref: '#/components/schemas/UserWithAutoincrementKey-post'
       responses:
         '201':
-          description: OK
+          description: 'Resource was created'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserWithAutoincrementKey-get'
+        '400':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '405':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '406':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '409':
+          description: 'Resource not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
     get:
       tags:
         - UserWithAutoincrementKey
@@ -85,7 +133,7 @@ paths:
       description: 'Gets a list of resource that are an instance of UserWithAutoincrementKey'
       operationId: get-all-UserWithAutoincrementKey
       responses:
-        '201':
+        '200':
           description: OK
           content:
             application/json:
@@ -129,11 +177,35 @@ paths:
               $ref: '#/components/schemas/Order-post'
       responses:
         '201':
-          description: OK
+          description: 'Resource was created'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Order-get'
+        '400':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '405':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '406':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '409':
+          description: 'Resource not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
     get:
       tags:
         - Order
@@ -141,7 +213,7 @@ paths:
       description: 'Gets a list of resource that are an instance of Order'
       operationId: get-all-Order
       responses:
-        '201':
+        '200':
           description: OK
           content:
             application/json:
@@ -187,12 +259,18 @@ paths:
           schema:
             $ref: '#/components/schemas/UserWithAddressIdentifier-post'
       responses:
-        '201':
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserWithAddress-get'
+        '404':
+          description: 'Resource not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
   '/UserWithAutoincrementKey/{id}':
     get:
       tags:
@@ -209,12 +287,18 @@ paths:
           schema:
             $ref: '#/components/schemas/UserAutoincrementIdentifier-post'
       responses:
-        '201':
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserWithAutoincrementKey-get'
+        '404':
+          description: 'Resource not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
   '/Order/{id}':
     get:
       tags:
@@ -231,12 +315,18 @@ paths:
           schema:
             $ref: '#/components/schemas/OrderIdentifier-post'
       responses:
-        '201':
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Order-get'
+        '404':
+          description: 'Resource not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
   /StaticActionExample/secretCode:
     get:
       tags:
@@ -245,7 +335,7 @@ paths:
       description: 'Calls method secretCode and returns return value.'
       operationId: call-method-StaticActionExample-secretCode
       responses:
-        '201':
+        '200':
           description: OK
           content:
             application/json:
@@ -280,12 +370,36 @@ paths:
                 password:
                   type: string
       responses:
-        '201':
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 type: boolean
+        '400':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '405':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '406':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '404':
+          description: 'Resource not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
   '/Order/{id}/orderLine':
     post:
       tags:
@@ -314,12 +428,36 @@ paths:
                   items:
                     $ref: '#/components/schemas/OrderLine-post'
       responses:
-        '201':
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Order-get'
+        '400':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '405':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '406':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '404':
+          description: 'Resource not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
     delete:
       tags:
         - Order
@@ -335,12 +473,36 @@ paths:
           schema:
             $ref: '#/components/schemas/OrderIdentifier-post'
       responses:
-        '201':
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Order-get'
+        '400':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '405':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '406':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '404':
+          description: 'Resource not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
   '/Order/{id}/acceptOrder':
     get:
       tags:
@@ -357,12 +519,18 @@ paths:
           schema:
             $ref: '#/components/schemas/OrderIdentifier-post'
       responses:
-        '201':
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Order-get'
+        '404':
+          description: 'Resource not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
 servers:
   -
     url: /test
@@ -484,6 +652,13 @@ components:
       type: string
       format: password
       pattern: '^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[\!@#\$%\^&\*\-_\+\.]){1,})[a-zA-Z0-9\!@#\$%\^&\*\-_\+\.]{6,42}$'
+    Throwable-get:
+      required:
+        - message
+      type: object
+      properties:
+        message:
+          type: string
     UserAutoincrementIdentifier-get:
       type: integer
     UserAutoincrementIdentifier-post:
