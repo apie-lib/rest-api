@@ -8,7 +8,7 @@ use Apie\Core\RouteDefinitions\ActionHashmap;
 use Apie\Core\RouteDefinitions\RouteDefinitionProviderInterface;
 use Apie\RestApi\Interfaces\RestApiRouteDefinition;
 
-class RestApiRouteDefinitionProvider implements RouteDefinitionProviderInterface
+final class RestApiRouteDefinitionProvider implements RouteDefinitionProviderInterface
 {
     public function getActionsForBoundedContext(BoundedContext $boundedContext, ApieContext $apieContext): ActionHashmap
     {
