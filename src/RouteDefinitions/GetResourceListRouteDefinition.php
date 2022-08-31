@@ -106,8 +106,7 @@ class GetResourceListRouteDefinition implements RestApiRouteDefinition
 
     public function getRouteAttributes(): array
     {
-        return
-        [
+        return [
             RestApiRouteDefinition::OPENAPI_ALL => true,
             ContextConstants::RESOURCE_NAME => $this->className->name,
             ContextConstants::BOUNDED_CONTEXT_ID => $this->boundedContextId->toNative(),
