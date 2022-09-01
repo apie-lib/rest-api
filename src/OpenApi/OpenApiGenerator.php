@@ -1,13 +1,14 @@
 <?php
 namespace Apie\RestApi\OpenApi;
 
+use Apie\Common\Interfaces\RouteDefinitionProviderInterface;
 use Apie\Core\Actions\ActionResponseStatus;
 use Apie\Core\BoundedContext\BoundedContext;
+use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\ContextBuilders\ContextBuilderFactory;
+use Apie\Core\Dto\ListOf;
 use Apie\Core\Enums\RequestMethod;
-use Apie\Core\RouteDefinitions\RouteDefinitionProviderInterface;
 use Apie\RestApi\Interfaces\RestApiRouteDefinition;
-use Apie\RestApi\RouteDefinitions\ListOf;
 use Apie\SchemaGenerator\Builders\ComponentsBuilder;
 use Apie\SchemaGenerator\ComponentsBuilderFactory;
 use Apie\Serializer\Serializer;
@@ -66,7 +67,14 @@ class OpenApiGenerator
         $urlPrefix = $this->baseUrl . '/' . $boundedContext->getId();
         $spec->servers = [new Server(['url' => $urlPrefix]), new Server(['url' => 'http://localhost/' . $urlPrefix])];
         $componentsBuilder = $this->componentsFactory->createComponentsBuilder();
-        $context = $this->contextBuilder->createGeneralContext([OpenApiGenerator::class => $this, Serializer::class => $this->serializer]);
+        $context = $this->contextBuilder->createGeneralContext(
+            [
+                OpenApiGenerator::class => $this,
+                Serializer::class => $this->serializer,
+                BoundedContextId::class => $boundedContext->getId(),
+                BoundedContext::class => $boundedContext,
+            ]
+        );
         foreach ($this->routeDefinitionProvider->getActionsForBoundedContext($boundedContext, $context) as $routeDefinition) {
             if ($routeDefinition instanceof RestApiRouteDefinition) {
                 $path = $routeDefinition->getUrl()->toNative();
@@ -88,12 +96,6 @@ class OpenApiGenerator
     private function createSchemaForInput(ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition): Schema|Reference
     {
         $input = $routeDefinition->getInputType();
-        if ($input instanceof ListOf) {
-            return new Schema([
-                'type' => 'array',
-                'items' => $this->doSchemaForInput($input->type, $componentsBuilder),
-            ]);
-        }
         
         return $this->doSchemaForInput($input, $componentsBuilder);
     }

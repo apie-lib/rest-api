@@ -1,26 +1,22 @@
 <?php
 namespace Apie\RestApi\Interfaces;
 
+use Apie\Common\Interfaces\HasActionDefinition;
+use Apie\Common\Interfaces\HasRouteDefinition;
 use Apie\Core\Actions\ActionResponseStatusList;
-use Apie\Core\Actions\HasActionDefinition;
-use Apie\Core\Actions\HasRouteDefinition;
+use Apie\Core\Dto\ListOf;
+use Apie\Core\Lists\StringList;
 use Apie\RestApi\Controllers\RestApiController;
-use Apie\RestApi\Lists\StringList;
-use Apie\RestApi\RouteDefinitions\ListOf;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionType;
 
 interface RestApiRouteDefinition extends HasRouteDefinition, HasActionDefinition
 {
-    public const OPENAPI_POST = 'openapi_post';
-    public const OPENAPI_ALL = 'openapi_all';
-    public const OPENAPI_GET = 'openapi_get';
-    public const OPENAPI_ACTION = 'openapi_action';
     /**
-     * @return ReflectionClass<object>|ReflectionMethod|ReflectionType|ListOf
+     * @return ReflectionClass<object>|ReflectionMethod|ReflectionType
      */
-    public function getInputType(): ReflectionClass|ReflectionMethod|ReflectionType|ListOf;
+    public function getInputType(): ReflectionClass|ReflectionMethod|ReflectionType;
 
     /**
      * @return ReflectionClass<object>|ReflectionMethod|ReflectionType|ListOf

@@ -1,10 +1,10 @@
 <?php
 namespace Apie\Tests\RestApi\Controllers;
 
+use Apie\Common\ContextBuilderFactory;
 use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\BoundedContext\BoundedContextHashmap;
 use Apie\Core\BoundedContext\BoundedContextId;
-use Apie\Core\ContextBuilders\ContextBuilderFactory;
 use Apie\Core\Lists\ReflectionClassList;
 use Apie\Core\Lists\ReflectionMethodList;
 use Apie\Fixtures\Actions\StaticActionExample;
@@ -15,6 +15,7 @@ use Apie\RestApi\Controllers\OpenApiDocumentationController;
 use Apie\RestApi\OpenApi\OpenApiGenerator;
 use Apie\RestApi\RouteDefinitions\RestApiRouteDefinitionProvider;
 use Apie\SchemaGenerator\ComponentsBuilderFactory;
+use Apie\Serializer\DecoderHashmap;
 use Apie\Serializer\Serializer;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
@@ -26,9 +27,10 @@ class OpenApiDocumentationControllerTest extends TestCase
 {
     protected function givenAControllerToProvideOpenApiDocumentation(): OpenApiDocumentationController
     {
-        $contextBuilder = ContextBuilderFactory::create();
+        $boundedContextHashmap = new BoundedContextHashmap(['test' => $this->givenABoundedContext()]);
+        $contextBuilder = ContextBuilderFactory::create($boundedContextHashmap, DecoderHashmap::create());
         return new OpenApiDocumentationController(
-            new BoundedContextHashmap(['test' => $this->givenABoundedContext()]),
+            $boundedContextHashmap,
             new OpenApiGenerator(
                 $contextBuilder,
                 ComponentsBuilderFactory::createComponentsBuilderFactory(),

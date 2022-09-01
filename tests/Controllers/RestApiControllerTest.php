@@ -2,9 +2,9 @@
 namespace Apie\Tests\RestApi\Controllers;
 
 use Apie\Common\Actions\RunAction;
+use Apie\Common\ContextBuilderFactory;
 use Apie\Common\ContextConstants;
 use Apie\Common\Tests\Concerns\ProvidesApieFacade;
-use Apie\Core\ContextBuilders\ContextBuilderFactory;
 use Apie\Fixtures\Actions\StaticActionExample;
 use Apie\Fixtures\BoundedContextFactory;
 use Apie\RestApi\Controllers\RestApiController;
@@ -22,11 +22,9 @@ class RestApiControllerTest extends TestCase
     {
         $boundedContextHashmap = BoundedContextFactory::createHashmap();
         return new RestApiController(
-            ContextBuilderFactory::create(),
-            $boundedContextHashmap,
+            ContextBuilderFactory::create($boundedContextHashmap, DecoderHashmap::create()),
             $this->givenAnApieFacade(RunAction::class, $boundedContextHashmap),
-            EncoderHashmap::create(),
-            DecoderHashmap::create()
+            EncoderHashmap::create()
         );
     }
 

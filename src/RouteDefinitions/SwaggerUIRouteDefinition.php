@@ -2,7 +2,7 @@
 namespace Apie\RestApi\RouteDefinitions;
 
 use Apie\Common\ContextConstants;
-use Apie\Core\Actions\HasRouteDefinition;
+use Apie\Common\Interfaces\HasRouteDefinition;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Enums\RequestMethod;
 use Apie\Core\ValueObjects\UrlRouteDefinition;
@@ -17,24 +17,6 @@ class SwaggerUIRouteDefinition implements HasRouteDefinition
     public function getOperationId(): string
     {
         return 'swagger_ui';
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    public function __serialize(): array
-    {
-        return [
-            'boundedContextId' => $this->boundedContextId->toNative(),
-        ];
-    }
-
-    /**
-     * @param array<string, mixed> $data
-     */
-    public function __unserialize(array $data): void
-    {
-        $this->boundedContextId = new BoundedContextId($data['boundedContextId']);
     }
 
     public function getMethod(): RequestMethod

@@ -1,7 +1,7 @@
 <?php
 namespace Apie\RestApi\RouteDefinitions;
 
-use Apie\Core\Actions\HasRouteDefinition;
+use Apie\Common\Interfaces\HasRouteDefinition;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Enums\RequestMethod;
 use Apie\Core\ValueObjects\UrlRouteDefinition;
@@ -16,26 +16,6 @@ class OpenApiDocumentationRouteDefinition implements HasRouteDefinition
     public function getOperationId(): string
     {
         return 'openapi_spec.' . ($this->yamlFormat ? 'yaml' : 'json');
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    public function __serialize(): array
-    {
-        return [
-            'yamlFormat' => $this->yamlFormat,
-            'boundedContextId' => $this->boundedContextId->toNative(),
-        ];
-    }
-
-    /**
-     * @param array<string, mixed> $data
-     */
-    public function __unserialize(array $data): void
-    {
-        $this->yamlFormat = $data['yamlFormat'];
-        $this->boundedContextId = new BoundedContextId($data['boundedContextId']);
     }
 
     public function getMethod(): RequestMethod
