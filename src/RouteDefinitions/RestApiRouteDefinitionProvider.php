@@ -23,7 +23,7 @@ final class RestApiRouteDefinitionProvider implements RouteDefinitionProviderInt
         $postContext = $apieContext->withContext(RequestMethod::class, RequestMethod::POST)
             ->withContext(ContextConstants::CREATE_OBJECT, true)
             ->registerInstance($boundedContext);
-        foreach ($boundedContext->resources->filterOnApieContext($postContext) as $resource) {
+        foreach ($boundedContext->resources->filterOnApieContext($postContext, false) as $resource) {
             $definition = new CreateResourceRouteDefinition($resource, $boundedContext->getId());
             $map[$definition->getOperationId()] = $definition;
         }
@@ -31,7 +31,7 @@ final class RestApiRouteDefinitionProvider implements RouteDefinitionProviderInt
         $getSingleContext = $apieContext->withContext(RequestMethod::class, RequestMethod::GET)
             ->withContext(ContextConstants::GET_OBJECT, true)
             ->registerInstance($boundedContext);
-        foreach ($boundedContext->resources->filterOnApieContext($getSingleContext) as $resource) {
+        foreach ($boundedContext->resources->filterOnApieContext($getSingleContext, false) as $resource) {
             $definition = new GetSingleResourceRouteDefinition($resource, $boundedContext->getId());
             $map[$definition->getOperationId()] = $definition;
         }
@@ -39,20 +39,20 @@ final class RestApiRouteDefinitionProvider implements RouteDefinitionProviderInt
         $getAllContext = $apieContext->withContext(RequestMethod::class, RequestMethod::GET)
             ->withContext(ContextConstants::GET_ALL_OBJECTS, true)
             ->registerInstance($boundedContext);
-        foreach ($boundedContext->resources->filterOnApieContext($getAllContext) as $resource) {
+        foreach ($boundedContext->resources->filterOnApieContext($getAllContext, false) as $resource) {
             $definition = new GetResourceListRouteDefinition($resource, $boundedContext->getId());
             $map[$definition->getOperationId()] = $definition;
         }
 
         $globalActionContext = $apieContext->withContext(ContextConstants::GLOBAL_METHOD, true);
-        foreach ($boundedContext->actions->filterOnApieContext($globalActionContext) as $action) {
+        foreach ($boundedContext->actions->filterOnApieContext($globalActionContext, false) as $action) {
             $definition = new RunGlobalMethodRouteDefinition($action, $boundedContext->getId());
             $map[$definition->getOperationId()] = $definition;
         }
 
         $resourceActionContext = $apieContext->withContext(ContextConstants::RESOURCE_METHOD, true);
         foreach ($boundedContext->resources->filterOnApieContext($resourceActionContext) as $resource) {
-            foreach ($resourceActionContext->getApplicableMethods($resource) as $method) {
+            foreach ($resourceActionContext->getApplicableMethods($resource, false) as $method) {
                 $definition = new RunMethodCallOnSingleResourceRouteDefinition(
                     $resource,
                     $method,
