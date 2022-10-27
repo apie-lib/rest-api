@@ -7,7 +7,6 @@ use Apie\Core\BoundedContext\BoundedContextHashmap;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Lists\ReflectionClassList;
 use Apie\Core\Lists\ReflectionMethodList;
-use Apie\Core\Session\FakeTokenProvider;
 use Apie\Fixtures\Actions\StaticActionExample;
 use Apie\Fixtures\Entities\Order;
 use Apie\Fixtures\Entities\UserWithAddress;
@@ -31,8 +30,7 @@ class OpenApiDocumentationControllerTest extends TestCase
         $boundedContextHashmap = new BoundedContextHashmap(['test' => $this->givenABoundedContext()]);
         $contextBuilder = ContextBuilderFactory::create(
             $boundedContextHashmap,
-            DecoderHashmap::create(),
-            new FakeTokenProvider()
+            DecoderHashmap::create()
         );
         return new OpenApiDocumentationController(
             $boundedContextHashmap,
