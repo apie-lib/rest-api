@@ -5,6 +5,7 @@ use Apie\Common\Actions\RunAction;
 use Apie\Common\ContextBuilderFactory;
 use Apie\Common\ContextConstants;
 use Apie\Common\Tests\Concerns\ProvidesApieFacade;
+use Apie\Core\Session\FakeTokenProvider;
 use Apie\Fixtures\Actions\StaticActionExample;
 use Apie\Fixtures\BoundedContextFactory;
 use Apie\RestApi\Controllers\RestApiController;
@@ -22,7 +23,7 @@ class RestApiControllerTest extends TestCase
     {
         $boundedContextHashmap = BoundedContextFactory::createHashmap();
         return new RestApiController(
-            ContextBuilderFactory::create($boundedContextHashmap, DecoderHashmap::create()),
+            ContextBuilderFactory::create($boundedContextHashmap, DecoderHashmap::create(), new FakeTokenProvider()),
             $this->givenAnApieFacade(RunAction::class, $boundedContextHashmap),
             EncoderHashmap::create()
         );
