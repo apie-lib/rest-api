@@ -667,12 +667,15 @@ components:
       required:
         - id
         - address
+        - password
       type: object
       properties:
         id:
           $ref: '#/components/schemas/UserWithAddressIdentifier-get'
         address:
           $ref: '#/components/schemas/AddressWithZipcodeCheck-get'
+        password:
+          type: boolean
     UserWithAddress-post:
       required:
         - address
