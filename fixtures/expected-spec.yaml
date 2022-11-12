@@ -539,12 +539,12 @@ servers:
 components:
   schemas:
     AddressWithZipcodeCheck-get:
+      type: object
       required:
         - street
         - streetNumber
         - zipcode
         - city
-      type: object
       properties:
         street:
           $ref: '#/components/schemas/DatabaseText-get'
@@ -555,12 +555,12 @@ components:
         city:
           $ref: '#/components/schemas/DatabaseText-get'
     AddressWithZipcodeCheck-post:
+      type: object
       required:
         - street
         - streetNumber
         - zipcode
         - city
-      type: object
       properties:
         street:
           $ref: '#/components/schemas/DatabaseText-post'
@@ -589,23 +589,23 @@ components:
           -
             type: integer
     Order-get:
-      required:
-        - orderStatus
-        - id
-        - orderLines
       type: object
+      required:
+        - id
+        - orderStatus
+        - orderLines
       properties:
-        orderStatus:
-          $ref: '#/components/schemas/OrderStatus-get'
         id:
           $ref: '#/components/schemas/OrderIdentifier-get'
+        orderStatus:
+          $ref: '#/components/schemas/OrderStatus-get'
         orderLines:
           $ref: '#/components/schemas/OrderLineList-get'
     Order-post:
+      type: object
       required:
         - id
         - orderLineList
-      type: object
       properties:
         id:
           $ref: '#/components/schemas/OrderIdentifier-post'
@@ -620,9 +620,9 @@ components:
       format: orderidentifier
       pattern: '^[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$'
     OrderLine-post:
+      type: object
       required:
         - id
-      type: object
       properties:
         id:
           $ref: '#/components/schemas/OrderLineIdentifier-post'
@@ -664,29 +664,26 @@ components:
     UserAutoincrementIdentifier-post:
       type: integer
     UserWithAddress-get:
+      type: object
       required:
         - id
         - address
-        - password
-      type: object
       properties:
         id:
           $ref: '#/components/schemas/UserWithAddressIdentifier-get'
         address:
           $ref: '#/components/schemas/AddressWithZipcodeCheck-get'
-        password:
-          type: boolean
     UserWithAddress-post:
+      type: object
       required:
         - address
-      type: object
       properties:
-        address:
-          $ref: '#/components/schemas/AddressWithZipcodeCheck-post'
         id:
           $ref: '#/components/schemas/UserWithAddressIdentifier-post'
         password:
           $ref: '#/components/schemas/Password-post'
+        address:
+          $ref: '#/components/schemas/AddressWithZipcodeCheck-post'
     UserWithAddressIdentifier-get:
       type: string
       format: userwithaddressidentifier
@@ -696,10 +693,11 @@ components:
       format: userwithaddressidentifier
       pattern: '^[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$'
     UserWithAutoincrementKey-get:
+      type: object
       required:
         - id
         - address
-      type: object
+        - password
       properties:
         id:
           $ref: '#/components/schemas/UserAutoincrementIdentifier-get'
@@ -708,13 +706,13 @@ components:
         password:
           $ref: '#/components/schemas/Password-get'
     UserWithAutoincrementKey-post:
+      type: object
       required:
         - address
-      type: object
       properties:
-        address:
-          $ref: '#/components/schemas/AddressWithZipcodeCheck-post'
         password:
           $ref: '#/components/schemas/Password-post'
+        address:
+          $ref: '#/components/schemas/AddressWithZipcodeCheck-post'
     mixed:
       nullable: true
