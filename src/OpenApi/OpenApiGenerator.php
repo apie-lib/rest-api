@@ -97,15 +97,18 @@ class OpenApiGenerator
     {
         $input = $routeDefinition->getInputType();
         
-        return $this->doSchemaForInput($input, $componentsBuilder);
+        return $this->doSchemaForInput($input, $componentsBuilder, $routeDefinition->getMethod());
     }
 
     /**
      * @param ReflectionClass<object>|ReflectionMethod|ReflectionType $input
      */
-    private function doSchemaForInput(ReflectionClass|ReflectionMethod|ReflectionType $input, ComponentsBuilder $componentsBuilder): Schema|Reference
+    private function doSchemaForInput(ReflectionClass|ReflectionMethod|ReflectionType $input, ComponentsBuilder $componentsBuilder, RequestMethod $method = RequestMethod::GET): Schema|Reference
     {
         if ($input instanceof ReflectionClass) {
+            if ($method === RequestMethod::PATCH) {
+                return $componentsBuilder->addModificationSchemaFor($input->name);
+            }
             return $componentsBuilder->addCreationSchemaFor($input->name);
         }
         if ($input instanceof ReflectionMethod) {

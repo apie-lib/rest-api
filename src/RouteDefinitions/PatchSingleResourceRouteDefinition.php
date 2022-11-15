@@ -1,7 +1,7 @@
 <?php
 namespace Apie\RestApi\RouteDefinitions;
 
-use Apie\Common\Actions\GetItemAction;
+use Apie\Common\Actions\ModifyObjectAction;
 use Apie\Common\ContextConstants;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Entities\EntityInterface;
@@ -10,9 +10,9 @@ use Apie\Core\ValueObjects\UrlRouteDefinition;
 use ReflectionClass;
 
 /**
- * Route definition for getting a single resource.
+ * Route definition for modifying a single resource.
  */
-class GetSingleResourceRouteDefinition extends AbstractRestApiRouteDefinition
+class PatchSingleResourceRouteDefinition extends AbstractRestApiRouteDefinition
 {
     /**
      * @param ReflectionClass<EntityInterface> $className
@@ -24,12 +24,12 @@ class GetSingleResourceRouteDefinition extends AbstractRestApiRouteDefinition
 
     public function getOperationId(): string
     {
-        return 'get-single-' . $this->class->getShortName();
+        return 'patch-single-' . $this->class->getShortName();
     }
 
     public function getMethod(): RequestMethod
     {
-        return RequestMethod::GET;
+        return RequestMethod::PATCH;
     }
 
     public function getUrl(): UrlRouteDefinition
@@ -39,6 +39,6 @@ class GetSingleResourceRouteDefinition extends AbstractRestApiRouteDefinition
 
     public function getAction(): string
     {
-        return GetItemAction::class;
+        return ModifyObjectAction::class;
     }
 }

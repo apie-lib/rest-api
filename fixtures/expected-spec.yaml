@@ -271,6 +271,56 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Throwable-get'
+    patch:
+      tags:
+        - UserWithAddress
+        - resource
+      description: 'Modifies an instance of UserWithAddress'
+      operationId: patch-single-UserWithAddress
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'id of instance of UserWithAddress'
+          required: true
+          schema:
+            $ref: '#/components/schemas/UserWithAddressIdentifier-post'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserWithAddress-patch'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWithAddress-get'
+        '400':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '405':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '406':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '409':
+          description: 'Resource not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
   '/UserWithAutoincrementKey/{id}':
     get:
       tags:
@@ -294,6 +344,56 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserWithAutoincrementKey-get'
         '404':
+          description: 'Resource not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+    patch:
+      tags:
+        - UserWithAutoincrementKey
+        - resource
+      description: 'Modifies an instance of UserWithAutoincrementKey'
+      operationId: patch-single-UserWithAutoincrementKey
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'id of instance of UserWithAutoincrementKey'
+          required: true
+          schema:
+            $ref: '#/components/schemas/UserAutoincrementIdentifier-post'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserWithAutoincrementKey-patch'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWithAutoincrementKey-get'
+        '400':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '405':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '406':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+        '409':
           description: 'Resource not found'
           content:
             application/json:
@@ -673,6 +773,12 @@ components:
           $ref: '#/components/schemas/UserWithAddressIdentifier-get'
         address:
           $ref: '#/components/schemas/AddressWithZipcodeCheck-get'
+    UserWithAddress-patch:
+      type: object
+      required: []
+      properties:
+        password:
+          $ref: '#/components/schemas/Password-post'
     UserWithAddress-post:
       type: object
       required:
@@ -705,6 +811,12 @@ components:
           $ref: '#/components/schemas/AddressWithZipcodeCheck-get'
         password:
           $ref: '#/components/schemas/Password-get'
+    UserWithAutoincrementKey-patch:
+      type: object
+      required: []
+      properties:
+        password:
+          $ref: '#/components/schemas/Password-post'
     UserWithAutoincrementKey-post:
       type: object
       required:

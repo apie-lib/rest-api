@@ -7,6 +7,7 @@ use Apie\Common\RouteDefinitions\ActionHashmap;
 use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Enums\RequestMethod;
+use Apie\Core\Metadata\MetadataFactory;
 
 final class RestApiRouteDefinitionProvider implements RouteDefinitionProviderInterface
 {
@@ -34,6 +35,17 @@ final class RestApiRouteDefinitionProvider implements RouteDefinitionProviderInt
         foreach ($boundedContext->resources->filterOnApieContext($getSingleContext, false) as $resource) {
             $definition = new GetSingleResourceRouteDefinition($resource, $boundedContext->getId());
             $map[$definition->getOperationId()] = $definition;
+        }
+
+        $patchSingleContext = $apieContext->withContext(RequestMethod::class, RequestMethod::PATCH)
+            ->withContext(ContextConstants::EDIT_OBJECT, true)
+            ->registerInstance($boundedContext);
+        foreach ($boundedContext->resources->filterOnApieContext($patchSingleContext, false) as $resource) {
+            $metadata = MetadataFactory::getModificationMetadata($resource, $patchSingleContext);
+            if ($metadata->getHashmap()->count()) {
+                $definition = new PatchSingleResourceRouteDefinition($resource, $boundedContext->getId());
+                $map[$definition->getOperationId()] = $definition;
+            }
         }
 
         $getAllContext = $apieContext->withContext(RequestMethod::class, RequestMethod::GET)
