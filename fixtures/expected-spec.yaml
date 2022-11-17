@@ -775,7 +775,6 @@ components:
           $ref: '#/components/schemas/AddressWithZipcodeCheck-get'
     UserWithAddress-patch:
       type: object
-      required: []
       properties:
         password:
           $ref: '#/components/schemas/Password-post'
@@ -813,7 +812,6 @@ components:
           $ref: '#/components/schemas/Password-get'
     UserWithAutoincrementKey-patch:
       type: object
-      required: []
       properties:
         password:
           $ref: '#/components/schemas/Password-post'
