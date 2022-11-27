@@ -11,6 +11,7 @@ use Apie\Core\Enums\RequestMethod;
 use Apie\RestApi\Interfaces\RestApiRouteDefinition;
 use Apie\SchemaGenerator\Builders\ComponentsBuilder;
 use Apie\SchemaGenerator\ComponentsBuilderFactory;
+use Apie\Serializer\Exceptions\ValidationException;
 use Apie\Serializer\Serializer;
 use cebe\openapi\Reader;
 use cebe\openapi\ReferenceContext;
@@ -284,7 +285,12 @@ class OpenApiGenerator
                             ]
                         ]);
                     }
-                    // TODO: validation error
+                    $responses[422] = new Response([
+                        'description' => 'A validation error occurred',
+                        'content' => [
+                            'application/json' => new MediaType(['schema' => $componentsBuilder->addDisplaySchemaFor(ValidationException::class)]),
+                        ]
+                    ]);
                     break;
                 case ActionResponseStatus::DELETED:
                     $responses[204] = new Response(['description' => 'Resource was deleted']);

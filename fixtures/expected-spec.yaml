@@ -40,6 +40,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Throwable-get'
+        '422':
+          description: 'A validation error occurred'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationException-get'
         '409':
           description: 'Resource not found'
           content:
@@ -120,6 +126,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Throwable-get'
+        '422':
+          description: 'A validation error occurred'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationException-get'
         '409':
           description: 'Resource not found'
           content:
@@ -200,6 +212,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Throwable-get'
+        '422':
+          description: 'A validation error occurred'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationException-get'
         '409':
           description: 'Resource not found'
           content:
@@ -315,6 +333,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Throwable-get'
+        '422':
+          description: 'A validation error occurred'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationException-get'
         '409':
           description: 'Resource not found'
           content:
@@ -393,6 +417,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Throwable-get'
+        '422':
+          description: 'A validation error occurred'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationException-get'
         '409':
           description: 'Resource not found'
           content:
@@ -494,6 +524,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Throwable-get'
+        '422':
+          description: 'A validation error occurred'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationException-get'
         '404':
           description: 'Resource not found'
           content:
@@ -552,6 +588,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Throwable-get'
+        '422':
+          description: 'A validation error occurred'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationException-get'
         '404':
           description: 'Resource not found'
           content:
@@ -597,6 +639,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Throwable-get'
+        '422':
+          description: 'A validation error occurred'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationException-get'
         '404':
           description: 'Resource not found'
           content:
@@ -824,5 +872,14 @@ components:
           $ref: '#/components/schemas/Password-post'
         address:
           $ref: '#/components/schemas/AddressWithZipcodeCheck-post'
+    ValidationException-get:
+      type: object
+      properties:
+        message:
+          type: string
+        errors:
+          type: object
+          additionalProperties:
+            type: string
     mixed:
       nullable: true
