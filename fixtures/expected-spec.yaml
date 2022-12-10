@@ -801,12 +801,16 @@ components:
       format: password
       pattern: '^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[\!@#\$%\^&\*\-_\+\.]){1,})[a-zA-Z0-9\!@#\$%\^&\*\-_\+\.]{6,42}$'
     Throwable-get:
+      type: object
       required:
         - message
-      type: object
+        - code
       properties:
         message:
           type: string
+          nullable: false
+        code:
+          $ref: '#/components/schemas/mixed'
     UserAutoincrementIdentifier-get:
       type: integer
     UserAutoincrementIdentifier-post:
