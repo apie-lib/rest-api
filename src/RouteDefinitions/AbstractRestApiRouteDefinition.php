@@ -24,7 +24,6 @@ abstract class AbstractRestApiRouteDefinition implements RestApiRouteDefinition
     ) {
     }
 
-
     /**
      * @return ReflectionClass<object>|ReflectionMethod|ReflectionType
      */
