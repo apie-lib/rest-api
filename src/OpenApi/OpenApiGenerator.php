@@ -1,6 +1,8 @@
 <?php
 namespace Apie\RestApi\OpenApi;
 
+use Apie\Common\Enums\UrlPrefix;
+use Apie\Common\Interfaces\RestApiRouteDefinition;
 use Apie\Common\Interfaces\RouteDefinitionProviderInterface;
 use Apie\Core\Actions\ActionResponseStatus;
 use Apie\Core\BoundedContext\BoundedContext;
@@ -8,7 +10,6 @@ use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\ContextBuilders\ContextBuilderFactory;
 use Apie\Core\Dto\ListOf;
 use Apie\Core\Enums\RequestMethod;
-use Apie\RestApi\Interfaces\RestApiRouteDefinition;
 use Apie\SchemaGenerator\Builders\ComponentsBuilder;
 use Apie\SchemaGenerator\ComponentsBuilderFactory;
 use Apie\Serializer\Exceptions\ValidationException;
@@ -78,6 +79,9 @@ class OpenApiGenerator
         );
         foreach ($this->routeDefinitionProvider->getActionsForBoundedContext($boundedContext, $context) as $routeDefinition) {
             if ($routeDefinition instanceof RestApiRouteDefinition) {
+                if (!in_array(UrlPrefix::API, $routeDefinition->getUrlPrefixes()->toArray())) {
+                    continue;
+                }
                 $path = $routeDefinition->getUrl()->toNative();
                 if ($spec->paths->hasPath($path)) {
                     $pathItem = $spec->paths->getPath($path);

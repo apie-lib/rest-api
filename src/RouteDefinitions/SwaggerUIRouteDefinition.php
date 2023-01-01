@@ -2,7 +2,9 @@
 namespace Apie\RestApi\RouteDefinitions;
 
 use Apie\Common\ContextConstants;
+use Apie\Common\Enums\UrlPrefix;
 use Apie\Common\Interfaces\HasRouteDefinition;
+use Apie\Common\Lists\UrlPrefixList;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Enums\RequestMethod;
 use Apie\Core\ValueObjects\UrlRouteDefinition;
@@ -39,5 +41,10 @@ class SwaggerUIRouteDefinition implements HasRouteDefinition
         return [
             ContextConstants::BOUNDED_CONTEXT_ID => $this->boundedContextId->toNative(),
         ];
+    }
+
+    public function getUrlPrefixes(): UrlPrefixList
+    {
+        return new UrlPrefixList([UrlPrefix::API]);
     }
 }
