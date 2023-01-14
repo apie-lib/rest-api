@@ -753,11 +753,11 @@ components:
       type: object
       required:
         - id
-        - orderLineList
+        - orderLines
       properties:
         id:
           $ref: '#/components/schemas/OrderIdentifier-post'
-        orderLineList:
+        orderLines:
           $ref: '#/components/schemas/OrderLineList-post'
     OrderIdentifier-get:
       type: string
