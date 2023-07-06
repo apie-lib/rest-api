@@ -23,6 +23,16 @@ class RestApiServiceProvider extends ServiceProvider
                 );
             }
         );
+        \Apie\ServiceProviderGenerator\TagMap::register(
+            $this->app,
+            \Apie\RestApi\RouteDefinitions\RestApiRouteDefinitionProvider::class,
+            array(
+              0 =>
+              array(
+                'name' => 'apie.core.route_definition',
+              ),
+            )
+        );
         $this->app->tag([\Apie\RestApi\RouteDefinitions\RestApiRouteDefinitionProvider::class], 'apie.core.route_definition');
         $this->app->singleton(
             \Apie\RestApi\OpenApi\OpenApiGenerator::class,
@@ -45,6 +55,13 @@ class RestApiServiceProvider extends ServiceProvider
                 );
             }
         );
+        \Apie\ServiceProviderGenerator\TagMap::register(
+            $this->app,
+            \Apie\RestApi\Controllers\OpenApiDocumentationController::class,
+            array(
+              0 => 'controller.service_arguments',
+            )
+        );
         $this->app->tag([\Apie\RestApi\Controllers\OpenApiDocumentationController::class], 'controller.service_arguments');
         $this->app->singleton(
             \Apie\RestApi\Controllers\RestApiController::class,
@@ -56,6 +73,13 @@ class RestApiServiceProvider extends ServiceProvider
                 );
             }
         );
+        \Apie\ServiceProviderGenerator\TagMap::register(
+            $this->app,
+            \Apie\RestApi\Controllers\RestApiController::class,
+            array(
+              0 => 'controller.service_arguments',
+            )
+        );
         $this->app->tag([\Apie\RestApi\Controllers\RestApiController::class], 'controller.service_arguments');
         $this->app->singleton(
             \Apie\RestApi\Controllers\SwaggerUIController::class,
@@ -64,6 +88,13 @@ class RestApiServiceProvider extends ServiceProvider
                     $this->parseArgument('%apie.rest_api.base_url%')
                 );
             }
+        );
+        \Apie\ServiceProviderGenerator\TagMap::register(
+            $this->app,
+            \Apie\RestApi\Controllers\SwaggerUIController::class,
+            array(
+              0 => 'controller.service_arguments',
+            )
         );
         $this->app->tag([\Apie\RestApi\Controllers\SwaggerUIController::class], 'controller.service_arguments');
         
