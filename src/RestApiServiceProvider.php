@@ -7,7 +7,6 @@ use Illuminate\Support\ServiceProvider;
 /**
  * This file is generated with apie/service-provider-generator from file: rest_api.yaml
  * @codecoverageIgnore
- * @phpstan-ignore
  */
 class RestApiServiceProvider extends ServiceProvider
 {
@@ -29,11 +28,11 @@ class RestApiServiceProvider extends ServiceProvider
             array(
               0 =>
               array(
-                'name' => 'apie.core.route_definition',
+                'name' => 'apie.common.route_definition',
               ),
             )
         );
-        $this->app->tag([\Apie\RestApi\RouteDefinitions\RestApiRouteDefinitionProvider::class], 'apie.core.route_definition');
+        $this->app->tag([\Apie\RestApi\RouteDefinitions\RestApiRouteDefinitionProvider::class], 'apie.common.route_definition');
         $this->app->singleton(
             \Apie\RestApi\OpenApi\OpenApiGenerator::class,
             function ($app) {

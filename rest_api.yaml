@@ -2,7 +2,7 @@ services:
 
   Apie\RestApi\RouteDefinitions\RestApiRouteDefinitionProvider:
     tags: 
-      - name: apie.core.route_definition
+      - name: apie.common.route_definition
 
   Apie\RestApi\OpenApi\OpenApiGenerator:
     arguments:
