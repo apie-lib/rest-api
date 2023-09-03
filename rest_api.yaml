@@ -10,6 +10,7 @@ services:
       - '@Apie\SchemaGenerator\ComponentsBuilderFactory'
       - '@apie.route_definitions.provider'
       - '@Apie\Serializer\Serializer'
+      - '@Psr\EventDispatcher\EventDispatcherInterface'
       - '%apie.rest_api.base_url%'
 
   Apie\RestApi\Controllers\OpenApiDocumentationController:
@@ -29,3 +30,8 @@ services:
     arguments:
       - '%apie.rest_api.base_url%'
     tags: ['controller.service_arguments']
+
+  Apie\RestApi\EventListeners\OpenApiOperationAddedEventSubscriber:
+    arguments:
+      - '@Apie\Core\Datalayers\ApieDatalayer'
+    tags: ['kernel.event_subscriber']

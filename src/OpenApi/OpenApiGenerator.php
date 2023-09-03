@@ -10,6 +10,7 @@ use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\ContextBuilders\ContextBuilderFactory;
 use Apie\Core\Dto\ListOf;
 use Apie\Core\Enums\RequestMethod;
+use Apie\RestApi\Events\OpenApiOperationAddedEvent;
 use Apie\SchemaGenerator\Builders\ComponentsBuilder;
 use Apie\SchemaGenerator\ComponentsBuilderFactory;
 use Apie\Serializer\Exceptions\ValidationException;
@@ -27,6 +28,7 @@ use cebe\openapi\spec\RequestBody;
 use cebe\openapi\spec\Response;
 use cebe\openapi\spec\Schema;
 use cebe\openapi\spec\Server;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionNamedType;
@@ -44,6 +46,7 @@ class OpenApiGenerator
         private ComponentsBuilderFactory $componentsFactory,
         private RouteDefinitionProviderInterface $routeDefinitionProvider,
         private Serializer $serializer,
+        private EventDispatcherInterface $dispatcher,
         private string $baseUrl = '',
         ?OpenApi $baseSpec = null
     ) {
@@ -327,5 +330,12 @@ class OpenApiGenerator
         $operation->responses = $responses;
         $prop = strtolower($method->value);
         $pathItem->{$prop} = $operation;
+        $this->dispatcher->dispatch(
+            new OpenApiOperationAddedEvent(
+                $componentsBuilder,
+                $operation,
+                $routeDefinition
+            )
+        );
     }
 }

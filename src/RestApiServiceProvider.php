@@ -41,6 +41,7 @@ class RestApiServiceProvider extends ServiceProvider
                     $app->make(\Apie\SchemaGenerator\ComponentsBuilderFactory::class),
                     $app->make('apie.route_definitions.provider'),
                     $app->make(\Apie\Serializer\Serializer::class),
+                    $app->make(\Psr\EventDispatcher\EventDispatcherInterface::class),
                     $this->parseArgument('%apie.rest_api.base_url%')
                 );
             }
@@ -96,6 +97,22 @@ class RestApiServiceProvider extends ServiceProvider
             )
         );
         $this->app->tag([\Apie\RestApi\Controllers\SwaggerUIController::class], 'controller.service_arguments');
+        $this->app->singleton(
+            \Apie\RestApi\EventListeners\OpenApiOperationAddedEventSubscriber::class,
+            function ($app) {
+                return new \Apie\RestApi\EventListeners\OpenApiOperationAddedEventSubscriber(
+                    $app->make(\Apie\Core\Datalayers\ApieDatalayer::class)
+                );
+            }
+        );
+        \Apie\ServiceProviderGenerator\TagMap::register(
+            $this->app,
+            \Apie\RestApi\EventListeners\OpenApiOperationAddedEventSubscriber::class,
+            array(
+              0 => 'kernel.event_subscriber',
+            )
+        );
+        $this->app->tag([\Apie\RestApi\EventListeners\OpenApiOperationAddedEventSubscriber::class], 'kernel.event_subscriber');
         
     }
 }

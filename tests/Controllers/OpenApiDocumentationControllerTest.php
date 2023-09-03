@@ -22,6 +22,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionClass;
 use ReflectionMethod;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class OpenApiDocumentationControllerTest extends TestCase
 {
@@ -38,7 +39,8 @@ class OpenApiDocumentationControllerTest extends TestCase
                 $contextBuilder,
                 ComponentsBuilderFactory::createComponentsBuilderFactory(),
                 new RestApiRouteDefinitionProvider(),
-                Serializer::create()
+                Serializer::create(),
+                new EventDispatcher(),
             )
         );
     }
