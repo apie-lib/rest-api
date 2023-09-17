@@ -20,6 +20,8 @@ final class RestApiRouteDefinitionProvider implements RouteDefinitionProviderInt
         $map[$definition->getOperationId()] = $definition;
         $definition = new SwaggerUIRouteDefinition($boundedContext->getId());
         $map[$definition->getOperationId()] = $definition;
+        $definition = new SwaggerUIRedirectRouteDefinition($boundedContext->getId());
+        $map[$definition->getOperationId()] = $definition;
 
         $postContext = $apieContext->withContext(RequestMethod::class, RequestMethod::POST)
             ->withContext(ContextConstants::CREATE_OBJECT, true)
