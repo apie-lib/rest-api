@@ -25,9 +25,9 @@ class RestApiServiceProvider extends ServiceProvider
         \Apie\ServiceProviderGenerator\TagMap::register(
             $this->app,
             \Apie\RestApi\RouteDefinitions\RestApiRouteDefinitionProvider::class,
-            array(
-              0 =>
-              array(
+            array (
+              0 => 
+              array (
                 'name' => 'apie.common.route_definition',
               ),
             )
@@ -58,7 +58,7 @@ class RestApiServiceProvider extends ServiceProvider
         \Apie\ServiceProviderGenerator\TagMap::register(
             $this->app,
             \Apie\RestApi\Controllers\OpenApiDocumentationController::class,
-            array(
+            array (
               0 => 'controller.service_arguments',
             )
         );
@@ -76,7 +76,7 @@ class RestApiServiceProvider extends ServiceProvider
         \Apie\ServiceProviderGenerator\TagMap::register(
             $this->app,
             \Apie\RestApi\Controllers\RestApiController::class,
-            array(
+            array (
               0 => 'controller.service_arguments',
             )
         );
@@ -92,7 +92,7 @@ class RestApiServiceProvider extends ServiceProvider
         \Apie\ServiceProviderGenerator\TagMap::register(
             $this->app,
             \Apie\RestApi\Controllers\SwaggerUIController::class,
-            array(
+            array (
               0 => 'controller.service_arguments',
             )
         );
@@ -108,7 +108,7 @@ class RestApiServiceProvider extends ServiceProvider
         \Apie\ServiceProviderGenerator\TagMap::register(
             $this->app,
             \Apie\RestApi\EventListeners\OpenApiOperationAddedEventSubscriber::class,
-            array(
+            array (
               0 => 'kernel.event_subscriber',
             )
         );
