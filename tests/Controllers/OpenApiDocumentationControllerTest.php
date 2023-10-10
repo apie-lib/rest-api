@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Tests\RestApi\Controllers;
 
+use Apie\Common\ActionDefinitionProvider;
 use Apie\Common\ContextBuilderFactory;
 use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\BoundedContext\BoundedContextHashmap;
@@ -20,6 +21,7 @@ use Apie\Serializer\Serializer;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\NullLogger;
 use ReflectionClass;
 use ReflectionMethod;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -38,7 +40,7 @@ class OpenApiDocumentationControllerTest extends TestCase
             new OpenApiGenerator(
                 $contextBuilder,
                 ComponentsBuilderFactory::createComponentsBuilderFactory(),
-                new RestApiRouteDefinitionProvider(),
+                new RestApiRouteDefinitionProvider(new ActionDefinitionProvider(), new NullLogger()),
                 Serializer::create(),
                 new EventDispatcher(),
             )

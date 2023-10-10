@@ -2,8 +2,8 @@
 namespace Apie\RestApi\RouteDefinitions;
 
 use Apie\Common\ActionDefinitions\ActionDefinitionInterface;
-use Apie\Common\ActionDefinitions\ModifyResourceActionDefinition;
-use Apie\Common\Actions\ModifyObjectAction;
+use Apie\Common\ActionDefinitions\RemoveResourceActionDefinition;
+use Apie\Common\Actions\RemoveObjectAction;
 use Apie\Common\ContextConstants;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Entities\EntityInterface;
@@ -12,9 +12,9 @@ use Apie\Core\ValueObjects\UrlRouteDefinition;
 use ReflectionClass;
 
 /**
- * Route definition for modifying a single resource.
+ * Route definition for removing a single resource.
  */
-class PatchSingleResourceRouteDefinition extends AbstractRestApiRouteDefinition
+class RemoveSingleResourceRouteDefinition extends AbstractRestApiRouteDefinition
 {
     /**
      * @param ReflectionClass<EntityInterface> $className
@@ -26,12 +26,12 @@ class PatchSingleResourceRouteDefinition extends AbstractRestApiRouteDefinition
 
     public function getOperationId(): string
     {
-        return 'patch-single-' . $this->class->getShortName();
+        return 'remove-single-' . $this->class->getShortName();
     }
 
     public function getMethod(): RequestMethod
     {
-        return RequestMethod::PATCH;
+        return RequestMethod::DELETE;
     }
 
     public function getUrl(): UrlRouteDefinition
@@ -41,12 +41,12 @@ class PatchSingleResourceRouteDefinition extends AbstractRestApiRouteDefinition
 
     public function getAction(): string
     {
-        return ModifyObjectAction::class;
+        return RemoveObjectAction::class;
     }
 
     public static function createFrom(ActionDefinitionInterface $actionDefinition): ?AbstractRestApiRouteDefinition
     {
-        if ($actionDefinition instanceof ModifyResourceActionDefinition) {
+        if ($actionDefinition instanceof RemoveResourceActionDefinition) {
             return new self($actionDefinition->getResourceName(), $actionDefinition->getBoundedContextId());
         }
         return null;

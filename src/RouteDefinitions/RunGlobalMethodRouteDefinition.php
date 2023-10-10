@@ -1,6 +1,8 @@
 <?php
 namespace Apie\RestApi\RouteDefinitions;
 
+use Apie\Common\ActionDefinitions\ActionDefinitionInterface;
+use Apie\Common\ActionDefinitions\RunGlobalMethodDefinition;
 use Apie\Common\Actions\RunAction;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Enums\RequestMethod;
@@ -38,5 +40,13 @@ class RunGlobalMethodRouteDefinition extends AbstractRestApiRouteDefinition
         $methodName = $this->method->getName();
         $suffix = $methodName === '__invoke' ? '' : ('-' . $methodName);
         return 'call-method-' . $this->method->getDeclaringClass()->getShortName() . $suffix;
+    }
+
+    public static function createFrom(ActionDefinitionInterface $actionDefinition): ?AbstractRestApiRouteDefinition
+    {
+        if ($actionDefinition instanceof RunGlobalMethodDefinition) {
+            return new self($actionDefinition->getMethod(), $actionDefinition->getBoundedContextId());
+        }
+        return null;
     }
 }

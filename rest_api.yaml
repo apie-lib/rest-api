@@ -1,6 +1,9 @@
 services:
 
   Apie\RestApi\RouteDefinitions\RestApiRouteDefinitionProvider:
+    arguments:
+      - '@Apie\Common\ActionDefinitionProvider'
+      - '@Psr\Log\LoggerInterface'
     tags: 
       - name: apie.common.route_definition
 

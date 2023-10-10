@@ -18,7 +18,8 @@ class RestApiServiceProvider extends ServiceProvider
             \Apie\RestApi\RouteDefinitions\RestApiRouteDefinitionProvider::class,
             function ($app) {
                 return new \Apie\RestApi\RouteDefinitions\RestApiRouteDefinitionProvider(
-                
+                    $app->make(\Apie\Common\ActionDefinitionProvider::class),
+                    $app->make(\Psr\Log\LoggerInterface::class)
                 );
             }
         );
