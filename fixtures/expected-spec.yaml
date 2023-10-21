@@ -651,6 +651,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Throwable-get'
+  '/Order/{id}/provideAllowedMethods':
+    get:
+      tags:
+        - Order
+        - action
+      description: 'Runs method provideAllowedMethods on a Order with a specific id'
+      operationId: get-single-Order-run-provideAllowedMethods
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'id of instance of Order'
+          required: true
+          schema:
+            $ref: '#/components/schemas/OrderIdentifier-post'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StringList-get'
+        '404':
+          description: 'Resource not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
   '/Order/{id}/acceptOrder':
     get:
       tags:
@@ -800,6 +828,10 @@ components:
       type: string
       format: password
       pattern: '^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[\!@#\$%\^&\*\-_\+\.]){1,})[a-zA-Z0-9\!@#\$%\^&\*\-_\+\.]{6,42}$'
+    StringList-get:
+      type: array
+      items:
+        type: string
     Throwable-get:
       type: object
       required:
