@@ -127,7 +127,7 @@ class OpenApiGenerator
                 'required' => $info->required,
             ]);
         }
-        return $componentsBuilder->getSchemaForType($input);
+        return $componentsBuilder->getSchemaForType($input, nullable: $input->allowsNull());
     }
 
     /**
@@ -141,7 +141,7 @@ class OpenApiGenerator
         if ($output instanceof ReflectionMethod) {
             $output = $output->getReturnType();
         }
-        return $componentsBuilder->getSchemaForType($output, false, true);
+        return $componentsBuilder->getSchemaForType($output, false, true, $output->allowsNull());
     }
 
     private function createSchemaForOutput(ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition): Schema|Reference

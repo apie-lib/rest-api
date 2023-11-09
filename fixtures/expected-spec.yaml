@@ -820,10 +820,11 @@ components:
         - ACCEPTED
         - COMPLETED
       type: string
-    Password-get:
+    Password-nullable-get:
       type: string
       format: password
       pattern: '^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[\!@#\$%\^&\*\-_\+\.]){1,})[a-zA-Z0-9\!@#\$%\^&\*\-_\+\.]{6,42}$'
+      nullable: true
     Password-post:
       type: string
       format: password
@@ -845,8 +846,10 @@ components:
           $ref: '#/components/schemas/mixed'
     UserAutoincrementIdentifier-get:
       type: integer
+      nullable: true
     UserAutoincrementIdentifier-post:
       type: integer
+      nullable: true
     UserWithAddress-get:
       type: object
       required:
@@ -868,7 +871,7 @@ components:
         - address
       properties:
         id:
-          $ref: '#/components/schemas/UserWithAddressIdentifier-post'
+          $ref: '#/components/schemas/UserWithAddressIdentifier-nullable-post'
         password:
           $ref: '#/components/schemas/Password-post'
         address:
@@ -877,6 +880,11 @@ components:
       type: string
       format: userwithaddressidentifier
       pattern: '^[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$'
+    UserWithAddressIdentifier-nullable-post:
+      type: string
+      format: userwithaddressidentifier
+      pattern: '^[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$'
+      nullable: true
     UserWithAddressIdentifier-post:
       type: string
       format: userwithaddressidentifier
@@ -893,7 +901,7 @@ components:
         address:
           $ref: '#/components/schemas/AddressWithZipcodeCheck-get'
         password:
-          $ref: '#/components/schemas/Password-get'
+          $ref: '#/components/schemas/Password-nullable-get'
     UserWithAutoincrementKey-patch:
       type: object
       properties:
