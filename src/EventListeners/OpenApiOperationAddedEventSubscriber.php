@@ -9,6 +9,7 @@ use Apie\Core\Datalayers\ApieDatalayer;
 use Apie\Core\Datalayers\ApieDatalayerWithFilters;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\RestApi\Events\OpenApiOperationAddedEvent;
+use Apie\TypeConverter\ReflectionTypeFactory;
 use cebe\openapi\spec\Parameter;
 use cebe\openapi\spec\Schema;
 use ReflectionClass;
@@ -61,11 +62,12 @@ class OpenApiOperationAddedEventSubscriber implements EventSubscriberInterface
                         'minLength' => 1,
                     ]);
                     if (isset($fieldMetadata[$filterColumn])) {
-                        $typehint = $fieldMetadata[$filterColumn]->getTypehint();
+                        $typehint = ReflectionTypeFactory::createReflectionType('string');
                         $schema = $event->componentsBuilder->getSchemaForType(
                             $typehint,
                             false,
-                            true
+                            true,
+                            $fieldMetadata[$filterColumn]->allowsNull()
                         );
                     }
 
