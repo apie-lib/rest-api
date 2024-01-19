@@ -15,6 +15,7 @@ services:
       - '@Apie\Serializer\Serializer'
       - '@Psr\EventDispatcher\EventDispatcherInterface'
       - '%apie.rest_api.base_url%'
+      - '@?cebe\openapi\spec\OpenApi'
 
   Apie\RestApi\Controllers\OpenApiDocumentationController:
     arguments:

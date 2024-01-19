@@ -43,7 +43,8 @@ class RestApiServiceProvider extends ServiceProvider
                     $app->make('apie.route_definitions.provider'),
                     $app->make(\Apie\Serializer\Serializer::class),
                     $app->make(\Psr\EventDispatcher\EventDispatcherInterface::class),
-                    $this->parseArgument('%apie.rest_api.base_url%')
+                    $this->parseArgument('%apie.rest_api.base_url%'),
+                    $app->bound(\cebe\openapi\spec\OpenApi::class) ? $app->make(\cebe\openapi\spec\OpenApi::class) : null
                 );
             }
         );

@@ -613,7 +613,7 @@ paths:
           description: 'id of instance of Order'
           required: true
           schema:
-            $ref: '#/components/schemas/OrderIdentifier-post'
+            $ref: '#/components/schemas/OrderLineIdentifier-post'
       responses:
         '200':
           description: OK

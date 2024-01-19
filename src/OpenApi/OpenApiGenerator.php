@@ -15,6 +15,7 @@ use Apie\SchemaGenerator\Builders\ComponentsBuilder;
 use Apie\SchemaGenerator\ComponentsBuilderFactory;
 use Apie\Serializer\Exceptions\ValidationException;
 use Apie\Serializer\Serializer;
+use Apie\TypeConverter\ReflectionTypeFactory;
 use cebe\openapi\Reader;
 use cebe\openapi\ReferenceContext;
 use cebe\openapi\spec\MediaType;
@@ -121,11 +122,12 @@ class OpenApiGenerator
         }
         if ($input instanceof ReflectionMethod) {
             $info = $componentsBuilder->getSchemaForMethod($input);
-            return new Schema([
-                'type' => 'object',
-                'properties' => $info->schemas,
-                'required' => $info->required,
-            ]);
+            return new Schema(
+                [
+                    'type' => 'object',
+                    'properties' => $info->schemas,
+                ] + ($info->required ? ['required' => $info->required] : [])
+            );
         }
         return $componentsBuilder->getSchemaForType($input, nullable: $input->allowsNull());
     }
@@ -179,7 +181,17 @@ class OpenApiGenerator
     ): Schema|Reference {
         $input = $routeDefinition->getInputType();
         if ($input instanceof ReflectionMethod) {
-            $input = $input->getDeclaringClass();
+            $found = false;
+            foreach ($input->getParameters() as $parameter) {
+                if ($parameter->name === $placeholderName) {
+                    $found = true;
+                    $input = $parameter->getType() ?? ReflectionTypeFactory::createReflectionType('string');
+                    break;
+                }
+            }
+            if (!$found) {
+                $input = $input->getDeclaringClass();
+            }
         }
         if ($input instanceof ReflectionClass) {
             $methodNames = [
@@ -208,7 +220,7 @@ class OpenApiGenerator
             'in' => 'path',
             'name' => $placeholderName,
             'required' => true,
-            'description' => $placeholderName . ' of instance of ' . $this->getDisplayValue($routeDefinition->getInputType()),
+            'description' => $placeholderName . ' of instance of ' . $this->getDisplayValue($routeDefinition->getInputType(), $placeholderName),
             'schema' => $this->createSchemaForParameter($componentsBuilder, $routeDefinition, $placeholderName),
         ]);
     }
@@ -216,7 +228,7 @@ class OpenApiGenerator
     /**
      * @param ReflectionClass<object>|ReflectionMethod|ReflectionType $type
      */
-    private function getDisplayValue(ReflectionClass|ReflectionMethod|ReflectionType $type): string
+    private function getDisplayValue(ReflectionClass|ReflectionMethod|ReflectionType $type, string $placeholderName): string
     {
         if ($type instanceof ReflectionNamedType) {
             $name = $type->getName();
@@ -231,7 +243,10 @@ class OpenApiGenerator
         if ($type instanceof ReflectionClass) {
             return $type->getShortName();
         }
-        return $type->getDeclaringClass()->getShortName();
+        if ($placeholderName === 'id') {
+            return $type->getDeclaringClass()->getShortName();
+        }
+        return $type->name;
     }
 
     private function addAction(PathItem $pathItem, ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition): void
