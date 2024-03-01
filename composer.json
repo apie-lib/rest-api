@@ -31,7 +31,6 @@
     "symfony/event-dispatcher": "6.*"
   },
   "require-dev": {
-    "apie/composite-value-objects": "self.version",
     "apie/fixtures": "self.version",
     "apie/text-value-objects": "self.version",
     "phpunit/phpunit": "^9.5"
