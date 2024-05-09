@@ -28,6 +28,7 @@ services:
       - '@Apie\Core\ContextBuilders\ContextBuilderFactory'
       - '@Apie\Common\ApieFacade'
       - '@Apie\Serializer\EncoderHashmap'
+      - '@Apie\Common\Events\ResponseDispatcher'
     tags: ['controller.service_arguments']
 
   Apie\RestApi\Controllers\SwaggerUIController:

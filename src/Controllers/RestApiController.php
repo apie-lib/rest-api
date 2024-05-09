@@ -3,6 +3,7 @@ namespace Apie\RestApi\Controllers;
 
 use Apie\Common\ApieFacade;
 use Apie\Common\ContextConstants;
+use Apie\Common\Events\ResponseDispatcher;
 use Apie\Core\Actions\ActionResponse;
 use Apie\Core\ContextBuilders\ContextBuilderFactory;
 use Apie\Serializer\EncoderHashmap;
@@ -15,7 +16,8 @@ class RestApiController
     public function __construct(
         private readonly ContextBuilderFactory $contextBuilderFactory,
         private readonly ApieFacade $apieFacade,
-        private readonly EncoderHashmap $encoderHashmap
+        private readonly EncoderHashmap $encoderHashmap,
+        private readonly ResponseDispatcher $responseDispatcher
     ) {
     }
 
@@ -39,8 +41,11 @@ class RestApiController
 
         $responseBody = $psr17Factory->createStream($statusCode === 204 ? '' : $encoder->encode($output->getResultAsNativeData()));
 
-        return $psr17Factory->createResponse($statusCode)
+        $response = $psr17Factory->createResponse($statusCode)
             ->withBody($responseBody)
             ->withHeader('Content-Type', $contentType);
+        $response = $this->responseDispatcher->triggerResponseCreated($response, $output->apieContext);
+
+        return $response;
     }
 }

@@ -143,7 +143,7 @@ class OpenApiGenerator
         if ($output instanceof ReflectionMethod) {
             $output = $output->getReturnType();
         }
-        return $componentsBuilder->getSchemaForType($output, false, true, $output->allowsNull());
+        return $componentsBuilder->getSchemaForType($output, false, true, $output ? $output->allowsNull() : true);
     }
 
     private function createSchemaForOutput(ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition): Schema|Reference
