@@ -1,11 +1,11 @@
 <?php
 namespace Apie\RestApi\RouteDefinitions;
 
-use Apie\Common\ContextConstants;
 use Apie\Common\Enums\UrlPrefix;
 use Apie\Common\Interfaces\HasRouteDefinition;
 use Apie\Common\Lists\UrlPrefixList;
 use Apie\Core\BoundedContext\BoundedContextId;
+use Apie\Core\ContextConstants;
 use Apie\Core\Enums\RequestMethod;
 use Apie\Core\ValueObjects\UrlRouteDefinition;
 use Apie\RestApi\Controllers\SwaggerUIController;

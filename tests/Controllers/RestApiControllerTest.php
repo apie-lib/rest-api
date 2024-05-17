@@ -3,9 +3,9 @@ namespace Apie\Tests\RestApi\Controllers;
 
 use Apie\Common\Actions\RunAction;
 use Apie\Common\ContextBuilderFactory;
-use Apie\Common\ContextConstants;
 use Apie\Common\Events\ResponseDispatcher;
 use Apie\Common\Tests\Concerns\ProvidesApieFacade;
+use Apie\Core\ContextConstants;
 use Apie\Fixtures\Actions\StaticActionExample;
 use Apie\Fixtures\BoundedContextFactory;
 use Apie\RestApi\Controllers\RestApiController;
