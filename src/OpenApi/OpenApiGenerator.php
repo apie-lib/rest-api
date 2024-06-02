@@ -281,7 +281,7 @@ class OpenApiGenerator
         $responses = [
         ];
         foreach ($routeDefinition->getPossibleActionResponseStatuses() as $responseStatus) {
-            switch($responseStatus) {
+            switch ($responseStatus) {
                 case ActionResponseStatus::CREATED:
                     $responses[201] = new Response([
                         'description' => 'Resource was created',
