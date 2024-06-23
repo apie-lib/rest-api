@@ -181,7 +181,7 @@ paths:
         - Order
         - resource
       description: 'Creates an instance of Order'
-      operationId: post-Order
+      operationId: put-Order
       requestBody:
         content:
           application/json:

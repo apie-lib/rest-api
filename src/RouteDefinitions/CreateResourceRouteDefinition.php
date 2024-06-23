@@ -23,7 +23,7 @@ class CreateResourceRouteDefinition extends AbstractRestApiRouteDefinition
         }
         // TODO: should become PUT
         if ($actionDefinition instanceof ReplaceResourceActionDefinition) {
-            return new self($actionDefinition->getResourceName(), $actionDefinition->getBoundedContextId());
+            return new self($actionDefinition->getResourceName(), $actionDefinition->getBoundedContextId(), true);
         }
         return null;
     }
@@ -31,7 +31,7 @@ class CreateResourceRouteDefinition extends AbstractRestApiRouteDefinition
     /**
      * @param ReflectionClass<EntityInterface> $className
      */
-    public function __construct(ReflectionClass $className, BoundedContextId $boundedContextId)
+    public function __construct(ReflectionClass $className, BoundedContextId $boundedContextId, private bool $put = false)
     {
         parent::__construct($className, $boundedContextId);
     }
@@ -43,7 +43,7 @@ class CreateResourceRouteDefinition extends AbstractRestApiRouteDefinition
 
     public function getOperationId(): string
     {
-        return 'post-' . $this->class->getShortName();
+        return ($this->put ? 'put-' : 'post-') . $this->class->getShortName();
     }
 
     public function getUrl(): UrlRouteDefinition
