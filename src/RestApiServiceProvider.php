@@ -116,5 +116,6 @@ class RestApiServiceProvider extends ServiceProvider
             )
         );
         $this->app->tag([\Apie\RestApi\EventListeners\OpenApiOperationAddedEventSubscriber::class], 'kernel.event_subscriber');
+        
     }
 }

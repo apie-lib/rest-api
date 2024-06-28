@@ -18,6 +18,7 @@ final class RestApiRouteDefinitionProvider implements RouteDefinitionProviderInt
         PatchSingleResourceRouteDefinition::class,
         RunGlobalMethodRouteDefinition::class,
         RunMethodCallOnSingleResourceRouteDefinition::class,
+        StreamMethodCallOnSingleResourceRouteDefinition::class,
     ];
 
     public function __construct(
