@@ -5,11 +5,14 @@ use Apie\Common\Enums\UrlPrefix;
 use Apie\Common\Interfaces\RestApiRouteDefinition;
 use Apie\Common\Interfaces\RouteDefinitionProviderInterface;
 use Apie\Core\Actions\ActionResponseStatus;
+use Apie\Core\Attributes\AllowMultipart;
 use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\ContextBuilders\ContextBuilderFactory;
 use Apie\Core\Dto\ListOf;
 use Apie\Core\Enums\RequestMethod;
+use Apie\Core\TypeUtils;
+use Apie\Core\Utils\ConverterUtils;
 use Apie\RestApi\Events\OpenApiOperationAddedEvent;
 use Apie\SchemaGenerator\Builders\ComponentsBuilder;
 use Apie\SchemaGenerator\ComponentsBuilderFactory;
@@ -102,11 +105,71 @@ class OpenApiGenerator
         return $spec;
     }
 
-    private function createSchemaForInput(ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition): Schema|Reference
+    private function createSchemaForInput(ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition, bool $forUpload = false): Schema|Reference
     {
         $input = $routeDefinition->getInputType();
         
-        return $this->doSchemaForInput($input, $componentsBuilder, $routeDefinition->getMethod());
+        $result = $this->doSchemaForInput($input, $componentsBuilder, $routeDefinition->getMethod());
+        if ($forUpload && $routeDefinition->getMethod() !== RequestMethod::GET) {
+            $uploads = [];
+            $visited = [];
+            $state = [];
+            $this->findUploads($result, $componentsBuilder, $state, $uploads, $visited);
+            $required = [];
+            foreach ($uploads as $uploadName => $upload) {
+                if (!$upload->nullable) {
+                    $required[] = $uploadName;
+                }
+            }
+            return new Schema([
+                'type' => 'object',
+                'properties' => [
+                    'form' => $result,
+                    '_csrf' => new Schema(['type' => 'string']),
+                    // TODO _internal
+                    ...$uploads
+                ],
+                'required' => $required,
+            ]);
+        }
+        return $result;
+    }
+
+    /**
+     * @param array<int, string> $state
+     * @param array <int|string, mixed> $uploads
+     * @param array <string, true> $visited  
+     */
+    private function findUploads(
+        Schema|Reference $schema,
+        ComponentsBuilder $componentsBuilder,
+        array $state,
+        array& $uploads,
+        array& $visited
+    ): void {
+        if ($schema instanceof Reference) {
+            if (isset($visited[$schema->getReference()])) {
+                return;
+            }
+            $visited[$schema->getReference()] = true;
+            $schema = $componentsBuilder->getSchemaForReference($schema);
+        }
+        if ($schema->__isset('x-upload')) {
+            $uploads[implode('.', $state)] = new Schema([
+                'type' => 'string',
+                'format' => 'binary',
+                'nullable' => $schema->nullable,
+            ]);
+        }
+        foreach ($schema->properties ?? [] as $propertyName => $propertySchema) {
+            $this->findUploads(
+                $propertySchema,
+                $componentsBuilder,
+                [...$state, $propertyName],
+                $uploads,
+                $visited
+            );
+        }
     }
 
     /**
@@ -249,6 +312,18 @@ class OpenApiGenerator
         return $type->name;
     }
 
+    private function supportsMultipart(RestApiRouteDefinition $routeDefinition): bool
+    {
+        $input = ConverterUtils::toReflectionClass($routeDefinition->getInputType());
+        if ($input === null) {
+            return false;
+        }
+        if (!in_array($routeDefinition->getMethod(), [RequestMethod::POST, RequestMethod::PUT, RequestMethod::PATCH])) {
+            return false;
+        }
+        return !empty($input->getAttributes(AllowMultipart::class));
+    }
+
     private function addAction(PathItem $pathItem, ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition): void
     {
         $method = $routeDefinition->getMethod();
@@ -272,10 +347,22 @@ class OpenApiGenerator
         }
 
         if ($method !== RequestMethod::GET && $method !== RequestMethod::DELETE) {
+            $content = [
+                'application/json' => new MediaType(['schema' => $inputSchema]),
+            ];
+            if ($this->supportsMultipart($routeDefinition)) {
+                $uploadSchema = $componentsBuilder->runInContentType(
+                    'multipart/form-data',
+                    function () use ($componentsBuilder, $routeDefinition) {
+                        return $this->createSchemaForInput($componentsBuilder, $routeDefinition, true);
+                    }
+                );
+                $content['multipart/form-data'] = new MediaType([
+                    'schema' => $uploadSchema
+                ]);
+            }
             $operation->requestBody = new RequestBody([
-                'content' => [
-                    'application/json' => new MediaType(['schema' => $inputSchema])
-                ]
+                'content' => $content
             ]);
         }
         $responses = [
@@ -343,6 +430,15 @@ class OpenApiGenerator
             }
         }
         $operation->responses = $responses;
+        if (strtolower($componentsBuilder->getContentType() ?? '') === 'multipart/form-data') {
+            $operation->parameters = [
+                new Parameter([
+                    'name' => 'x-no-crsf',
+                    'in' => 'header',
+                    'description' => 'Disable csrf',
+                ])
+            ];
+        }
         $prop = strtolower($method->value);
         $pathItem->{$prop} = $operation;
         $this->dispatcher->dispatch(
