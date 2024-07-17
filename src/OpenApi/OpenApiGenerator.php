@@ -11,7 +11,6 @@ use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\ContextBuilders\ContextBuilderFactory;
 use Apie\Core\Dto\ListOf;
 use Apie\Core\Enums\RequestMethod;
-use Apie\Core\TypeUtils;
 use Apie\Core\Utils\ConverterUtils;
 use Apie\RestApi\Events\OpenApiOperationAddedEvent;
 use Apie\SchemaGenerator\Builders\ComponentsBuilder;
@@ -138,7 +137,7 @@ class OpenApiGenerator
     /**
      * @param array<int, string> $state
      * @param array <int|string, mixed> $uploads
-     * @param array <string, true> $visited  
+     * @param array <string, true> $visited
      */
     private function findUploads(
         Schema|Reference $schema,
