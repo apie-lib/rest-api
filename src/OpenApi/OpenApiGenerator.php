@@ -114,7 +114,7 @@ class OpenApiGenerator
             $visited = [];
             $state = [];
             $this->findUploads($result, $componentsBuilder, $state, $uploads, $visited);
-            $required = [];
+            $required = ['form'];
             foreach ($uploads as $uploadName => $upload) {
                 if (!$upload->nullable) {
                     $required[] = $uploadName;
@@ -359,6 +359,17 @@ class OpenApiGenerator
                 $content['multipart/form-data'] = new MediaType([
                     'schema' => $uploadSchema
                 ]);
+                $parameters = $operation->parameters;
+                $parameters[] = new Parameter([
+                    'name' => 'x-no-crsf',
+                    'in' => 'header',
+                    'description' => 'Disable csrf',
+                    'schema' => [
+                        'type' => 'string',
+                        'enum' => [1]
+                    ],
+                ]);
+                $operation->parameters = $parameters;
             }
             $operation->requestBody = new RequestBody([
                 'content' => $content
@@ -429,15 +440,6 @@ class OpenApiGenerator
             }
         }
         $operation->responses = $responses;
-        if (strtolower($componentsBuilder->getContentType() ?? '') === 'multipart/form-data') {
-            $operation->parameters = [
-                new Parameter([
-                    'name' => 'x-no-crsf',
-                    'in' => 'header',
-                    'description' => 'Disable csrf',
-                ])
-            ];
-        }
         $prop = strtolower($method->value);
         $pathItem->{$prop} = $operation;
         $this->dispatcher->dispatch(
