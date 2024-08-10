@@ -34,6 +34,7 @@ services:
   Apie\RestApi\Controllers\SwaggerUIController:
     arguments:
       - '%apie.rest_api.base_url%'
+      - '@Apie\Core\BoundedContext\BoundedContextHashmap'
     tags: ['controller.service_arguments']
 
   Apie\RestApi\EventListeners\OpenApiOperationAddedEventSubscriber:

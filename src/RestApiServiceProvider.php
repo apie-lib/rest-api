@@ -88,7 +88,8 @@ class RestApiServiceProvider extends ServiceProvider
             \Apie\RestApi\Controllers\SwaggerUIController::class,
             function ($app) {
                 return new \Apie\RestApi\Controllers\SwaggerUIController(
-                    $this->parseArgument('%apie.rest_api.base_url%')
+                    $this->parseArgument('%apie.rest_api.base_url%'),
+                    $app->make(\Apie\Core\BoundedContext\BoundedContextHashmap::class)
                 );
             }
         );

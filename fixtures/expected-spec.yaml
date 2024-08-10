@@ -795,6 +795,13 @@ components:
       type: string
       format: orderidentifier
       pattern: '^[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$'
+    OrderLine-get:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          $ref: '#/components/schemas/OrderLineIdentifier-get'
     OrderLine-post:
       type: object
       required:
@@ -802,6 +809,10 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/OrderLineIdentifier-post'
+    OrderLineIdentifier-get:
+      type: string
+      format: orderlineidentifier
+      pattern: '^[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$'
     OrderLineIdentifier-post:
       type: string
       format: orderlineidentifier
@@ -809,7 +820,7 @@ components:
     OrderLineList-get:
       type: array
       items:
-        $ref: '#/components/schemas/OrderLine-post'
+        $ref: '#/components/schemas/OrderLine-get'
     OrderLineList-post:
       type: array
       items:
