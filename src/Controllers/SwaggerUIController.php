@@ -25,12 +25,21 @@ class SwaggerUIController
             '%%OPENAPI_YAML%%',
             '%%OPENAPIS_AVAILABLE%%',
         ];
-        $urls = [];
+        $boundedContext = $this->boundedContextHashmap[$boundedContextId];
+        $urls = [
+            [
+                'url' => '/' . trim($this->baseUrl, '/') . '/' . $boundedContextId . '/openapi.yaml',
+                'name' => $boundedContextId . '(' . $boundedContext->actions->count() . ' actions, ' . $boundedContext->resources->count() . ' resources)',
+            ]
+        ];
+        
         foreach ($this->boundedContextHashmap as $availableBoundedContextId => $boundedContext) {
-            $urls[] = [
-                'url' => '/' . trim($this->baseUrl, '/') . '/' . $availableBoundedContextId . '/openapi.yaml',
-                'name' => $availableBoundedContextId . '(' . $boundedContext->actions->count() . ' actions, ' . $boundedContext->resources->count() . ' resources)',
-            ];
+            if ($boundedContextId !== $availableBoundedContextId) {
+                $urls[] = [
+                    'url' => '/' . trim($this->baseUrl, '/') . '/' . $availableBoundedContextId . '/openapi.yaml',
+                    'name' => $availableBoundedContextId . '(' . $boundedContext->actions->count() . ' actions, ' . $boundedContext->resources->count() . ' resources)',
+                ];
+            }
         }
         $replace = [
             '/' . trim($this->baseUrl, '/') . '/' . $boundedContextId . '/openapi.yaml',

@@ -51,7 +51,7 @@ class StreamMethodCallOnSingleResourceRouteDefinition extends AbstractRestApiRou
 
     public static function createFrom(ActionDefinitionInterface $actionDefinition): ?AbstractRestApiRouteDefinition
     {
-        if ($actionDefinition instanceof StreamGetterActionDefinition) {
+        if ($actionDefinition instanceof StreamGetterActionDefinition && $actionDefinition->getMethod() instanceof ReflectionMethod) {
             return new self($actionDefinition->getResourceName(), $actionDefinition->getMethod(), $actionDefinition->getBoundedContextId());
         }
         return null;
