@@ -485,7 +485,7 @@ paths:
           description: 'id of instance of UserWithAddress'
           required: true
           schema:
-            $ref: '#/components/schemas/UserWithAddressIdentifier-post'
+            $ref: '#/components/schemas/NonEmptyString-post'
       requestBody:
         content:
           application/json:
@@ -550,7 +550,7 @@ paths:
           description: 'id of instance of Order'
           required: true
           schema:
-            $ref: '#/components/schemas/OrderIdentifier-post'
+            $ref: '#/components/schemas/NonEmptyString-post'
       requestBody:
         content:
           application/json:
@@ -665,7 +665,7 @@ paths:
           description: 'id of instance of Order'
           required: true
           schema:
-            $ref: '#/components/schemas/OrderIdentifier-post'
+            $ref: '#/components/schemas/NonEmptyString-post'
       responses:
         '200':
           description: OK
@@ -693,7 +693,7 @@ paths:
           description: 'id of instance of Order'
           required: true
           schema:
-            $ref: '#/components/schemas/OrderIdentifier-post'
+            $ref: '#/components/schemas/NonEmptyString-post'
       responses:
         '200':
           description: OK
@@ -764,6 +764,10 @@ components:
             type: string
           -
             type: integer
+    NonEmptyString-post:
+      type: string
+      format: nonemptystring
+      pattern: ^.+$
     Order-get:
       type: object
       required:

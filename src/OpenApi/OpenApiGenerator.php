@@ -12,6 +12,7 @@ use Apie\Core\ContextBuilders\ContextBuilderFactory;
 use Apie\Core\Dto\ListOf;
 use Apie\Core\Enums\RequestMethod;
 use Apie\Core\Utils\ConverterUtils;
+use Apie\Core\ValueObjects\NonEmptyString;
 use Apie\RestApi\Events\OpenApiOperationAddedEvent;
 use Apie\SchemaGenerator\Builders\ComponentsBuilder;
 use Apie\SchemaGenerator\ComponentsBuilderFactory;
@@ -242,17 +243,14 @@ class OpenApiGenerator
         string $placeholderName
     ): Schema|Reference {
         $input = $routeDefinition->getInputType();
+        $found = false;
         if ($input instanceof ReflectionMethod) {
-            $found = false;
             foreach ($input->getParameters() as $parameter) {
                 if ($parameter->name === $placeholderName) {
                     $found = true;
                     $input = $parameter->getType() ?? ReflectionTypeFactory::createReflectionType('string');
                     break;
                 }
-            }
-            if (!$found) {
-                $input = $input->getDeclaringClass();
             }
         }
         if ($input instanceof ReflectionClass) {
@@ -262,13 +260,18 @@ class OpenApiGenerator
                 ['is' . ucfirst($placeholderName), 'hasMethod', 'getMethod', 'getReturnType'],
                 [$placeholderName, 'hasProperty', 'getProperty', 'getType'],
             ];
+
             foreach ($methodNames as $optionToCheck) {
                 list($propertyName, $has, $get, $type) = $optionToCheck;
                 if ($input->$has($propertyName)) {
                     $input = $input->$get($propertyName)->$type();
+                    $found = true;
                     break;
                 }
             }
+        }
+        if (!$found) {
+            $input = ReflectionTypeFactory::createReflectionType(NonEmptyString::class);
         }
         return $this->doSchemaForInput($input, $componentsBuilder);
     }
