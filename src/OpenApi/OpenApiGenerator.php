@@ -1,6 +1,7 @@
 <?php
 namespace Apie\RestApi\OpenApi;
 
+use Apie\Common\ContextBuilders\Exceptions\WrongTokenException;
 use Apie\Common\Enums\UrlPrefix;
 use Apie\Common\Interfaces\RestApiRouteDefinition;
 use Apie\Common\Interfaces\RouteDefinitionProviderInterface;
@@ -16,6 +17,7 @@ use Apie\Core\ValueObjects\NonEmptyString;
 use Apie\RestApi\Events\OpenApiOperationAddedEvent;
 use Apie\SchemaGenerator\Builders\ComponentsBuilder;
 use Apie\SchemaGenerator\ComponentsBuilderFactory;
+use Apie\Serializer\Exceptions\NotAcceptedException;
 use Apie\Serializer\Exceptions\ValidationException;
 use Apie\Serializer\Serializer;
 use Apie\TypeConverter\ReflectionTypeFactory;
@@ -403,7 +405,7 @@ class OpenApiGenerator
                         $responses[$statusCode] = new Response([
                             'description' => 'Invalid request',
                             'content' => [
-                                'application/json' => new MediaType(['schema' => $componentsBuilder->addDisplaySchemaFor(Throwable::class)]),
+                                'application/json' => new MediaType(['schema' => $componentsBuilder->addDisplaySchemaFor(NotAcceptedException::class)]),
                             ]
                         ]);
                     }
@@ -413,6 +415,16 @@ class OpenApiGenerator
                             'application/json' => new MediaType(['schema' => $componentsBuilder->addDisplaySchemaFor(ValidationException::class)]),
                         ]
                     ]);
+                    break;
+                case ActionResponseStatus::AUTHORIZATION_ERROR:
+                    foreach ([401 => 'Requires authorization', 403 => 'Access denied'] as $statusCode => $description) {
+                        $responses[$statusCode] = new Response([
+                            'description' => $description,
+                            'content' => [
+                                'application/json' => new MediaType(['schema' => $componentsBuilder->addDisplaySchemaFor(WrongTokenException::class)]),
+                            ]
+                        ]);
+                    }
                     break;
                 case ActionResponseStatus::DELETED:
                     $responses[204] = new Response(['description' => 'Resource was deleted']);
