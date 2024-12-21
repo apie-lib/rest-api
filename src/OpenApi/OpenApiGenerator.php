@@ -218,13 +218,15 @@ class OpenApiGenerator
             return new Schema([
                 'type' => 'object',
                 'required' => [
+                    'filteredCount',
                     'totalCount',
                     'first',
                     'last',
                     'list',
                 ],
                 'properties' => [
-                    'totalCount' => ['type' => 'integer'],
+                    'totalCount' => ['type' => 'integer', 'minimum' => 0],
+                    'filteredCount' => ['type' => 'integer', 'minimum' => 0],
                     'first' => ['type' => 'string', 'format' => 'uri'],
                     'last' => ['type' => 'string', 'format' => 'uri'],
                     'prev' => ['type' => 'string', 'format' => 'uri'],
