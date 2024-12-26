@@ -43,9 +43,7 @@ class RestApiControllerTest extends TestCase
             ->withAttribute(ContextConstants::OPERATION_ID, 'test');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_run_a_method()
     {
         $testItem = $this->givenAControllerToRunArbitraryMethod();

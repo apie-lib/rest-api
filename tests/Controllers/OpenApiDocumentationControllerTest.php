@@ -71,9 +71,7 @@ class OpenApiDocumentationControllerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_an_openapi_schema()
     {
         $testItem = $this->givenAControllerToProvideOpenApiDocumentation();
