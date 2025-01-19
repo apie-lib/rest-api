@@ -77,7 +77,7 @@ class OpenApiGenerator
         $spec = unserialize($this->baseSpec);
         $urlPrefix = $this->baseUrl . '/' . $boundedContext->getId();
         $spec->servers = [new Server(['url' => $urlPrefix]), new Server(['url' => 'http://localhost/' . $urlPrefix])];
-        $componentsBuilder = $this->componentsFactory->createComponentsBuilder();
+        $componentsBuilder = $this->componentsFactory->createComponentsBuilder($spec->components);
         $context = $this->contextBuilder->createGeneralContext(
             [
                 OpenApiGenerator::class => $this,

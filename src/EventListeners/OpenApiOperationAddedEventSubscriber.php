@@ -42,6 +42,7 @@ class OpenApiOperationAddedEventSubscriber implements EventSubscriberInterface
                     new ApieContext()
                 )->getHashmap();
                 $filterColumns = $this->apieDatalayer->getFilterColumns($refl, new BoundedContextId($boundedContextId));
+                // TODO: this assumes that if there are no filters, there is also no global search?
                 if (null === $filterColumns) {
                     return;
                 }
@@ -75,6 +76,30 @@ class OpenApiOperationAddedEventSubscriber implements EventSubscriberInterface
                         'name' => 'query[' . $filterColumn . ']',
                         'in' => 'query',
                         'schema' => $schema,
+                    ]);
+                }
+                $orderByColumns = $this->apieDatalayer->getOrderByColumns($refl, new BoundedContextId($boundedContextId));
+                if ($orderByColumns?->count()) {
+                    $values = [];
+                    foreach ($orderByColumns as $orderByColumn) {
+                        array_push(
+                            $values,
+                            $orderByColumn,
+                            '+' . $orderByColumn,
+                            '-' . $orderByColumn
+                        );
+                    }
+
+                    $parameters[] = new Parameter([
+                        'name' => 'order_by',
+                        'in' => 'query',
+                        'schema' => new Schema([
+                            'type' => 'array',
+                            'items' => [
+                                'type' => 'string',
+                                'enum' => $values,
+                            ]
+                        ])
                     ]);
                 }
                 $operation->parameters = $parameters;
