@@ -343,14 +343,24 @@ class OpenApiGenerator
             'description' => $routeDefinition->getDescription(),
             'operationId' => $routeDefinition->getOperationId(),
         ]);
+        $parameters = [];
+        $parameters[] = new Parameter([
+            'name' => 'fields',
+            'in' => 'query',
+            'explode' => false,
+            'schema' => new Schema([
+                'type' => 'array',
+                'items' => new Schema([
+                    'type' => 'string',
+                ])
+            ])
+        ]);
         $placeholders = $routeDefinition->getUrl()->getPlaceholders();
-        if ($placeholders) {
-            $parameters = [];
-            foreach ($placeholders as $placeholderName) {
-                $parameters[] = $this->generateParameter($componentsBuilder, $routeDefinition, $placeholderName);
-            }
-            $operation->parameters = $parameters;
+
+        foreach ($placeholders as $placeholderName) {
+            $parameters[] = $this->generateParameter($componentsBuilder, $routeDefinition, $placeholderName);
         }
+        $operation->parameters = $parameters;
 
         if ($method !== RequestMethod::GET && $method !== RequestMethod::DELETE) {
             $content = [

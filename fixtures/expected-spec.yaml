@@ -10,6 +10,15 @@ paths:
         - resource
       description: 'Creates an instance of UserWithAddress'
       operationId: post-UserWithAddress
+      parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       requestBody:
         content:
           application/json:
@@ -58,6 +67,15 @@ paths:
         - resource
       description: 'Gets a list of resource that are an instance of UserWithAddress'
       operationId: get-all-UserWithAddress
+      parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         '200':
           description: OK
@@ -101,6 +119,15 @@ paths:
         - resource
       description: 'Creates an instance of UserWithAutoincrementKey'
       operationId: post-UserWithAutoincrementKey
+      parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       requestBody:
         content:
           application/json:
@@ -149,6 +176,15 @@ paths:
         - resource
       description: 'Gets a list of resource that are an instance of UserWithAutoincrementKey'
       operationId: get-all-UserWithAutoincrementKey
+      parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         '200':
           description: OK
@@ -192,6 +228,15 @@ paths:
         - resource
       description: 'Creates an instance of Order'
       operationId: put-Order
+      parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       requestBody:
         content:
           application/json:
@@ -240,6 +285,15 @@ paths:
         - resource
       description: 'Gets a list of resource that are an instance of Order'
       operationId: get-all-Order
+      parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         '200':
           description: OK
@@ -285,6 +339,14 @@ paths:
       operationId: get-single-UserWithAddress
       parameters:
         -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
           name: id
           in: path
           description: 'id of instance of UserWithAddress'
@@ -323,6 +385,14 @@ paths:
       description: 'Modifies an instance of UserWithAddress'
       operationId: patch-single-UserWithAddress
       parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
         -
           name: id
           in: path
@@ -381,6 +451,14 @@ paths:
       operationId: get-single-UserWithAutoincrementKey
       parameters:
         -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
           name: id
           in: path
           description: 'id of instance of UserWithAutoincrementKey'
@@ -419,6 +497,14 @@ paths:
       description: 'Modifies an instance of UserWithAutoincrementKey'
       operationId: patch-single-UserWithAutoincrementKey
       parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
         -
           name: id
           in: path
@@ -477,6 +563,14 @@ paths:
       operationId: get-single-Order
       parameters:
         -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
           name: id
           in: path
           description: 'id of instance of Order'
@@ -515,6 +609,15 @@ paths:
         - action
       description: 'Calls method secretCode and returns return value.'
       operationId: call-method-StaticActionExample-secretCode
+      parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         '200':
           description: OK
@@ -530,6 +633,14 @@ paths:
       description: 'Runs method verifyAuthentication on a UserWithAddress with a specific id'
       operationId: get-single-UserWithAddress-run-verifyAuthentication
       parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
         -
           name: id
           in: path
@@ -596,6 +707,14 @@ paths:
       operationId: get-single-Order-run-addOrderLine
       parameters:
         -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
           name: id
           in: path
           description: 'id of instance of Order'
@@ -659,6 +778,14 @@ paths:
       operationId: get-single-Order-run-removeOrderLine
       parameters:
         -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
           name: id
           in: path
           description: 'id of instance of Order'
@@ -711,6 +838,14 @@ paths:
       operationId: get-single-Order-run-provideAllowedMethods
       parameters:
         -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
           name: id
           in: path
           description: 'id of instance of Order'
@@ -738,6 +873,14 @@ paths:
       description: 'Runs method acceptOrder on a Order with a specific id'
       operationId: get-single-Order-run-acceptOrder
       parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
         -
           name: id
           in: path
