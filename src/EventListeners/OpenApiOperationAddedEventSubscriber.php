@@ -50,6 +50,22 @@ class OpenApiOperationAddedEventSubscriber implements EventSubscriberInterface
                 $parameters = $operation->parameters ?? [];
                 $parameters ??= [];
                 $parameters[] = new Parameter([
+                    'name' => 'items_per_page',
+                    'in' => 'query',
+                    'schema' => new Schema([
+                        'type' => 'int',
+                        'min' => 1
+                    ])
+                ]);
+                $parameters[] = new Parameter([
+                    'name' => 'page',
+                    'in' => 'query',
+                    'schema' => new Schema([
+                        'type' => 'int',
+                        'min' => 0
+                    ])
+                ]);
+                $parameters[] = new Parameter([
                     'name' => 'search',
                     'in' => 'query',
                     'schema' => new Schema([
