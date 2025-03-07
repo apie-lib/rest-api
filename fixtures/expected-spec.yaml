@@ -19,6 +19,14 @@ paths:
             type: array
             items:
               type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       requestBody:
         content:
           application/json:
@@ -76,6 +84,14 @@ paths:
             type: array
             items:
               type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         '200':
           description: OK
@@ -122,6 +138,14 @@ paths:
       parameters:
         -
           name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
           in: query
           explode: false
           schema:
@@ -185,6 +209,14 @@ paths:
             type: array
             items:
               type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         '200':
           description: OK
@@ -231,6 +263,14 @@ paths:
       parameters:
         -
           name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
           in: query
           explode: false
           schema:
@@ -294,6 +334,14 @@ paths:
             type: array
             items:
               type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         '200':
           description: OK
@@ -347,6 +395,14 @@ paths:
             items:
               type: string
         -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
           name: id
           in: path
           description: 'id of instance of UserWithAddress'
@@ -387,6 +443,14 @@ paths:
       parameters:
         -
           name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
           in: query
           explode: false
           schema:
@@ -459,6 +523,14 @@ paths:
             items:
               type: string
         -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
           name: id
           in: path
           description: 'id of instance of UserWithAutoincrementKey'
@@ -499,6 +571,14 @@ paths:
       parameters:
         -
           name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
           in: query
           explode: false
           schema:
@@ -571,6 +651,14 @@ paths:
             items:
               type: string
         -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
           name: id
           in: path
           description: 'id of instance of Order'
@@ -618,6 +706,14 @@ paths:
             type: array
             items:
               type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         '200':
           description: OK
@@ -635,6 +731,14 @@ paths:
       parameters:
         -
           name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
           in: query
           explode: false
           schema:
@@ -715,6 +819,14 @@ paths:
             items:
               type: string
         -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
           name: id
           in: path
           description: 'id of instance of Order'
@@ -786,6 +898,14 @@ paths:
             items:
               type: string
         -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
           name: id
           in: path
           description: 'id of instance of Order'
@@ -846,6 +966,14 @@ paths:
             items:
               type: string
         -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
           name: id
           in: path
           description: 'id of instance of Order'
@@ -875,6 +1003,14 @@ paths:
       parameters:
         -
           name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
           in: query
           explode: false
           schema:

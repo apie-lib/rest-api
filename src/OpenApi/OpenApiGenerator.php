@@ -355,6 +355,17 @@ class OpenApiGenerator
                 ])
             ])
         ]);
+        $parameters[] = new Parameter([
+            'name' => 'relations',
+            'in' => 'query',
+            'explode' => false,
+            'schema' => new Schema([
+                'type' => 'array',
+                'items' => new Schema([
+                    'type' => 'string',
+                ])
+            ])
+        ]);
         $placeholders = $routeDefinition->getUrl()->getPlaceholders();
 
         foreach ($placeholders as $placeholderName) {
