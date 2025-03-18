@@ -2,8 +2,8 @@
 namespace Apie\RestApi\RouteDefinitions;
 
 use Apie\Common\ActionDefinitions\ActionDefinitionInterface;
-use Apie\Common\ActionDefinitions\GetResourceActionDefinition;
-use Apie\Common\Actions\GetItemAction;
+use Apie\Common\ActionDefinitions\ModifyResourceActionDefinition;
+use Apie\Common\Actions\ModifyObjectAction;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\ContextConstants;
 use Apie\Core\Entities\EntityInterface;
@@ -12,9 +12,9 @@ use Apie\Core\ValueObjects\UrlRouteDefinition;
 use ReflectionClass;
 
 /**
- * Route definition for getting a single resource.
+ * Route definition for modifying a single resource.
  */
-class GetSingleResourceRouteDefinition extends AbstractRestApiRouteDefinition
+class PatchSingleResourceRouteDefinition extends AbstractRestApiRouteDefinition
 {
     /**
      * @param ReflectionClass<EntityInterface> $className
@@ -24,22 +24,14 @@ class GetSingleResourceRouteDefinition extends AbstractRestApiRouteDefinition
         parent::__construct($className, $boundedContextId);
     }
 
-    public static function createFrom(ActionDefinitionInterface $actionDefinition): ?AbstractRestApiRouteDefinition
-    {
-        if ($actionDefinition instanceof GetResourceActionDefinition) {
-            return new self($actionDefinition->getResourceName(), $actionDefinition->getBoundedContextId());
-        }
-        return null;
-    }
-
     public function getOperationId(): string
     {
-        return 'get-single-' . $this->class->getShortName();
+        return 'patch-single-' . $this->class->getShortName();
     }
 
     public function getMethod(): RequestMethod
     {
-        return RequestMethod::GET;
+        return RequestMethod::PATCH;
     }
 
     public function getUrl(): UrlRouteDefinition
@@ -49,6 +41,14 @@ class GetSingleResourceRouteDefinition extends AbstractRestApiRouteDefinition
 
     public function getAction(): string
     {
-        return GetItemAction::class;
+        return ModifyObjectAction::class;
+    }
+
+    public static function createFrom(ActionDefinitionInterface $actionDefinition): ?AbstractRestApiRouteDefinition
+    {
+        if ($actionDefinition instanceof ModifyResourceActionDefinition) {
+            return new self($actionDefinition->getResourceName(), $actionDefinition->getBoundedContextId());
+        }
+        return null;
     }
 }

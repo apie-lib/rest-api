@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Tests\RestApi\Controllers;
 
+use Apie\Common\ActionDefinitionProvider;
 use Apie\Common\ContextBuilderFactory;
 use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\BoundedContext\BoundedContextHashmap;
@@ -20,22 +21,28 @@ use Apie\Serializer\Serializer;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\NullLogger;
 use ReflectionClass;
 use ReflectionMethod;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class OpenApiDocumentationControllerTest extends TestCase
 {
     protected function givenAControllerToProvideOpenApiDocumentation(): OpenApiDocumentationController
     {
         $boundedContextHashmap = new BoundedContextHashmap(['test' => $this->givenABoundedContext()]);
-        $contextBuilder = ContextBuilderFactory::create($boundedContextHashmap, DecoderHashmap::create());
+        $contextBuilder = ContextBuilderFactory::create(
+            $boundedContextHashmap,
+            DecoderHashmap::create()
+        );
         return new OpenApiDocumentationController(
             $boundedContextHashmap,
             new OpenApiGenerator(
                 $contextBuilder,
                 ComponentsBuilderFactory::createComponentsBuilderFactory(),
-                new RestApiRouteDefinitionProvider(),
-                Serializer::create()
+                new RestApiRouteDefinitionProvider(new ActionDefinitionProvider(), new NullLogger()),
+                Serializer::create(),
+                new EventDispatcher(),
             )
         );
     }
@@ -64,9 +71,7 @@ class OpenApiDocumentationControllerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_an_openapi_schema()
     {
         $testItem = $this->givenAControllerToProvideOpenApiDocumentation();

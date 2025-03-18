@@ -1,6 +1,9 @@
 <?php
 namespace Apie\RestApi\RouteDefinitions;
 
+use Apie\Common\ActionDefinitions\ActionDefinitionInterface;
+use Apie\Common\ActionDefinitions\CreateResourceActionDefinition;
+use Apie\Common\ActionDefinitions\ReplaceResourceActionDefinition;
 use Apie\Common\Actions\CreateObjectAction;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Entities\EntityInterface;
@@ -13,10 +16,22 @@ use ReflectionClass;
  */
 class CreateResourceRouteDefinition extends AbstractRestApiRouteDefinition
 {
+    public static function createFrom(ActionDefinitionInterface $actionDefinition): ?AbstractRestApiRouteDefinition
+    {
+        if ($actionDefinition instanceof CreateResourceActionDefinition) {
+            return new self($actionDefinition->getResourceName(), $actionDefinition->getBoundedContextId());
+        }
+        // TODO: should become PUT
+        if ($actionDefinition instanceof ReplaceResourceActionDefinition) {
+            return new self($actionDefinition->getResourceName(), $actionDefinition->getBoundedContextId(), true);
+        }
+        return null;
+    }
+
     /**
      * @param ReflectionClass<EntityInterface> $className
      */
-    public function __construct(ReflectionClass $className, BoundedContextId $boundedContextId)
+    public function __construct(ReflectionClass $className, BoundedContextId $boundedContextId, private bool $put = false)
     {
         parent::__construct($className, $boundedContextId);
     }
@@ -28,7 +43,7 @@ class CreateResourceRouteDefinition extends AbstractRestApiRouteDefinition
 
     public function getOperationId(): string
     {
-        return 'post-' . $this->class->getShortName();
+        return ($this->put ? 'put-' : 'post-') . $this->class->getShortName();
     }
 
     public function getUrl(): UrlRouteDefinition

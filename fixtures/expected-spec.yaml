@@ -10,6 +10,23 @@ paths:
         - resource
       description: 'Creates an instance of UserWithAddress'
       operationId: post-UserWithAddress
+      parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       requestBody:
         content:
           application/json:
@@ -27,19 +44,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Throwable-get'
+                $ref: '#/components/schemas/NotAcceptedException-get'
         '405':
           description: 'Invalid request'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Throwable-get'
+                $ref: '#/components/schemas/NotAcceptedException-get'
         '406':
           description: 'Invalid request'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Throwable-get'
+                $ref: '#/components/schemas/NotAcceptedException-get'
+        '422':
+          description: 'A validation error occurred'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationException-get'
         '409':
           description: 'Resource not found'
           content:
@@ -52,6 +75,23 @@ paths:
         - resource
       description: 'Gets a list of resource that are an instance of UserWithAddress'
       operationId: get-all-UserWithAddress
+      parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         '200':
           description: OK
@@ -59,6 +99,7 @@ paths:
             application/json:
               schema:
                 required:
+                  - filteredCount
                   - totalCount
                   - first
                   - last
@@ -66,6 +107,10 @@ paths:
                 type: object
                 properties:
                   totalCount:
+                    minimum: 0
+                    type: integer
+                  filteredCount:
+                    minimum: 0
                     type: integer
                   first:
                     type: string
@@ -90,6 +135,23 @@ paths:
         - resource
       description: 'Creates an instance of UserWithAutoincrementKey'
       operationId: post-UserWithAutoincrementKey
+      parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       requestBody:
         content:
           application/json:
@@ -107,19 +169,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Throwable-get'
+                $ref: '#/components/schemas/NotAcceptedException-get'
         '405':
           description: 'Invalid request'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Throwable-get'
+                $ref: '#/components/schemas/NotAcceptedException-get'
         '406':
           description: 'Invalid request'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Throwable-get'
+                $ref: '#/components/schemas/NotAcceptedException-get'
+        '422':
+          description: 'A validation error occurred'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationException-get'
         '409':
           description: 'Resource not found'
           content:
@@ -132,6 +200,23 @@ paths:
         - resource
       description: 'Gets a list of resource that are an instance of UserWithAutoincrementKey'
       operationId: get-all-UserWithAutoincrementKey
+      parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         '200':
           description: OK
@@ -139,6 +224,7 @@ paths:
             application/json:
               schema:
                 required:
+                  - filteredCount
                   - totalCount
                   - first
                   - last
@@ -146,6 +232,10 @@ paths:
                 type: object
                 properties:
                   totalCount:
+                    minimum: 0
+                    type: integer
+                  filteredCount:
+                    minimum: 0
                     type: integer
                   first:
                     type: string
@@ -169,7 +259,24 @@ paths:
         - Order
         - resource
       description: 'Creates an instance of Order'
-      operationId: post-Order
+      operationId: put-Order
+      parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       requestBody:
         content:
           application/json:
@@ -187,19 +294,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Throwable-get'
+                $ref: '#/components/schemas/NotAcceptedException-get'
         '405':
           description: 'Invalid request'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Throwable-get'
+                $ref: '#/components/schemas/NotAcceptedException-get'
         '406':
           description: 'Invalid request'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Throwable-get'
+                $ref: '#/components/schemas/NotAcceptedException-get'
+        '422':
+          description: 'A validation error occurred'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationException-get'
         '409':
           description: 'Resource not found'
           content:
@@ -212,6 +325,23 @@ paths:
         - resource
       description: 'Gets a list of resource that are an instance of Order'
       operationId: get-all-Order
+      parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         '200':
           description: OK
@@ -219,6 +349,7 @@ paths:
             application/json:
               schema:
                 required:
+                  - filteredCount
                   - totalCount
                   - first
                   - last
@@ -226,6 +357,10 @@ paths:
                 type: object
                 properties:
                   totalCount:
+                    minimum: 0
+                    type: integer
+                  filteredCount:
+                    minimum: 0
                     type: integer
                   first:
                     type: string
@@ -252,6 +387,22 @@ paths:
       operationId: get-single-UserWithAddress
       parameters:
         -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
           name: id
           in: path
           description: 'id of instance of UserWithAddress'
@@ -265,7 +416,91 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserWithAddress-get'
+        '401':
+          description: 'Requires authorization'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrongTokenException-get'
+        '403':
+          description: 'Access denied'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrongTokenException-get'
         '404':
+          description: 'Resource not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+    patch:
+      tags:
+        - UserWithAddress
+        - resource
+      description: 'Modifies an instance of UserWithAddress'
+      operationId: patch-single-UserWithAddress
+      parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: id
+          in: path
+          description: 'id of instance of UserWithAddress'
+          required: true
+          schema:
+            $ref: '#/components/schemas/UserWithAddressIdentifier-post'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserWithAddress-patch'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWithAddress-get'
+        '400':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptedException-get'
+        '405':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptedException-get'
+        '406':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptedException-get'
+        '422':
+          description: 'A validation error occurred'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationException-get'
+        '409':
           description: 'Resource not found'
           content:
             application/json:
@@ -280,6 +515,22 @@ paths:
       operationId: get-single-UserWithAutoincrementKey
       parameters:
         -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
           name: id
           in: path
           description: 'id of instance of UserWithAutoincrementKey'
@@ -293,7 +544,91 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserWithAutoincrementKey-get'
+        '401':
+          description: 'Requires authorization'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrongTokenException-get'
+        '403':
+          description: 'Access denied'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrongTokenException-get'
         '404':
+          description: 'Resource not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+    patch:
+      tags:
+        - UserWithAutoincrementKey
+        - resource
+      description: 'Modifies an instance of UserWithAutoincrementKey'
+      operationId: patch-single-UserWithAutoincrementKey
+      parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: id
+          in: path
+          description: 'id of instance of UserWithAutoincrementKey'
+          required: true
+          schema:
+            $ref: '#/components/schemas/UserAutoincrementIdentifier-post'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserWithAutoincrementKey-patch'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWithAutoincrementKey-get'
+        '400':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptedException-get'
+        '405':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptedException-get'
+        '406':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptedException-get'
+        '422':
+          description: 'A validation error occurred'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationException-get'
+        '409':
           description: 'Resource not found'
           content:
             application/json:
@@ -308,6 +643,22 @@ paths:
       operationId: get-single-Order
       parameters:
         -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
           name: id
           in: path
           description: 'id of instance of Order'
@@ -321,6 +672,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Order-get'
+        '401':
+          description: 'Requires authorization'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrongTokenException-get'
+        '403':
+          description: 'Access denied'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrongTokenException-get'
         '404':
           description: 'Resource not found'
           content:
@@ -334,6 +697,23 @@ paths:
         - action
       description: 'Calls method secretCode and returns return value.'
       operationId: call-method-StaticActionExample-secretCode
+      parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         '200':
           description: OK
@@ -350,12 +730,28 @@ paths:
       operationId: get-single-UserWithAddress-run-verifyAuthentication
       parameters:
         -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
           name: id
           in: path
           description: 'id of instance of UserWithAddress'
           required: true
           schema:
-            $ref: '#/components/schemas/UserWithAddressIdentifier-post'
+            $ref: '#/components/schemas/NonEmptyString-post'
       requestBody:
         content:
           application/json:
@@ -381,19 +777,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Throwable-get'
+                $ref: '#/components/schemas/NotAcceptedException-get'
         '405':
           description: 'Invalid request'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Throwable-get'
+                $ref: '#/components/schemas/NotAcceptedException-get'
         '406':
           description: 'Invalid request'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Throwable-get'
+                $ref: '#/components/schemas/NotAcceptedException-get'
+        '422':
+          description: 'A validation error occurred'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationException-get'
         '404':
           description: 'Resource not found'
           content:
@@ -409,12 +811,28 @@ paths:
       operationId: get-single-Order-run-addOrderLine
       parameters:
         -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
           name: id
           in: path
           description: 'id of instance of Order'
           required: true
           schema:
-            $ref: '#/components/schemas/OrderIdentifier-post'
+            $ref: '#/components/schemas/NonEmptyString-post'
       requestBody:
         content:
           application/json:
@@ -439,19 +857,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Throwable-get'
+                $ref: '#/components/schemas/NotAcceptedException-get'
         '405':
           description: 'Invalid request'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Throwable-get'
+                $ref: '#/components/schemas/NotAcceptedException-get'
         '406':
           description: 'Invalid request'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Throwable-get'
+                $ref: '#/components/schemas/NotAcceptedException-get'
+        '422':
+          description: 'A validation error occurred'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationException-get'
         '404':
           description: 'Resource not found'
           content:
@@ -466,12 +890,28 @@ paths:
       operationId: get-single-Order-run-removeOrderLine
       parameters:
         -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
           name: id
           in: path
           description: 'id of instance of Order'
           required: true
           schema:
-            $ref: '#/components/schemas/OrderIdentifier-post'
+            $ref: '#/components/schemas/OrderLineIdentifier-post'
       responses:
         '200':
           description: OK
@@ -484,19 +924,69 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Throwable-get'
+                $ref: '#/components/schemas/NotAcceptedException-get'
         '405':
           description: 'Invalid request'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Throwable-get'
+                $ref: '#/components/schemas/NotAcceptedException-get'
         '406':
           description: 'Invalid request'
           content:
             application/json:
               schema:
+                $ref: '#/components/schemas/NotAcceptedException-get'
+        '422':
+          description: 'A validation error occurred'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationException-get'
+        '404':
+          description: 'Resource not found'
+          content:
+            application/json:
+              schema:
                 $ref: '#/components/schemas/Throwable-get'
+  '/Order/{id}/provideAllowedMethods':
+    get:
+      tags:
+        - Order
+        - action
+      description: 'Runs method provideAllowedMethods on a Order with a specific id'
+      operationId: get-single-Order-run-provideAllowedMethods
+      parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: id
+          in: path
+          description: 'id of instance of Order'
+          required: true
+          schema:
+            $ref: '#/components/schemas/NonEmptyString-post'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StringList-get'
         '404':
           description: 'Resource not found'
           content:
@@ -512,12 +1002,28 @@ paths:
       operationId: get-single-Order-run-acceptOrder
       parameters:
         -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
           name: id
           in: path
           description: 'id of instance of Order'
           required: true
           schema:
-            $ref: '#/components/schemas/OrderIdentifier-post'
+            $ref: '#/components/schemas/NonEmptyString-post'
       responses:
         '200':
           description: OK
@@ -539,12 +1045,12 @@ servers:
 components:
   schemas:
     AddressWithZipcodeCheck-get:
+      type: object
       required:
         - street
         - streetNumber
         - zipcode
         - city
-      type: object
       properties:
         street:
           $ref: '#/components/schemas/DatabaseText-get'
@@ -555,12 +1061,12 @@ components:
         city:
           $ref: '#/components/schemas/DatabaseText-get'
     AddressWithZipcodeCheck-post:
+      type: object
       required:
         - street
         - streetNumber
         - zipcode
         - city
-      type: object
       properties:
         street:
           $ref: '#/components/schemas/DatabaseText-post'
@@ -588,28 +1094,43 @@ components:
             type: string
           -
             type: integer
-    Order-get:
-      required:
-        - orderStatus
-        - id
-        - orderLines
+    NonEmptyString-post:
+      type: string
+      format: nonemptystring
+      pattern: ^.+$
+    NotAcceptedException-get:
       type: object
+      required:
+        - message
+        - code
       properties:
-        orderStatus:
-          $ref: '#/components/schemas/OrderStatus-get'
+        message:
+          type: string
+          nullable: false
+        code:
+          $ref: '#/components/schemas/mixed'
+    Order-get:
+      type: object
+      required:
+        - id
+        - orderStatus
+        - orderLines
+      properties:
         id:
           $ref: '#/components/schemas/OrderIdentifier-get'
+        orderStatus:
+          $ref: '#/components/schemas/OrderStatus-get'
         orderLines:
           $ref: '#/components/schemas/OrderLineList-get'
     Order-post:
+      type: object
       required:
         - id
-        - orderLineList
-      type: object
+        - orderLines
       properties:
         id:
           $ref: '#/components/schemas/OrderIdentifier-post'
-        orderLineList:
+        orderLines:
           $ref: '#/components/schemas/OrderLineList-post'
     OrderIdentifier-get:
       type: string
@@ -619,13 +1140,24 @@ components:
       type: string
       format: orderidentifier
       pattern: '^[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$'
-    OrderLine-post:
+    OrderLine-get:
+      type: object
       required:
         - id
+      properties:
+        id:
+          $ref: '#/components/schemas/OrderLineIdentifier-get'
+    OrderLine-post:
       type: object
+      required:
+        - id
       properties:
         id:
           $ref: '#/components/schemas/OrderLineIdentifier-post'
+    OrderLineIdentifier-get:
+      type: string
+      format: orderlineidentifier
+      pattern: '^[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$'
     OrderLineIdentifier-post:
       type: string
       format: orderlineidentifier
@@ -633,7 +1165,7 @@ components:
     OrderLineList-get:
       type: array
       items:
-        $ref: '#/components/schemas/OrderLine-post'
+        $ref: '#/components/schemas/OrderLine-get'
     OrderLineList-post:
       type: array
       items:
@@ -644,74 +1176,124 @@ components:
         - ACCEPTED
         - COMPLETED
       type: string
-    Password-get:
+    Password-nullable-get:
       type: string
       format: password
       pattern: '^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[\!@#\$%\^&\*\-_\+\.]){1,})[a-zA-Z0-9\!@#\$%\^&\*\-_\+\.]{6,42}$'
+      nullable: true
     Password-post:
       type: string
       format: password
       pattern: '^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[\!@#\$%\^&\*\-_\+\.]){1,})[a-zA-Z0-9\!@#\$%\^&\*\-_\+\.]{6,42}$'
+    StringList-get:
+      type: array
+      items:
+        type: string
     Throwable-get:
+      type: object
       required:
         - message
-      type: object
+        - code
       properties:
         message:
           type: string
+          nullable: false
+        code:
+          $ref: '#/components/schemas/mixed'
     UserAutoincrementIdentifier-get:
       type: integer
+      nullable: true
     UserAutoincrementIdentifier-post:
       type: integer
+      nullable: true
     UserWithAddress-get:
+      type: object
       required:
         - id
         - address
-      type: object
       properties:
         id:
           $ref: '#/components/schemas/UserWithAddressIdentifier-get'
         address:
           $ref: '#/components/schemas/AddressWithZipcodeCheck-get'
-    UserWithAddress-post:
-      required:
-        - address
+    UserWithAddress-patch:
       type: object
       properties:
-        address:
-          $ref: '#/components/schemas/AddressWithZipcodeCheck-post'
-        id:
-          $ref: '#/components/schemas/UserWithAddressIdentifier-post'
         password:
           $ref: '#/components/schemas/Password-post'
+    UserWithAddress-post:
+      type: object
+      required:
+        - address
+      properties:
+        id:
+          $ref: '#/components/schemas/UserWithAddressIdentifier-nullable-post'
+        password:
+          $ref: '#/components/schemas/Password-post'
+        address:
+          $ref: '#/components/schemas/AddressWithZipcodeCheck-post'
     UserWithAddressIdentifier-get:
       type: string
       format: userwithaddressidentifier
       pattern: '^[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$'
+    UserWithAddressIdentifier-nullable-post:
+      type: string
+      format: userwithaddressidentifier
+      pattern: '^[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$'
+      nullable: true
     UserWithAddressIdentifier-post:
       type: string
       format: userwithaddressidentifier
       pattern: '^[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}$'
     UserWithAutoincrementKey-get:
+      type: object
       required:
         - id
         - address
-      type: object
+        - password
       properties:
         id:
           $ref: '#/components/schemas/UserAutoincrementIdentifier-get'
         address:
           $ref: '#/components/schemas/AddressWithZipcodeCheck-get'
         password:
-          $ref: '#/components/schemas/Password-get'
-    UserWithAutoincrementKey-post:
-      required:
-        - address
+          $ref: '#/components/schemas/Password-nullable-get'
+    UserWithAutoincrementKey-patch:
       type: object
       properties:
-        address:
-          $ref: '#/components/schemas/AddressWithZipcodeCheck-post'
         password:
           $ref: '#/components/schemas/Password-post'
+    UserWithAutoincrementKey-post:
+      type: object
+      required:
+        - address
+      properties:
+        password:
+          $ref: '#/components/schemas/Password-post'
+        address:
+          $ref: '#/components/schemas/AddressWithZipcodeCheck-post'
+    ValidationException-get:
+      required:
+        - message
+        - errors
+      type: object
+      properties:
+        message:
+          type: string
+        errors:
+          type: object
+          additionalProperties:
+            type: string
+    WrongTokenException-get:
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+          nullable: false
+        code:
+          $ref: '#/components/schemas/mixed'
     mixed:
       nullable: true

@@ -1,6 +1,7 @@
 <?php
 namespace Apie\RestApi\Controllers;
 
+use Apie\Core\BoundedContext\BoundedContextHashmap;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -11,6 +12,7 @@ class SwaggerUIController
 
     public function __construct(
         private readonly string $baseUrl,
+        private readonly BoundedContextHashmap $boundedContextHashmap,
         ?string $htmlPath = null
     ) {
         $this->htmlPath = null === $htmlPath ? __DIR__ . '/../../resources/swagger-ui/index.html' : $htmlPath;
@@ -20,10 +22,28 @@ class SwaggerUIController
     {
         $boundedContextId = $request->getAttribute('boundedContextId');
         $search = [
-            '%%OPENAPI_YAML%%'
+            '%%OPENAPI_YAML%%',
+            '%%OPENAPIS_AVAILABLE%%',
         ];
+        $boundedContext = $this->boundedContextHashmap[$boundedContextId];
+        $urls = [
+            [
+                'url' => '/' . trim($this->baseUrl, '/') . '/' . $boundedContextId . '/openapi.yaml',
+                'name' => $boundedContextId . '(' . $boundedContext->actions->count() . ' actions, ' . $boundedContext->resources->count() . ' resources)',
+            ]
+        ];
+        
+        foreach ($this->boundedContextHashmap as $availableBoundedContextId => $boundedContext) {
+            if ($boundedContextId !== $availableBoundedContextId) {
+                $urls[] = [
+                    'url' => '/' . trim($this->baseUrl, '/') . '/' . $availableBoundedContextId . '/openapi.yaml',
+                    'name' => $availableBoundedContextId . '(' . $boundedContext->actions->count() . ' actions, ' . $boundedContext->resources->count() . ' resources)',
+                ];
+            }
+        }
         $replace = [
-            '/' . trim($this->baseUrl, '/') . '/' . $boundedContextId . '/openapi.yaml'
+            '/' . trim($this->baseUrl, '/') . '/' . $boundedContextId . '/openapi.yaml',
+            json_encode($urls),
         ];
 
         $responseBody = str_replace($search, $replace, file_get_contents($this->htmlPath));

@@ -1,9 +1,11 @@
 <?php
 namespace Apie\RestApi\RouteDefinitions;
 
+use Apie\Common\ActionDefinitions\ActionDefinitionInterface;
+use Apie\Common\ActionDefinitions\RunResourceMethodDefinition;
 use Apie\Common\Actions\RunItemMethodAction;
-use Apie\Common\ContextConstants;
 use Apie\Core\BoundedContext\BoundedContextId;
+use Apie\Core\ContextConstants;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Enums\RequestMethod;
 use Apie\Core\ValueObjects\UrlRouteDefinition;
@@ -50,5 +52,13 @@ class RunMethodCallOnSingleResourceRouteDefinition extends AbstractRestApiRouteD
     public function getAction(): string
     {
         return RunItemMethodAction::class;
+    }
+
+    public static function createFrom(ActionDefinitionInterface $actionDefinition): ?AbstractRestApiRouteDefinition
+    {
+        if ($actionDefinition instanceof RunResourceMethodDefinition) {
+            return new self($actionDefinition->getResourceName(), $actionDefinition->getMethod(), $actionDefinition->getBoundedContextId());
+        }
+        return null;
     }
 }

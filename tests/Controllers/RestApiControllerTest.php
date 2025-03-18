@@ -3,8 +3,9 @@ namespace Apie\Tests\RestApi\Controllers;
 
 use Apie\Common\Actions\RunAction;
 use Apie\Common\ContextBuilderFactory;
-use Apie\Common\ContextConstants;
+use Apie\Common\Events\ResponseDispatcher;
 use Apie\Common\Tests\Concerns\ProvidesApieFacade;
+use Apie\Core\ContextConstants;
 use Apie\Fixtures\Actions\StaticActionExample;
 use Apie\Fixtures\BoundedContextFactory;
 use Apie\RestApi\Controllers\RestApiController;
@@ -13,6 +14,7 @@ use Apie\Serializer\EncoderHashmap;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class RestApiControllerTest extends TestCase
 {
@@ -24,7 +26,8 @@ class RestApiControllerTest extends TestCase
         return new RestApiController(
             ContextBuilderFactory::create($boundedContextHashmap, DecoderHashmap::create()),
             $this->givenAnApieFacade(RunAction::class, $boundedContextHashmap),
-            EncoderHashmap::create()
+            EncoderHashmap::create(),
+            new ResponseDispatcher(new EventDispatcher())
         );
     }
 
@@ -40,9 +43,7 @@ class RestApiControllerTest extends TestCase
             ->withAttribute(ContextConstants::OPERATION_ID, 'test');
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_run_a_method()
     {
         $testItem = $this->givenAControllerToRunArbitraryMethod();

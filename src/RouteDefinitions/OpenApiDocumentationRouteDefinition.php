@@ -1,7 +1,9 @@
 <?php
 namespace Apie\RestApi\RouteDefinitions;
 
+use Apie\Common\Enums\UrlPrefix;
 use Apie\Common\Interfaces\HasRouteDefinition;
+use Apie\Common\Lists\UrlPrefixList;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Enums\RequestMethod;
 use Apie\Core\ValueObjects\UrlRouteDefinition;
@@ -39,5 +41,10 @@ class OpenApiDocumentationRouteDefinition implements HasRouteDefinition
             'boundedContextId' => $this->boundedContextId->toNative(),
             'yaml' => $this->yamlFormat,
         ];
+    }
+
+    public function getUrlPrefixes(): UrlPrefixList
+    {
+        return new UrlPrefixList([UrlPrefix::API]);
     }
 }
