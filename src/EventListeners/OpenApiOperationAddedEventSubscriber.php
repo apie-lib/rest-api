@@ -53,16 +53,16 @@ class OpenApiOperationAddedEventSubscriber implements EventSubscriberInterface
                     'name' => 'items_per_page',
                     'in' => 'query',
                     'schema' => new Schema([
-                        'type' => 'int',
-                        'min' => 1
+                        'type' => 'integer',
+                        'minimum' => 1
                     ])
                 ]);
                 $parameters[] = new Parameter([
                     'name' => 'page',
                     'in' => 'query',
                     'schema' => new Schema([
-                        'type' => 'int',
-                        'min' => 0
+                        'type' => 'integer',
+                        'minimum' => 0
                     ])
                 ]);
                 $parameters[] = new Parameter([
@@ -70,13 +70,13 @@ class OpenApiOperationAddedEventSubscriber implements EventSubscriberInterface
                     'in' => 'query',
                     'schema' => new Schema([
                         'type' => 'string',
-                        'minLength' => 1,
+                        'minimum' => 1,
                     ])
                 ]);
                 foreach ($filterColumns as $filterColumn) {
                     $schema = new Schema([
                         'type' => 'string',
-                        'minLength' => 1,
+                        'minimum' => 1,
                     ]);
                     if (isset($fieldMetadata[$filterColumn])) {
                         $typehint = ReflectionTypeFactory::createReflectionType('string');
