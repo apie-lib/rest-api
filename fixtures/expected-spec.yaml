@@ -1060,6 +1060,7 @@ components:
           $ref: '#/components/schemas/DatabaseText-get'
         city:
           $ref: '#/components/schemas/DatabaseText-get'
+      description: 'Represents an address which can verify if the zipcode is correct with some API call'
     AddressWithZipcodeCheck-post:
       type: object
       required:
@@ -1076,16 +1077,19 @@ components:
           $ref: '#/components/schemas/DatabaseText-post'
         city:
           $ref: '#/components/schemas/DatabaseText-post'
+      description: 'Represents an address which can verify if the zipcode is correct with some API call'
     DatabaseText-get:
       maxLength: 65535
       minLength: 0
       type: string
       example: 'Lorem Ipsum'
+      description: 'Any text with a maximum length of 65535 characters that fit in a TEXT field in a database'
     DatabaseText-post:
       maxLength: 65535
       minLength: 0
       type: string
       example: 'Lorem Ipsum'
+      description: 'Any text with a maximum length of 65535 characters that fit in a TEXT field in a database'
     ImmutableStringOrIntList-get:
       type: array
       items:
