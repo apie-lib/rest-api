@@ -43,7 +43,7 @@ class RestApiServiceProvider extends ServiceProvider
                     $app->make('apie.route_definitions.provider'),
                     $app->make(\Apie\Serializer\Serializer::class),
                     $app->make(\Psr\EventDispatcher\EventDispatcherInterface::class),
-                    $this->parseArgument('%apie.rest_api.base_url%'),
+                    $this->parseArgument('%apie.rest_api.base_url%', \Apie\RestApi\OpenApi\OpenApiGenerator::class, 5),
                     $app->bound(\cebe\openapi\spec\OpenApi::class) ? $app->make(\cebe\openapi\spec\OpenApi::class) : null
                 );
             }
@@ -88,7 +88,7 @@ class RestApiServiceProvider extends ServiceProvider
             \Apie\RestApi\Controllers\SwaggerUIController::class,
             function ($app) {
                 return new \Apie\RestApi\Controllers\SwaggerUIController(
-                    $this->parseArgument('%apie.rest_api.base_url%'),
+                    $this->parseArgument('%apie.rest_api.base_url%', \Apie\RestApi\Controllers\SwaggerUIController::class, 0),
                     $app->make(\Apie\Core\BoundedContext\BoundedContextHashmap::class)
                 );
             }
