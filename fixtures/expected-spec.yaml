@@ -1124,6 +1124,8 @@ components:
           $ref: '#/components/schemas/OrderIdentifier-get'
         orderStatus:
           $ref: '#/components/schemas/OrderStatus-get'
+        optionalTags:
+          $ref: '#/components/schemas/StringList-nullable-get'
         orderLines:
           $ref: '#/components/schemas/OrderLineList-get'
     Order-post:
@@ -1134,6 +1136,8 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/OrderIdentifier-post'
+        optionalTags:
+          $ref: '#/components/schemas/StringList-nullable-post'
         orderLines:
           $ref: '#/components/schemas/OrderLineList-post'
     OrderIdentifier-get:
@@ -1193,6 +1197,18 @@ components:
       type: array
       items:
         type: string
+    StringList-nullable-get:
+      type: array
+      items:
+        type: string
+        nullable: true
+      nullable: true
+    StringList-nullable-post:
+      type: array
+      items:
+        type: string
+        nullable: true
+      nullable: true
     Throwable-get:
       type: object
       required:

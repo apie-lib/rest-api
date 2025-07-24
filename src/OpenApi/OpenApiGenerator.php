@@ -10,6 +10,7 @@ use Apie\Core\Attributes\AllowMultipart;
 use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\ContextBuilders\ContextBuilderFactory;
+use Apie\Core\ContextConstants;
 use Apie\Core\Dto\ListOf;
 use Apie\Core\Enums\RequestMethod;
 use Apie\Core\Utils\ConverterUtils;
@@ -81,6 +82,7 @@ class OpenApiGenerator
         $context = $this->contextBuilder->createGeneralContext(
             [
                 OpenApiGenerator::class => $this,
+                ContextConstants::REST_API => true,
                 Serializer::class => $this->serializer,
                 BoundedContextId::class => $boundedContext->getId(),
                 BoundedContext::class => $boundedContext,
