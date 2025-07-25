@@ -1101,6 +1101,7 @@ components:
     NonEmptyString-post:
       type: string
       format: nonemptystring
+      description: 'Any text, except the empty string.'
       pattern: ^.+$
     NotAcceptedException-get:
       type: object
