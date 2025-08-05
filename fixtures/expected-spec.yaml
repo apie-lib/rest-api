@@ -753,6 +753,69 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Throwable-get'
+    delete:
+      tags:
+        - Order
+        - resource
+      description: 'Removes an instance of Order'
+      operationId: remove-single-Order
+      parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: id
+          in: path
+          description: 'id of instance of Order'
+          required: true
+          schema:
+            $ref: '#/components/schemas/OrderIdentifier-post'
+      responses:
+        '204':
+          description: 'Resource was deleted'
+        '400':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptedException-get'
+        '405':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptedException-get'
+        '406':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptedException-get'
+        '422':
+          description: 'A validation error occurred'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationException-get'
+        '409':
+          description: 'Resource not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
   /StaticActionExample/secretCode:
     get:
       tags:
