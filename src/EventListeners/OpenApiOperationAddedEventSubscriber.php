@@ -70,13 +70,13 @@ class OpenApiOperationAddedEventSubscriber implements EventSubscriberInterface
                     'in' => 'query',
                     'schema' => new Schema([
                         'type' => 'string',
-                        'minimum' => 1,
+                        'minLength' => 1,
                     ])
                 ]);
                 foreach ($filterColumns as $filterColumn) {
                     $schema = new Schema([
                         'type' => 'string',
-                        'minimum' => 1,
+                        'minLength' => 1,
                     ]);
                     if (isset($fieldMetadata[$filterColumn])) {
                         $typehint = ReflectionTypeFactory::createReflectionType('string');
