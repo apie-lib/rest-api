@@ -41,3 +41,8 @@ services:
     arguments:
       - '@Apie\Core\Datalayers\ApieDatalayer'
     tags: ['kernel.event_subscriber']
+
+  Apie\RestApi\EventListeners\OpenApiTagsNormalizerSubscriber:
+    arguments:
+      - '@Apie\Core\BoundedContext\BoundedContextHashmap'
+    tags: ['kernel.event_subscriber']

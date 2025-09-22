@@ -15,6 +15,7 @@ use Apie\Core\Dto\ListOf;
 use Apie\Core\Enums\RequestMethod;
 use Apie\Core\Utils\ConverterUtils;
 use Apie\Core\ValueObjects\NonEmptyString;
+use Apie\RestApi\Events\OpenApiSchemaGeneratedEvent;
 use Apie\RestApi\Events\OpenApiOperationAddedEvent;
 use Apie\SchemaGenerator\Builders\ComponentsBuilder;
 use Apie\SchemaGenerator\ComponentsBuilderFactory;
@@ -105,7 +106,12 @@ class OpenApiGenerator
         }
 
         $spec->components = $componentsBuilder->getComponents();
-
+        $this->dispatcher->dispatch(
+            new OpenApiSchemaGeneratedEvent(
+                $spec,
+                $boundedContext
+            )
+        );
         return $spec;
     }
 

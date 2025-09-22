@@ -117,6 +117,22 @@ class RestApiServiceProvider extends ServiceProvider
             )
         );
         $this->app->tag([\Apie\RestApi\EventListeners\OpenApiOperationAddedEventSubscriber::class], 'kernel.event_subscriber');
+        $this->app->singleton(
+            \Apie\RestApi\EventListeners\OpenApiTagsNormalizerSubscriber::class,
+            function ($app) {
+                return new \Apie\RestApi\EventListeners\OpenApiTagsNormalizerSubscriber(
+                    $app->make(\Apie\Core\BoundedContext\BoundedContextHashmap::class)
+                );
+            }
+        );
+        \Apie\ServiceProviderGenerator\TagMap::register(
+            $this->app,
+            \Apie\RestApi\EventListeners\OpenApiTagsNormalizerSubscriber::class,
+            array(
+              0 => 'kernel.event_subscriber',
+            )
+        );
+        $this->app->tag([\Apie\RestApi\EventListeners\OpenApiTagsNormalizerSubscriber::class], 'kernel.event_subscriber');
         
     }
 }
