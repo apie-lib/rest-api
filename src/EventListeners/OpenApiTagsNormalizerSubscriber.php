@@ -6,6 +6,7 @@ use Apie\RestApi\Events\OpenApiSchemaGeneratedEvent;
 use cebe\openapi\spec\OpenApi;
 use cebe\openapi\spec\Operation;
 use cebe\openapi\spec\PathItem;
+use cebe\openapi\spec\Tag;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class OpenApiTagsNormalizerSubscriber implements EventSubscriberInterface
@@ -66,6 +67,24 @@ class OpenApiTagsNormalizerSubscriber implements EventSubscriberInterface
         foreach ($addPaths as $newPath => $pathItem) {
             $paths[$newPath] = $pathItem;
         }
+        sort($allTags);
+        $tags = array_map(
+            fn ($tag) => ['name' => $tag, 'description' => 'All operations for ' . $tag],
+            array_unique($allTags)
+        );
+        $actionTags = [];
+        foreach ($event->boundedContext->actions as $action) {
+            $actionTags[] = $action->getDeclaringClass()->getShortName();
+        }
+        sort($actionTags);
+        $tags = array_merge(
+            $tags,
+            array_map(
+                fn ($tag) => new Tag(['name' => $tag, 'description' => 'All operations for ' . $tag]),
+                array_unique($actionTags)
+            )
+        );
+        $openApi->tags = $tags;
         $openApi->paths = $paths;
     }
 
