@@ -69,7 +69,7 @@ class OpenApiTagsNormalizerSubscriber implements EventSubscriberInterface
         }
         sort($allTags);
         $tags = array_map(
-            fn ($tag) => ['name' => $tag, 'description' => 'All operations for ' . $tag],
+            fn ($tag) => new Tag(['name' => $tag, 'description' => 'All operations for ' . $tag]),
             array_unique($allTags)
         );
         $actionTags = [];
