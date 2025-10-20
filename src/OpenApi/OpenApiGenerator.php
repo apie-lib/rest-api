@@ -341,7 +341,7 @@ class OpenApiGenerator
     private function addAction(PathItem $pathItem, ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition): void
     {
         $method = $routeDefinition->getMethod();
-        if ($method === RequestMethod::CONNECT) {
+        if (!in_array($method, RequestMethod::allowedInOpenApi())) {
             return;
         }
         $inputSchema = $this->createSchemaForInput($componentsBuilder, $routeDefinition);
@@ -487,6 +487,7 @@ class OpenApiGenerator
         }
         $operation->responses = $responses;
         $prop = strtolower($method->value);
+        // @phpstan-ignore-next-line
         $pathItem->{$prop} = $operation;
         $this->dispatcher->dispatch(
             new OpenApiOperationAddedEvent(
