@@ -46,3 +46,6 @@ services:
     arguments:
       - '@Apie\Core\BoundedContext\BoundedContextHashmap'
     tags: ['kernel.event_subscriber']
+
+  Apie\RestApi\EventListeners\PruneUnusedComponentsSubscriber:
+    tags: ['kernel.event_subscriber']

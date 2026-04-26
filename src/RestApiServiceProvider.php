@@ -118,6 +118,22 @@ class RestApiServiceProvider extends ServiceProvider
         );
         $this->app->tag([\Apie\RestApi\EventListeners\OpenApiOperationAddedEventSubscriber::class], 'kernel.event_subscriber');
         $this->registerSingleton(
+            \Apie\RestApi\EventListeners\PruneUnusedComponentsSubscriber::class,
+            function ($app) {
+                return new \Apie\RestApi\EventListeners\PruneUnusedComponentsSubscriber(
+                
+                );
+            }
+        );
+        \Apie\ServiceProviderGenerator\TagMap::register(
+            $this->app,
+            \Apie\RestApi\EventListeners\PruneUnusedComponentsSubscriber::class,
+            array(
+              0 => 'kernel.event_subscriber',
+            )
+        );
+        $this->app->tag([\Apie\RestApi\EventListeners\PruneUnusedComponentsSubscriber::class], 'kernel.event_subscriber');
+        $this->registerSingleton(
             \Apie\RestApi\EventListeners\OpenApiTagsNormalizerSubscriber::class,
             function ($app) {
                 return new \Apie\RestApi\EventListeners\OpenApiTagsNormalizerSubscriber(
