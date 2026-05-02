@@ -24,6 +24,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\NullLogger;
 use ReflectionClass;
 use ReflectionMethod;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class OpenApiDocumentationControllerTest extends TestCase
@@ -40,7 +41,7 @@ class OpenApiDocumentationControllerTest extends TestCase
             new OpenApiGenerator(
                 $contextBuilder,
                 ComponentsBuilderFactory::createComponentsBuilderFactory(),
-                new RestApiRouteDefinitionProvider(new ActionDefinitionProvider(), new NullLogger()),
+                new RestApiRouteDefinitionProvider(new ActionDefinitionProvider(new ServiceLocator([])), new NullLogger()),
                 Serializer::create(),
                 new EventDispatcher(),
             )
