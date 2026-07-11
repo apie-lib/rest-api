@@ -134,6 +134,23 @@ class RestApiServiceProvider extends ServiceProvider
         );
         $this->app->tag([\Apie\RestApi\EventListeners\OpenApiTagsNormalizerSubscriber::class], 'kernel.event_subscriber');
         $this->registerSingleton(
+            \Apie\RestApi\EventListeners\AddAcceptLanguageEventSubscriber::class,
+            function ($app) {
+                return new \Apie\RestApi\EventListeners\AddAcceptLanguageEventSubscriber(
+                    $this->parseArgument('%apie.language_typehint%', \Apie\RestApi\EventListeners\AddAcceptLanguageEventSubscriber::class, 0),
+                    $app->make(\Apie\SchemaGenerator\SchemaGenerator::class)
+                );
+            }
+        );
+        \Apie\ServiceProviderGenerator\TagMap::register(
+            $this->app,
+            \Apie\RestApi\EventListeners\AddAcceptLanguageEventSubscriber::class,
+            array(
+              0 => 'kernel.event_subscriber',
+            )
+        );
+        $this->app->tag([\Apie\RestApi\EventListeners\AddAcceptLanguageEventSubscriber::class], 'kernel.event_subscriber');
+        $this->registerSingleton(
             \Apie\RestApi\EventListeners\PruneUnusedComponentsSubscriber::class,
             function ($app) {
                 return new \Apie\RestApi\EventListeners\PruneUnusedComponentsSubscriber(

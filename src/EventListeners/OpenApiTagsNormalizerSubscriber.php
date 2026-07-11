@@ -5,6 +5,7 @@ use Apie\Core\BoundedContext\BoundedContextHashmap;
 use Apie\RestApi\Events\OpenApiSchemaGeneratedEvent;
 use cebe\openapi\spec\OpenApi;
 use cebe\openapi\spec\Operation;
+use cebe\openapi\spec\Parameter;
 use cebe\openapi\spec\PathItem;
 use cebe\openapi\spec\Tag;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -105,7 +106,7 @@ class OpenApiTagsNormalizerSubscriber implements EventSubscriberInterface
         $operation->operationId = $operation->operationId . '_' . $suffix;
         if ($operation->parameters) {
             $parameters = array_filter($operation->parameters, function ($parameter) {
-                return $parameter->name !== 'resourceName';
+                return $parameter instanceof Parameter && $parameter->name !== 'resourceName';
             });
             $operation->parameters = array_values($parameters);
         }

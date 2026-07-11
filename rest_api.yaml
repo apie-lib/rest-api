@@ -47,5 +47,11 @@ services:
       - '@Apie\Core\BoundedContext\BoundedContextHashmap'
     tags: ['kernel.event_subscriber']
 
+  Apie\RestApi\EventListeners\AddAcceptLanguageEventSubscriber:
+    arguments:
+      - '%apie.language_typehint%'
+      - '@Apie\SchemaGenerator\SchemaGenerator'
+    tags: ['kernel.event_subscriber']
+
   Apie\RestApi\EventListeners\PruneUnusedComponentsSubscriber:
     tags: ['kernel.event_subscriber']

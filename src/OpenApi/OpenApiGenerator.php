@@ -124,6 +124,10 @@ class OpenApiGenerator
     private function createExamplesForInput(ComponentsBuilder $componentsBuilder, RestApiRouteDefinition $routeDefinition): array
     {
         $input = $routeDefinition->getInputType();
+        $class = ConverterUtils::toReflectionClass($input);
+        if ($class !== null) {
+            $input = $class;
+        }
         if ($input instanceof ReflectionClass || $input instanceof ReflectionMethod) {
             $examples = [];
             foreach ($input->getAttributes(ExampleValue::class) as $attribute) {
@@ -136,7 +140,6 @@ class OpenApiGenerator
             }
             return $examples;
         }
-        // TODO: ReflectionType?
         return [];
     }
 
