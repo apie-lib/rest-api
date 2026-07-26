@@ -32,11 +32,17 @@ class AddAcceptLanguageEventSubscriber implements EventSubscriberInterface
         if ($this->languageTypehint === null) {
             return;
         }
+        $parameters = $event->operation->parameters ?? [];
         $ref = new Reference([
             '$ref' => '#/components/parameters/AcceptLanguage',
         ]);
-        $parameters = $event->operation->parameters ?? [];
         $parameters[] = $ref;
+        if (!$event->method->hasOptionalOrNoContentBody()) {
+            $ref = new Reference([
+                '$ref' => '#/components/parameters/ContentLanguage',
+            ]);
+            $parameters[] = $ref;
+        }
         $event->operation->parameters = $parameters;
     }
 
@@ -63,6 +69,20 @@ class AddAcceptLanguageEventSubscriber implements EventSubscriberInterface
             $parameter->examples = $examples;
         }
         $parameters['AcceptLanguage'] = $parameter;
+        $parameter = new \cebe\openapi\spec\Parameter([
+            'name' => 'Content-Language',
+            'in' => 'header',
+            'required' => false,
+            'description' => 'Language of content body.',
+            'schema' => $this->schemaFactory->createSchema(
+                $this->languageTypehint,
+                display: false
+            ),
+        ]);
+        if ($examples) {
+            $parameter->examples = $examples;
+        }
+        $parameters['ContentLanguage'] = $parameter;
         $openApi->components->parameters = $parameters;
     }
 

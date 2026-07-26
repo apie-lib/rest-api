@@ -579,7 +579,8 @@ class OpenApiGenerator
             new OpenApiOperationAddedEvent(
                 $componentsBuilder,
                 $operation,
-                $routeDefinition
+                $routeDefinition,
+                $method
             )
         );
     }
