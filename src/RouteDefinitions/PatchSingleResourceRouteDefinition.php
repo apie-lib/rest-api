@@ -17,7 +17,7 @@ use ReflectionClass;
 class PatchSingleResourceRouteDefinition extends AbstractRestApiRouteDefinition
 {
     /**
-     * @param ReflectionClass<EntityInterface> $className
+     * @param ReflectionClass<covariant EntityInterface> $className
      */
     public function __construct(ReflectionClass $className, BoundedContextId $boundedContextId)
     {

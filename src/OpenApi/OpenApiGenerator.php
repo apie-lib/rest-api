@@ -211,7 +211,7 @@ class OpenApiGenerator
     }
 
     /**
-     * @param ReflectionClass<object>|ReflectionMethod|ReflectionType $input
+     * @param ReflectionClass<covariant object>|ReflectionMethod|ReflectionType $input
      */
     private function doSchemaForInput(ReflectionClass|ReflectionMethod|ReflectionType $input, ComponentsBuilder $componentsBuilder, RequestMethod $method = RequestMethod::GET): Schema|Reference
     {
@@ -234,7 +234,7 @@ class OpenApiGenerator
     }
 
     /**
-     * @param ReflectionClass<object>|ReflectionMethod|ReflectionType $output
+     * @param ReflectionClass<covariant object>|ReflectionMethod|ReflectionType $output
      */
     private function doSchemaForOutput(ReflectionClass|ReflectionMethod|ReflectionType $output, ComponentsBuilder $componentsBuilder): Schema|Reference
     {
@@ -389,7 +389,7 @@ class OpenApiGenerator
     }
 
     /**
-     * @param ReflectionClass<object>|ReflectionMethod|ReflectionType $type
+     * @param ReflectionClass<covariant object>|ReflectionMethod|ReflectionType $type
      */
     private function getDisplayValue(ReflectionClass|ReflectionMethod|ReflectionType $type, string $placeholderName): string
     {

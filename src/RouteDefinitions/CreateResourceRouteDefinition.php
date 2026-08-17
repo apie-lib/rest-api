@@ -29,7 +29,7 @@ class CreateResourceRouteDefinition extends AbstractRestApiRouteDefinition
     }
 
     /**
-     * @param ReflectionClass<EntityInterface> $className
+     * @param ReflectionClass<covariant EntityInterface> $className
      */
     public function __construct(ReflectionClass $className, BoundedContextId $boundedContextId, private bool $put = false)
     {

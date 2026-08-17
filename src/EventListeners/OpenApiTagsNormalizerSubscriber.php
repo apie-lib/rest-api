@@ -3,7 +3,6 @@ namespace Apie\RestApi\EventListeners;
 
 use Apie\Core\BoundedContext\BoundedContextHashmap;
 use Apie\RestApi\Events\OpenApiSchemaGeneratedEvent;
-use cebe\openapi\spec\OpenApi;
 use cebe\openapi\spec\Operation;
 use cebe\openapi\spec\Parameter;
 use cebe\openapi\spec\PathItem;
@@ -26,10 +25,7 @@ class OpenApiTagsNormalizerSubscriber implements EventSubscriberInterface
 
     public function onOpenApiSchemaGenerated(OpenApiSchemaGeneratedEvent $event): void
     {
-        $openApi = $event->openApi ?? null;
-        if (!$openApi instanceof OpenApi) {
-            return;
-        }
+        $openApi = $event->openApi;
         $allTags = [];
         foreach ($event->boundedContext->resources as $resource) {
             $allTags[] = $resource->getShortName();

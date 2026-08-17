@@ -18,7 +18,7 @@ use ReflectionMethod;
 class RunMethodCallOnSingleResourceRouteDefinition extends AbstractRestApiRouteDefinition
 {
     /**
-     * @param ReflectionClass<EntityInterface> $className
+     * @param ReflectionClass<covariant EntityInterface> $className
      */
     public function __construct(ReflectionClass $className, ReflectionMethod $method, BoundedContextId $boundedContextId)
     {
