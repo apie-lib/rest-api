@@ -20,14 +20,14 @@
     }
   },
   "require": {
-    "php": ">=8.3",
+    "php": ">=8.4",
     "apie/core": "self.version",
     "apie/common": "self.version",
     "apie/schema-generator": "self.version",
     "apie/serializer": "self.version",
-    "devizzent/cebe-php-openapi": "^1.1.2",
+    "devizzent/cebe-php-openapi": "^1.1.5",
     "nyholm/psr7": "^1.8.2",
-    "psr/http-message": "^1.1|^2.0",
+    "psr/http-message": "^2.0",
     "symfony/event-dispatcher": "^7.2"
   },
   "require-dev": {
