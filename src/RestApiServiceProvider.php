@@ -71,7 +71,7 @@ class RestApiServiceProvider extends ServiceProvider
                 return new \Apie\RestApi\Controllers\RestApiController(
                     $app->make(\Apie\Core\ContextBuilders\ContextBuilderFactory::class),
                     $app->make(\Apie\Common\ApieFacade::class),
-                    $app->make(\Apie\Serializer\EncoderHashmap::class),
+                    $app->make(\Apie\Common\StreamFactory\StreamFactoryInterface::class),
                     $app->make(\Apie\Common\Events\ResponseDispatcher::class)
                 );
             }

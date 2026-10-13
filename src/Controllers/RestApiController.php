@@ -3,11 +3,11 @@ namespace Apie\RestApi\Controllers;
 
 use Apie\Common\ApieFacade;
 use Apie\Common\Events\ResponseDispatcher;
+use Apie\Common\StreamFactory\StreamFactoryInterface;
 use Apie\Core\Actions\ActionResponse;
 use Apie\Core\ContextBuilders\ContextBuilderFactory;
 use Apie\Core\ContextConstants;
-use Apie\Serializer\EncoderHashmap;
-use Nyholm\Psr7\Factory\Psr17Factory;
+use Nyholm\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -16,7 +16,7 @@ class RestApiController
     public function __construct(
         private readonly ContextBuilderFactory $contextBuilderFactory,
         private readonly ApieFacade $apieFacade,
-        private readonly EncoderHashmap $encoderHashmap,
+        private readonly StreamFactoryInterface $streamFactory,
         private readonly ResponseDispatcher $responseDispatcher
     ) {
     }
@@ -33,20 +33,7 @@ class RestApiController
 
     private function createResponse(ServerRequestInterface $request, ActionResponse $output): ResponseInterface
     {
-        if ($output->result instanceof ResponseInterface) {
-            return $output->result;
-        }
-        $contentType = $this->encoderHashmap->getAcceptedContentTypeForRequest($request);
-        $encoder = $this->encoderHashmap[$contentType];
-        
-        $psr17Factory = new Psr17Factory();
-        $statusCode = $output->getStatusCode();
-
-        $responseBody = $psr17Factory->createStream($statusCode === 204 ? '' : $encoder->encode($output->getResultAsNativeData()));
-
-        $response = $psr17Factory->createResponse($statusCode)
-            ->withBody($responseBody)
-            ->withHeader('Content-Type', $contentType);
+        $response = $this->streamFactory->createStream($request, $output) ?? new Response();
         $response = $this->responseDispatcher->triggerResponseCreated($response, $output->apieContext);
 
         return $response;

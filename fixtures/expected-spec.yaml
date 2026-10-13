@@ -1307,10 +1307,12 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/OrderLine-get'
+      uniqueItems: true
     OrderLineList-post:
       type: array
       items:
         $ref: '#/components/schemas/OrderLine-post'
+      uniqueItems: true
     OrderStatus-get:
       enum:
         - DRAFT

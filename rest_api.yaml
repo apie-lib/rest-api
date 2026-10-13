@@ -27,7 +27,7 @@ services:
     arguments:
       - '@Apie\Core\ContextBuilders\ContextBuilderFactory'
       - '@Apie\Common\ApieFacade'
-      - '@Apie\Serializer\EncoderHashmap'
+      - '@Apie\Common\StreamFactory\StreamFactoryInterface'
       - '@Apie\Common\Events\ResponseDispatcher'
     tags: ['controller.service_arguments']
 
