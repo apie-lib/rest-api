@@ -151,6 +151,38 @@ class RestApiServiceProvider extends ServiceProvider
         );
         $this->app->tag([\Apie\RestApi\EventListeners\AddAcceptLanguageEventSubscriber::class], 'kernel.event_subscriber');
         $this->registerSingleton(
+            \Apie\RestApi\EventListeners\AddNoVarySearchHeaderEventSubscriber::class,
+            function ($app) {
+                return new \Apie\RestApi\EventListeners\AddNoVarySearchHeaderEventSubscriber(
+
+                );
+            }
+        );
+        \Apie\ServiceProviderGenerator\TagMap::register(
+            $this->app,
+            \Apie\RestApi\EventListeners\AddNoVarySearchHeaderEventSubscriber::class,
+            array(
+              0 => 'kernel.event_subscriber',
+            )
+        );
+        $this->app->tag([\Apie\RestApi\EventListeners\AddNoVarySearchHeaderEventSubscriber::class], 'kernel.event_subscriber');
+        $this->registerSingleton(
+            \Apie\RestApi\EventListeners\AddEntityCacheHeadersEventSubscriber::class,
+            function ($app) {
+                return new \Apie\RestApi\EventListeners\AddEntityCacheHeadersEventSubscriber(
+
+                );
+            }
+        );
+        \Apie\ServiceProviderGenerator\TagMap::register(
+            $this->app,
+            \Apie\RestApi\EventListeners\AddEntityCacheHeadersEventSubscriber::class,
+            array(
+              0 => 'kernel.event_subscriber',
+            )
+        );
+        $this->app->tag([\Apie\RestApi\EventListeners\AddEntityCacheHeadersEventSubscriber::class], 'kernel.event_subscriber');
+        $this->registerSingleton(
             \Apie\RestApi\EventListeners\PruneUnusedComponentsSubscriber::class,
             function ($app) {
                 return new \Apie\RestApi\EventListeners\PruneUnusedComponentsSubscriber(

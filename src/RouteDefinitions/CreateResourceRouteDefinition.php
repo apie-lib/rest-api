@@ -21,9 +21,8 @@ class CreateResourceRouteDefinition extends AbstractRestApiRouteDefinition
         if ($actionDefinition instanceof CreateResourceActionDefinition) {
             return new self($actionDefinition->getResourceName(), $actionDefinition->getBoundedContextId());
         }
-        // TODO: should become PUT
         if ($actionDefinition instanceof ReplaceResourceActionDefinition) {
-            return new self($actionDefinition->getResourceName(), $actionDefinition->getBoundedContextId(), true);
+            return new self($actionDefinition->getResourceName(), $actionDefinition->getBoundedContextId());
         }
         return null;
     }
@@ -38,7 +37,7 @@ class CreateResourceRouteDefinition extends AbstractRestApiRouteDefinition
 
     public function getMethod(): RequestMethod
     {
-        return RequestMethod::POST;
+        return $this->put ? RequestMethod::PUT : RequestMethod::POST;
     }
 
     public function getOperationId(): string

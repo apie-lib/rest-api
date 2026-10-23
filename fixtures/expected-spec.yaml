@@ -259,6 +259,71 @@ paths:
         - Order
         - resource
       description: 'Creates an instance of Order'
+      operationId: post-Order
+      parameters:
+        -
+          name: fields
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: relations
+          in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order-post'
+      responses:
+        '201':
+          description: 'Resource was created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order-get'
+        '400':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptedException-get'
+        '405':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptedException-get'
+        '406':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptedException-get'
+        '422':
+          description: 'A validation error occurred'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationException-get'
+        '409':
+          description: 'Resource not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwable-get'
+    put:
+      tags:
+        - Order
+        - resource
+      description: 'Creates an instance of Order'
       operationId: put-Order
       parameters:
         -
@@ -272,6 +337,15 @@ paths:
         -
           name: relations
           in: query
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: If-Match
+          in: header
+          required: false
           explode: false
           schema:
             type: array
@@ -409,6 +483,15 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/UserWithAddressIdentifier-post'
+        -
+          name: If-None-Match
+          in: header
+          required: false
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         '200':
           description: OK
@@ -434,6 +517,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Throwable-get'
+        '304':
+          description: 'Not Modified'
     patch:
       tags:
         - UserWithAddress
@@ -464,6 +549,15 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/UserWithAddressIdentifier-post'
+        -
+          name: If-Match
+          in: header
+          required: false
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       requestBody:
         content:
           application/json:
@@ -600,6 +694,15 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/UserAutoincrementIdentifier-post'
+        -
+          name: If-None-Match
+          in: header
+          required: false
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         '200':
           description: OK
@@ -625,6 +728,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Throwable-get'
+        '304':
+          description: 'Not Modified'
     patch:
       tags:
         - UserWithAutoincrementKey
@@ -655,6 +760,15 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/UserAutoincrementIdentifier-post'
+        -
+          name: If-Match
+          in: header
+          required: false
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       requestBody:
         content:
           application/json:
@@ -728,6 +842,15 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/OrderIdentifier-post'
+        -
+          name: If-None-Match
+          in: header
+          required: false
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         '200':
           description: OK
@@ -753,6 +876,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Throwable-get'
+        '304':
+          description: 'Not Modified'
     delete:
       tags:
         - Order

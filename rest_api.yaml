@@ -53,5 +53,11 @@ services:
       - '@Apie\SchemaGenerator\SchemaGenerator'
     tags: ['kernel.event_subscriber']
 
+  Apie\RestApi\EventListeners\AddNoVarySearchHeaderEventSubscriber:
+    tags: ['kernel.event_subscriber']
+
+  Apie\RestApi\EventListeners\AddEntityCacheHeadersEventSubscriber:
+    tags: ['kernel.event_subscriber']
+
   Apie\RestApi\EventListeners\PruneUnusedComponentsSubscriber:
     tags: ['kernel.event_subscriber']

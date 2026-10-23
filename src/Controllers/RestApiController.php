@@ -3,6 +3,7 @@ namespace Apie\RestApi\Controllers;
 
 use Apie\Common\ApieFacade;
 use Apie\Common\Events\ResponseDispatcher;
+use Apie\Common\Exceptions\EntityNotModifiedException;
 use Apie\Common\StreamFactory\StreamFactoryInterface;
 use Apie\Core\Actions\ActionResponse;
 use Apie\Core\ContextBuilders\ContextBuilderFactory;
@@ -26,7 +27,15 @@ class RestApiController
         $context = $this->contextBuilderFactory->createFromRequest($request, [ContextConstants::REST_API => true]);
 
         $action = $this->apieFacade->createAction($context);
-        $data = ($action)($context, $context->getContext(ContextConstants::RAW_CONTENTS));
+        try {
+            $data = ($action)($context, $context->getContext(ContextConstants::RAW_CONTENTS));
+        } catch (EntityNotModifiedException $exception) {
+            $response = new Response(304, [
+                'ETag' => $exception->etag,
+                'Cache-Control' => 'no-cache',
+            ]);
+            return $this->responseDispatcher->triggerResponseCreated($response, $context);
+        }
 
         return $this->createResponse($request, $data);
     }

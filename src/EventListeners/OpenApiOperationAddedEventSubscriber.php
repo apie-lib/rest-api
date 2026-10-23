@@ -1,16 +1,21 @@
 <?php
 namespace Apie\RestApi\EventListeners;
 
+use Apie\Common\Actions\CreateObjectAction;
+use Apie\Common\Actions\GetItemAction;
 use Apie\Common\Actions\GetListAction;
+use Apie\Common\Actions\ModifyObjectAction;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\ContextConstants;
 use Apie\Core\Datalayers\ApieDatalayer;
 use Apie\Core\Datalayers\ApieDatalayerWithFilters;
+use Apie\Core\Enums\RequestMethod;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\RestApi\Events\OpenApiOperationAddedEvent;
 use Apie\TypeConverter\ReflectionTypeFactory;
 use cebe\openapi\spec\Parameter;
+use cebe\openapi\spec\Response;
 use cebe\openapi\spec\Schema;
 use ReflectionClass;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -31,6 +36,70 @@ class OpenApiOperationAddedEventSubscriber implements EventSubscriberInterface
 
     public function onOperationAdded(OpenApiOperationAddedEvent $event): void
     {
+        $responses = $event->operation->responses ?? [];
+
+        if ($event->routeDefinition->getAction() === GetItemAction::class) {
+            $parameters = $event->operation->parameters ?? [];
+            $parameters[] = new Parameter([
+                'name' => 'If-None-Match',
+                'in' => 'header',
+                'required' => false,
+                'explode' => false,
+                'schema' => new Schema([
+                    'type' => 'array',
+                    'items' => new Schema([
+                        'type' => 'string',
+                    ]),
+                ]),
+            ]);
+            $event->operation->parameters = $parameters;
+            $responses = $event->operation->responses ?? [];
+            $responses[304] = new Response([
+                'description' => 'Not Modified'
+            ]);
+            $event->operation->responses = $responses;
+            return;
+        }
+
+        if ($event->routeDefinition->getAction() === ModifyObjectAction::class) {
+            $parameters = $event->operation->parameters ?? [];
+            $parameters[] = new Parameter([
+                'name' => 'If-Match',
+                'in' => 'header',
+                'required' => false,
+                'explode' => false,
+                'schema' => new Schema([
+                    'type' => 'array',
+                    'items' => new Schema([
+                        'type' => 'string',
+                    ]),
+                ]),
+            ]);
+            $event->operation->parameters = $parameters;
+            return;
+        }
+
+        if (
+            $event->routeDefinition->getAction() === CreateObjectAction::class
+            && $event->method === RequestMethod::PUT
+        ) {
+            $parameters = $event->operation->parameters ?? [];
+            $parameters[] = new Parameter([
+                'name' => 'If-Match',
+                'in' => 'header',
+                'required' => false,
+                'explode' => false,
+                'schema' => new Schema([
+                    'type' => 'array',
+                    'items' => new Schema([
+                        'type' => 'string',
+                    ]),
+                ]),
+            ]);
+            $event->operation->parameters = $parameters;
+            return;
+        }
+
         if ($this->apieDatalayer instanceof ApieDatalayerWithFilters) {
             $routeAttributes = $event->routeDefinition->getRouteAttributes();
             $resourceName = $routeAttributes[ContextConstants::RESOURCE_NAME] ?? null;
