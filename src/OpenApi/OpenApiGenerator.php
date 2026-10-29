@@ -242,11 +242,14 @@ class OpenApiGenerator
             return $componentsBuilder->addDisplaySchemaFor($output->name);
         }
         if ($output instanceof ReflectionMethod) {
-            if (ConverterUtils::isStaticOrSelf($output->getReturnType())) {
-                $output = $output->getDeclaringClass();
-            } else {
-                $output = $output->getReturnType();
+            $returnType = $output->getReturnType();
+            if (ConverterUtils::isStaticOrSelf($returnType)) {
+                return $componentsBuilder->addDisplaySchemaFor(
+                    $output->getDeclaringClass(),
+                    nullable: $returnType->allowsNull()
+                );
             }
+            $output = $returnType;
         }
 
         return $componentsBuilder->getSchemaForType($output, false, true, $output ? $output->allowsNull() : true);
