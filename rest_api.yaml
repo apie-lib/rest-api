@@ -31,6 +31,12 @@ services:
       - '@Apie\Common\Events\ResponseDispatcher'
     tags: ['controller.service_arguments']
 
+  Apie\RestApi\Controllers\QueryResourceListController:
+    arguments:
+      - '@Apie\RestApi\Controllers\RestApiController'
+      - '@Apie\Common\RequestBodyDecoder'
+    tags: ['controller.service_arguments']
+
   Apie\RestApi\Controllers\SwaggerUIController:
     arguments:
       - '%apie.rest_api.base_url%'

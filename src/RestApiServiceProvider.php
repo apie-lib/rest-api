@@ -85,6 +85,23 @@ class RestApiServiceProvider extends ServiceProvider
         );
         $this->app->tag([\Apie\RestApi\Controllers\RestApiController::class], 'controller.service_arguments');
         $this->registerSingleton(
+            \Apie\RestApi\Controllers\QueryResourceListController::class,
+            function ($app) {
+                return new \Apie\RestApi\Controllers\QueryResourceListController(
+                    $app->make(\Apie\RestApi\Controllers\RestApiController::class),
+                    $app->make(\Apie\Common\RequestBodyDecoder::class)
+                );
+            }
+        );
+        \Apie\ServiceProviderGenerator\TagMap::register(
+            $this->app,
+            \Apie\RestApi\Controllers\QueryResourceListController::class,
+            array(
+              0 => 'controller.service_arguments',
+            )
+        );
+        $this->app->tag([\Apie\RestApi\Controllers\QueryResourceListController::class], 'controller.service_arguments');
+        $this->registerSingleton(
             \Apie\RestApi\Controllers\SwaggerUIController::class,
             function ($app) {
                 return new \Apie\RestApi\Controllers\SwaggerUIController(
@@ -154,7 +171,7 @@ class RestApiServiceProvider extends ServiceProvider
             \Apie\RestApi\EventListeners\AddNoVarySearchHeaderEventSubscriber::class,
             function ($app) {
                 return new \Apie\RestApi\EventListeners\AddNoVarySearchHeaderEventSubscriber(
-
+                
                 );
             }
         );
@@ -170,7 +187,7 @@ class RestApiServiceProvider extends ServiceProvider
             \Apie\RestApi\EventListeners\AddEntityCacheHeadersEventSubscriber::class,
             function ($app) {
                 return new \Apie\RestApi\EventListeners\AddEntityCacheHeadersEventSubscriber(
-
+                
                 );
             }
         );

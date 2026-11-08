@@ -15,6 +15,7 @@ final class RestApiRouteDefinitionProvider implements RouteDefinitionProviderInt
         PutResourceRouteDefinition::class,
         RemoveSingleResourceRouteDefinition::class,
         GetResourceListRouteDefinition::class,
+        QueryResourceListRouteDefinition::class,
         GetSingleResourceRouteDefinition::class,
         PatchSingleResourceRouteDefinition::class,
         RunGlobalMethodRouteDefinition::class,
